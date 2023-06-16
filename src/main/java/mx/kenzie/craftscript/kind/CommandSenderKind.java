@@ -23,7 +23,7 @@ public class CommandSenderKind extends Kind<CommandSender> {
     public Object setProperty(CommandSender thing, String property, Object value) {
         if (thing == null) return null;
         return switch (property) {
-            case "type" -> this.equals(Kind.of(value));
+            case "type" -> this.equals(Kind.asKind(value));
             case "equals" -> thing.equals(value);
             case "has_permission" -> thing.hasPermission((String) value);
             default -> null;

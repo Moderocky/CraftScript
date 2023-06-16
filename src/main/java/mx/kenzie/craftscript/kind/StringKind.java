@@ -13,7 +13,7 @@ public class StringKind extends Kind<String> {
             case "type" -> this;
             case "length" -> thing.length();
             case "is_empty" -> thing.isEmpty();
-            case "is_blank" -> thing.isEmpty();
+            case "is_blank" -> thing.isBlank();
             case "lowercase" -> thing.toLowerCase();
             case "uppercase" -> thing.toUpperCase();
             default -> null;
@@ -24,7 +24,7 @@ public class StringKind extends Kind<String> {
     public Object setProperty(String thing, String property, Object value) {
         if (thing == null) return null;
         return switch (property) {
-            case "type" -> this.equals(Kind.of(value));
+            case "type" -> this.equals(Kind.asKind(value));
             case "equals" -> thing.equals(value);
             case "length" -> thing.length() == ((Number) value).intValue();
             case "char_at" -> thing.charAt(((Number) value).intValue()) + "";

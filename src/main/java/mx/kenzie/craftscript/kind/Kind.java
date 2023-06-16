@@ -12,9 +12,16 @@ public abstract class Kind<Type> {
         this.type = type;
     }
 
+    public static Kind<?> asKind(Object thing) {
+        if (thing instanceof Kind<?> kind) return kind;
+        if (thing instanceof Class<?> kind) return new UnknownKind(kind);
+        if (thing == null) return new NullKind();
+        return null;
+    }
+
     public static Kind<?> of(Object thing) {
         if (thing == null) return new NullKind();
-        if (thing instanceof Kind<?> kind) return kind;
+        if (thing instanceof Kind<?>) return new KindKind();
         if (thing instanceof Class<?> kind) return new UnknownKind(kind);
         final Context context = Context.getLocalContext();
         if (context != null) {
@@ -28,7 +35,7 @@ public abstract class Kind<Type> {
     public Object setProperty(Type thing, String property, Object value) {
         if (thing == null) return null;
         return switch (property) {
-            case "type" -> this.equals(Kind.of(value));
+            case "type" -> this.equals(Kind.asKind(value));
             case "equals" -> thing.equals(value);
             default -> null;
         };
@@ -48,6 +55,11 @@ public abstract class Kind<Type> {
         return Objects.toString(type);
     }
 
+    public String toStringTry(Object object) {
+        if (this.getType().isInstance(object)) return this.toString((Type) object);
+        return Objects.toString(type);
+    }
+
     public Class<Type> getType() {
         return type;
     }
@@ -55,6 +67,7 @@ public abstract class Kind<Type> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o instanceof Class<?> type && type.equals(this.type)) return true;
         if (!(o instanceof final Kind<?> kind)) return false;
         return Objects.equals(type, kind.type);
     }

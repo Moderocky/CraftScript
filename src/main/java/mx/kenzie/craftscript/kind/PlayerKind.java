@@ -42,7 +42,7 @@ public class PlayerKind extends Kind<Player> {
     public Object setProperty(Player thing, String property, Object value) {
         if (thing == null) return false;
         return switch (property) {
-            case "type" -> this.equals(Kind.of(value));
+            case "type" -> this.equals(Kind.asKind(value));
             case "equals" -> thing.equals(value);
             case "killer" -> {
                 thing.setKiller((Player) value);

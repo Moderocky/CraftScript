@@ -11,7 +11,7 @@ public class UnknownKind extends Kind<Object> {
     public Object getProperty(Object thing, String property) {
         if (thing == null) return null;
         return switch (property) {
-            case "type" -> this.equals(Kind.of(thing));
+            case "type" -> this;
             case "type_name" -> type.getSimpleName();
             default -> null;
         };

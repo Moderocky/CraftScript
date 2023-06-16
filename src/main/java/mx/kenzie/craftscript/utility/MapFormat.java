@@ -274,7 +274,7 @@ public class MapFormat extends Format {
             return (String) obj;
         }
 
-        return ((Kind<Object>) Kind.of(obj)).toString(obj);
+        return Kind.of(obj).toStringTry(obj);
     }
 
     /**

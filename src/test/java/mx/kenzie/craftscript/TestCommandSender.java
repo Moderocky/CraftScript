@@ -46,7 +46,7 @@ public class TestCommandSender implements CommandSender {
 
     @Override
     public @NotNull String getName() {
-        return null;
+        return "Sender";
     }
 
     @Override
