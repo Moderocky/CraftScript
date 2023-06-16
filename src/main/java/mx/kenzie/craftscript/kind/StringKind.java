@@ -26,6 +26,7 @@ public class StringKind extends Kind<String> {
         return switch (property) {
             case "type" -> this.equals(Kind.of(value));
             case "equals" -> thing.equals(value);
+            case "length" -> thing.length() == ((Number) value).intValue();
             case "char_at" -> thing.charAt(((Number) value).intValue()) + "";
             case "substring" -> thing.substring(((Number) value).intValue());
             case "index_of" -> thing.indexOf(((String) value));

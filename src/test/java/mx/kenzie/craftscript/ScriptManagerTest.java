@@ -15,7 +15,11 @@ public class ScriptManagerTest {
 
     private static final ScriptLoader LOADER = new SimpleScriptLoader(
         NullParser::new,
+        ForParser::new,
+        IfParser::new,
+        BlockParser::new,
         StringParser::new,
+        CloseParser::new,
         IntegerParser::new,
         DoubleParser::new,
         CommandParser::new,
@@ -79,6 +83,48 @@ public class ScriptManagerTest {
             var = "hello"
             /print char at 1 is {var[char_at=1]}
             """, "char at 1 is e");
+    }
+
+    @Test
+    public void ifCheck() {
+        assert this.test("""
+            var = "hello"
+            /print char at 1 is {var[char_at=1]}
+            if var {
+                /print char at 2 is {var[char_at=2]}
+            }
+            """, "char at 2 is l");
+    }
+
+    @Test
+    public void ifChangeVar() {
+        assert this.test("""
+            var = "hello"
+            if var {
+                var = "{var} there"
+            }
+            /print {var}
+            """, "hello there");
+    }
+
+    @Test
+    public void ifSetterTest() {
+        assert this.test("""
+            var = "hello"
+            if var[length=5] {
+                var = "{var} there"
+            }
+            /print {var}
+            """, "hello there");
+    }
+
+    @Test
+    public void forTest() {
+        assert this.test("""
+            for var = "hello there" {
+                /print {var}
+            }
+            """, "hello there");
     }
 
     private boolean test(String source, String output) {
