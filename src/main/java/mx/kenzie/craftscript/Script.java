@@ -3,6 +3,7 @@ package mx.kenzie.craftscript;
 import mx.kenzie.craftscript.statement.Statement;
 
 import java.io.PrintStream;
+import java.util.Objects;
 
 public record Script(String name, Statement<?>... statements) implements Executable<Boolean> {
 
@@ -42,6 +43,18 @@ public record Script(String name, Statement<?>... statements) implements Executa
             statement.stringify(stream);
             stream.println();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof final Script script)) return false;
+        return Objects.equals(name, script.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
 }

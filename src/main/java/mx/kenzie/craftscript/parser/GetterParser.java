@@ -20,7 +20,7 @@ public class GetterParser extends BasicParser {
         if (label.isEmpty()) return false;
         if (property.isEmpty()) return false;
         if (property.contains("=")) return false;
-        this.assignment = parent.parse(property);
+        this.assignment = parent.parse(label);
         return assignment != null;
     }
 

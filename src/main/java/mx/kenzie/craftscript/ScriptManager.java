@@ -17,9 +17,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -51,6 +53,10 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    public Script loadScript(String name, String content) {
+        return this.loadScript(name, new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+    }
+
     public Script getScript(String name) {
         synchronized (scripts) {
             return scripts.get(name);
@@ -63,9 +69,20 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    public void deleteScript(Script script) {
+        synchronized (scripts) {
+            this.scripts.values().removeIf(script::equals);
+        }
+    }
+
     public boolean runScript(Script script, CommandSender source) {
         final Context context = new Context(source, this);
-        return script.execute(context);
+        Context.setLocalContext(context);
+        try {
+            return script.execute(context);
+        } finally {
+            Context.removeLocalContext();
+        }
     }
 
     public void printError(ScriptError error, CommandSender sender) {

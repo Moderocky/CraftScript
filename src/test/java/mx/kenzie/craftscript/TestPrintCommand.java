@@ -8,15 +8,15 @@ import org.bukkit.command.CommandSender;
 
 import static mx.kenzie.centurion.Arguments.*;
 
-public class TestSayCommand extends MinecraftCommand {
+public class TestPrintCommand extends MinecraftCommand {
 
-    TestSayCommand() {
+    TestPrintCommand() {
         super("Test command.");
     }
 
     @Override
     public MinecraftBehaviour create() {
-        return command("say")
+        return command("print")
             .arg(OFFSET, this::vector)
             .arg(INTEGER, this::integer)
             .arg(DOUBLE, this::number)

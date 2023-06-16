@@ -1,3 +1,3 @@
 name = "BaeFell"
-result = /say hello there
-/say hello {name} was {result}
+result = /print hello there
+/print hello {name} was {result}

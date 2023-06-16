@@ -41,7 +41,7 @@ package mx.kenzie.craftscript.utility;
  * made subject to such option by the copyright holder.
  */
 
-import mx.kenzie.craftscript.Context;
+import mx.kenzie.craftscript.kind.Kind;
 
 import java.io.Serial;
 import java.text.*;
@@ -274,10 +274,7 @@ public class MapFormat extends Format {
             return (String) obj;
         }
 
-        final Context context = Context.getLocalContext(); // kenzie
-        if (context != null) return context.manager().toString(obj);
-
-        return obj.toString();
+        return ((Kind<Object>) Kind.of(obj)).toString(obj);
     }
 
     /**
