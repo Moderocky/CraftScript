@@ -8,6 +8,7 @@
     <artifactId>craftscript</artifactId>
     <version>1.0.0</version>
     <name>CraftScript</name>
+    <description>A tiny scripting language for writing user-centered scripts in minecraft.</description>
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
