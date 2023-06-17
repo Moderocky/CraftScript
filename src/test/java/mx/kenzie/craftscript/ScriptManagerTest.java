@@ -120,7 +120,7 @@ public class ScriptManagerTest {
 
     @Test
     public void simple() {
-        assert this.test(this.getScript("simple.csc"), "hello BaeFell was true");
+        assert this.test(this.getScript("simple.script"), "hello BaeFell was true");
     }
 
     @Test
@@ -274,7 +274,7 @@ public class ScriptManagerTest {
     }
 
     private boolean test(String source, String output) {
-        final Script script = manager.loadScript("test.csc", source);
+        final Script script = manager.loadScript("test.script", source);
         try {
             this.test(script, output);
         } finally {
@@ -284,7 +284,7 @@ public class ScriptManagerTest {
     }
 
     private boolean test(InputStream source, String output) {
-        final Script script = manager.loadScript("test.csc", source);
+        final Script script = manager.loadScript("test.script", source);
         try {
             this.test(script, output);
         } finally {
