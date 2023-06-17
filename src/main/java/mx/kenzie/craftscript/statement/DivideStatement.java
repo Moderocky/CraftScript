@@ -5,14 +5,16 @@ import mx.kenzie.craftscript.ScriptError;
 import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
-import java.util.Objects;
 
-public record EqualsStatement(Statement<?> antecedent, Statement<?> consequent) implements Statement<Boolean> {
+public record DivideStatement(Statement<?> antecedent, Statement<?> consequent) implements Statement<Number> {
 
     @Override
-    public Boolean execute(Context context) throws ScriptError {
-        final Object a = antecedent.execute(context), b = consequent.execute(context);
-        return Objects.equals(Wrapper.unwrap(a), Wrapper.unwrap(b));
+    public Number execute(Context context) throws ScriptError {
+        final Object a = Wrapper.unwrap(antecedent.execute(context)), b = Wrapper.unwrap(consequent.execute(context));
+        if (!(a instanceof Number first)) return null;
+        if (!(b instanceof Number second)) return null;
+        if (first instanceof Integer && second instanceof Integer) return first.intValue() / second.intValue();
+        return first.doubleValue() / second.doubleValue();
     }
 
     @Override
@@ -30,7 +32,7 @@ public record EqualsStatement(Statement<?> antecedent, Statement<?> consequent) 
     @Override
     public void stringify(PrintStream stream) {
         this.antecedent.stringify(stream);
-        stream.print("==");
+        stream.print('/');
         this.consequent.stringify(stream);
     }
 

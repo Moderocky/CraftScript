@@ -4,7 +4,6 @@ package mx.kenzie.craftscript;
 import mx.kenzie.craftscript.kind.*;
 import mx.kenzie.craftscript.parser.*;
 import mx.kenzie.craftscript.variable.VariableContainer;
-import org.bukkit.command.CommandSender;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,11 +27,15 @@ public class ScriptManagerTest {
         IntegerParser::new,
         DoubleParser::new,
         CommandParser::new,
+        InterpolationParser::new,
         VariableAssignmentParser::new,
         EqualsParser::new,
+        PlusParser::new,
+        MinusParser::new,
+        TimesParser::new,
+        DivideParser::new,
         SetterParser::new,
         GetterParser::new,
-        InterpolationParser::new,
         VariableParser::new
     );
 
@@ -57,6 +60,31 @@ public class ScriptManagerTest {
     public static void tearDown() {
         manager.close();
         manager = null;
+    }
+
+    @Test
+    public void maths() {
+        assert this.test("""
+            three = 1
+            three = three + 2
+            result = var == "hello"
+            if three == 3 {
+                result = "{three}"
+            }
+            five = 8 - 3
+            if five == 5 {
+                result = "{result} {five}"
+            }
+            five = 10 / 2
+            if five == 5 {
+                result = "{result} {five}"
+            }
+            seven = 3.5 * 2
+            if seven == 7 {
+                result = "{result} {seven}"
+            }
+            /print {result}
+            """, "3 5 5 7.0");
     }
 
     @Test
