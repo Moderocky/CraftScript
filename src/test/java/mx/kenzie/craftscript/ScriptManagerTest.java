@@ -2,7 +2,9 @@ package mx.kenzie.craftscript;
 
 
 import mx.kenzie.craftscript.kind.*;
+import mx.kenzie.craftscript.parser.ScriptParser;
 import mx.kenzie.craftscript.parser.*;
+import mx.kenzie.craftscript.script.*;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -18,10 +20,15 @@ public class ScriptManagerTest {
         AssertParser::new,
         ForParser::new,
         IfParser::new,
-        TypeParser::new,
+        StructParser::new,
+        RequireParser::new,
+        RunParser::new,
         InvertParser::new,
         BooleanParser::new,
+        SelectorParser::new,
+        ScriptParser::new,
         BlockParser::new,
+        MapParser::new,
         ListParser::new,
         StringParser::new,
         InterpolationParser::new,
@@ -53,6 +60,8 @@ public class ScriptManagerTest {
         manager.registerKind(new NullKind());
         manager.registerKind(new LocationKind());
         manager.registerKind(new VectorKind());
+        manager.registerKind(new BlockDataKind());
+        manager.registerKind(new BlockKind());
         manager.registerKind(new ListKind());
         manager.registerKind(new CollectionKind());
         manager.registerKind(new KindKind());
@@ -62,6 +71,31 @@ public class ScriptManagerTest {
     public static void tearDown() {
         manager.close();
         manager = null;
+    }
+
+    @Test
+    public void scriptLiteral() {
+        final Script script = manager.loadScript("blob.script", "");
+        assert this.test("""
+            script = blob.script
+            /print {script}
+            """, "blob.script");
+        manager.deleteScript(script);
+    }
+
+    @Test
+    public void scriptRun() {
+        final Script script = manager.loadScript("blob.script", """
+            require [text]
+            text
+            """);
+        assert this.test("""
+            a = run blob.script [text="hello there"]
+            script = blob.script
+            b = run script [text="general kenobi"]
+            /print {a} {b}
+            """, "hello there general kenobi");
+        manager.deleteScript(script);
     }
 
     @Test
@@ -116,6 +150,22 @@ public class ScriptManagerTest {
                 /print {result}
             }
             """, "true");
+    }
+
+    @Test
+    public void selectorCheck() {
+        assert this.test("""
+            /print empty
+            for var = @a {
+                /print {var}
+            }
+            """, "empty");
+        assert this.test("""
+            /print empty
+            for var = @s {
+                /print {var}
+            }
+            """, "Console");
     }
 
     @Test
@@ -264,13 +314,27 @@ public class ScriptManagerTest {
     @Test
     public void typeDeclaration() {
         assert this.test("""
-            person = type #person {
+            person = struct {
                 name = "BaeFell"
                 age = 42
                 height = 1.8
             }
             /print {person[name]} is {person[age]} years old and {person[height]}m tall
             """, "BaeFell is 42 years old and 1.8m tall");
+    }
+
+    @Test
+    public void requireVariables() {
+        assert this.test("""
+            require[]
+            """, null);
+    }
+
+    @Test(expected = ScriptError.class)
+    public void requireVariablesFail() {
+        assert this.test("""
+            require[bee, spoon]
+            """, null);
     }
 
     private boolean test(String source, String output) {
@@ -301,7 +365,8 @@ public class ScriptManagerTest {
         final Context context = new Context(sender, manager, new VariableContainer(), data);
         Context.setLocalContext(context);
         try {
-            if (!script.execute(context) || !Objects.equals(sender.output, output)) {
+            script.execute(context);
+            if (!Objects.equals(sender.output, output)) {
                 script.debug(System.err);
                 assert false : sender.output;
             }

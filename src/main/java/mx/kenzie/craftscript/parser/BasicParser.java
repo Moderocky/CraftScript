@@ -1,6 +1,7 @@
 package mx.kenzie.craftscript.parser;
 
-import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.script.ScriptParser;
 
 public abstract class BasicParser implements Parser {
 

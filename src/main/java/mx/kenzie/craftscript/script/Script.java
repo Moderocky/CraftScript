@@ -1,27 +1,29 @@
-package mx.kenzie.craftscript;
+package mx.kenzie.craftscript.script;
 
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.utility.Executable;
 
 import java.io.PrintStream;
 import java.util.Objects;
 
-public record Script(String name, Statement<?>... statements) implements Executable<Boolean> {
+public record Script(String name, Statement<?>... statements) implements Executable<Object> {
 
     @Override
-    public Boolean execute(Context context) throws ScriptError {
+    public Object execute(Context context) throws ScriptError {
         context.data().script = this;
+        Object result = null;
         for (final Statement<?> statement : statements) {
             try {
-                statement.execute(context);
+                result = statement.execute(context);
             } catch (ScriptError error) {
                 context.manager().printError(error, context.source());
-                return false;
+                return null;
             } catch (Throwable ex) {
                 context.manager().printError(new ScriptError("Unknown error.", ex), context.source());
-                return false;
+                return null;
             }
         }
-        return true;
+        return result;
     }
 
     @Override

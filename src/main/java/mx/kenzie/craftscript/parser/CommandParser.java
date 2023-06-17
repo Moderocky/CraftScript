@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.parser;
 
-import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.CommandStatement;
 import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.Statement;

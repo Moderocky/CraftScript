@@ -1,4 +1,4 @@
-package mx.kenzie.craftscript;
+package mx.kenzie.craftscript.script;
 
 import mx.kenzie.craftscript.parser.Parser;
 import mx.kenzie.craftscript.statement.CloseStatement;

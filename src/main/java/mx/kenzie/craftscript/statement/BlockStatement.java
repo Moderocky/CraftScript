@@ -1,16 +1,17 @@
 package mx.kenzie.craftscript.statement;
 
-import mx.kenzie.craftscript.Context;
-import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.script.Context;
+import mx.kenzie.craftscript.script.ScriptError;
 
 import java.io.PrintStream;
 
-public record BlockStatement(Statement<?>... statements) implements Statement<Boolean> {
+public record BlockStatement(Statement<?>... statements) implements Statement<Object> {
 
     @Override
-    public Boolean execute(Context context) throws ScriptError {
-        for (final Statement<?> statement : statements) statement.execute(context);
-        return true;
+    public Object execute(Context context) throws ScriptError {
+        Object result = null;
+        for (final Statement<?> statement : statements) result = statement.execute(context);
+        return result;
     }
 
     @Override

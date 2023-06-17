@@ -1,4 +1,4 @@
-package mx.kenzie.craftscript;
+package mx.kenzie.craftscript.script;
 
 import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.craftscript.kind.Kind;
@@ -55,11 +55,13 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         public Set<Kind<?>> kinds = new LinkedHashSet<>();
 
         @Override
-        protected Data clone() {
+        public Data clone() {
             try {
                 return (Data) super.clone();
             } catch (Throwable ex) {
-                return new Data();
+                final Data data = new Data();
+                data.script = script;
+                return data;
             }
         }
 

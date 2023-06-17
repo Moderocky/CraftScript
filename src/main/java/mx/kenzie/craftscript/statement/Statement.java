@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.statement;
 
-import mx.kenzie.craftscript.Executable;
+import mx.kenzie.craftscript.utility.Executable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

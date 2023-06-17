@@ -1,7 +1,7 @@
 package mx.kenzie.craftscript.statement;
 
-import mx.kenzie.craftscript.Context;
-import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.script.Context;
+import mx.kenzie.craftscript.script.ScriptError;
 
 import java.io.PrintStream;
 

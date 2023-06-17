@@ -1,6 +1,4 @@
-package mx.kenzie.craftscript;
-
-import mx.kenzie.craftscript.parser.ScriptParser;
+package mx.kenzie.craftscript.script;
 
 import java.io.IOException;
 import java.io.InputStream;

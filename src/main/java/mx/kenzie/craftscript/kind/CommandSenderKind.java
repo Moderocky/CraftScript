@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.kind;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class CommandSenderKind extends Kind<CommandSender> {
 
@@ -35,6 +36,12 @@ public class CommandSenderKind extends Kind<CommandSender> {
         final CommandSender sender = Bukkit.getPlayer(string);
         if (sender == null) return Bukkit.getConsoleSender();
         return sender;
+    }
+
+    @Override
+    public String toString(CommandSender sender) {
+        if (sender instanceof Player player) return player.getName();
+        else return "Console";
     }
 
 }

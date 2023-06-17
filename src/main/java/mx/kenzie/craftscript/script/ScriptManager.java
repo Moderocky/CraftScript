@@ -1,4 +1,4 @@
-package mx.kenzie.craftscript;
+package mx.kenzie.craftscript.script;
 
 import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.craftscript.kind.Kind;
@@ -6,15 +6,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -22,7 +17,10 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static net.kyori.adventure.text.Component.text;
@@ -44,10 +42,7 @@ public class ScriptManager implements Closeable {
     public Script loadScript(String name, InputStream stream) {
         try {
             final Script script = loader.load(name, stream);
-            synchronized (scripts) {
-                this.scripts.put(script.name(), script);
-            }
-            return script;
+            return this.loadScript(script);
         } catch (IOException ex) {
             throw new ScriptError("Error loading script content.", ex);
         }
@@ -55,6 +50,13 @@ public class ScriptManager implements Closeable {
 
     public Script loadScript(String name, String content) {
         return this.loadScript(name, new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    public Script loadScript(Script script) {
+        synchronized (scripts) {
+            this.scripts.put(script.name(), script);
+        }
+        return script;
     }
 
     public Script getScript(String name) {
@@ -75,7 +77,7 @@ public class ScriptManager implements Closeable {
         }
     }
 
-    public boolean runScript(Script script, CommandSender source) {
+    public Object runScript(Script script, CommandSender source) {
         final Context context = new Context(source, this);
         Context.setLocalContext(context);
         try {
@@ -83,6 +85,10 @@ public class ScriptManager implements Closeable {
         } finally {
             Context.removeLocalContext();
         }
+    }
+
+    public Script[] getScripts() {
+        return scripts.values().toArray(new Script[0]);
     }
 
     public void printError(ScriptError error, CommandSender sender) {
@@ -163,16 +169,6 @@ public class ScriptManager implements Closeable {
         } catch (InterruptedException e) {
             throw new ScriptError("Failed to run '" + command + "'.", e);
         }
-    }
-
-    public String toString(Object object) {
-        if (object instanceof Player player) return player.getName();
-        if (object instanceof CommandSender player) return player.getName();
-        if (object instanceof Block block) return block.getType().getKey().toString();
-        if (object instanceof BlockData data) return data.getAsString(true);
-        if (object instanceof Location location) return location.getX() + " " + location.getY() + " " + location.getZ();
-        if (object instanceof Vector location) return location.getX() + " " + location.getY() + " " + location.getZ();
-        return Objects.toString(object);
     }
 
 }

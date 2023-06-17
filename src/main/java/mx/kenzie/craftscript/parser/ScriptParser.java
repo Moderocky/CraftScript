@@ -1,15 +1,26 @@
 package mx.kenzie.craftscript.parser;
 
+import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.statement.ScriptStatement;
 import mx.kenzie.craftscript.statement.Statement;
 
-import java.io.IOException;
+public class ScriptParser extends BasicParser {
 
-public interface ScriptParser {
+    @Override
+    public boolean matches() {
+        if (!input.endsWith(".script")) return false;
+        if (input.length() < 8) return false;
+        return !input.contains(" ");
+    }
 
-    Statement<?> parseLine() throws IOException;
+    @Override
+    public Statement<?> parse() throws ScriptError {
+        return new ScriptStatement(input);
+    }
 
-    Statement<?> parse(String line);
-
-    int getLine();
+    @Override
+    public void close() throws ScriptError {
+        super.close();
+    }
 
 }

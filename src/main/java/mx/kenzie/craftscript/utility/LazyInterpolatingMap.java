@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.utility;
 
-import mx.kenzie.craftscript.Context;
+import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import org.jetbrains.annotations.NotNull;

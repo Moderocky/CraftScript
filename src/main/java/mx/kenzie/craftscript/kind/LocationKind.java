@@ -1,7 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
 
-import mx.kenzie.craftscript.Context;
+import mx.kenzie.craftscript.script.Context;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

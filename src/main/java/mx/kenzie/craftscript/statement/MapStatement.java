@@ -2,18 +2,21 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.variable.VariableContainer;
+import mx.kenzie.craftscript.variable.VariableFinder;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public record ListStatement(Statement<?>... statements) implements Statement<List<?>> {
+public record MapStatement(Statement<?>... statements) implements Statement<Map<String, Object>> {
 
     @Override
-    public List<?> execute(Context context) throws ScriptError {
-        final List<Object> list = new ArrayList<>();
-        for (final Statement<?> statement : statements) list.add(statement.execute(context));
-        return list;
+    public Map<String, Object> execute(Context context) throws ScriptError {
+        final VariableContainer container = new VariableFinder(context.variables());
+        final Context sub = new Context(context.source(), context.manager(), container, context.data());
+        for (final Statement<?> statement : statements) statement.execute(sub);
+        return new HashMap<>(container);
     }
 
     @Override

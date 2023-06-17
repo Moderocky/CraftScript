@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.kind;
 
-import mx.kenzie.craftscript.Context;
+import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.variable.UnknownObject;
 import mx.kenzie.craftscript.variable.Wrapper;
 

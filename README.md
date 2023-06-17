@@ -68,14 +68,14 @@ sum = 5 + 5
 first = second = "hello"
 ```
 
-### Type Creator
+### Structure
 
 Creates a data object with given properties.
 MUST be followed by a block.
 The block must contain ONLY variable assignment root statements
 
 ```
-type_#%name%_%block%
+struct_%block%
    %variable assignment%
    ...
 %close block%
@@ -84,7 +84,7 @@ type_#%name%_%block%
 #### Examples
 
 ```
-person = type #person {
+person = struct {
    name = "BaeFell"
    age = 42
 }
@@ -214,7 +214,7 @@ length = "hello"[length]
 assert length == 5
 assert length[type] == #integer
 
-player = type #player {
+player = struct {
    name = "BaeFell"
    age = 42
 }
@@ -235,7 +235,7 @@ Some types may use setters to call unary methods, e.g. `string[char_at=1]` calli
 #### Examples
 
 ```
-player = type #player {
+player = struct {
    name = "BaeFell"
    age = 42
 }
@@ -248,6 +248,97 @@ assert player[name] == "Phil"
 assert player[age] == 21
 
 assert "hello"[char_at=0] == "h"
+```
+
+### Selector
+
+A selector in the Minecraft format, starting with the 'at' `@` character.
+This supports interpolation using the `{` and `}` brackets. \
+This returns a list if multiple elements are selected or a single object if only one is found.
+
+Please note domains are expected to override the selector to provide a relevant universe.
+
+```
+@%finder%[%property%=%value%,...]
+```
+
+#### Examples
+
+```
+players = @a[distance=..10]
+for player = players {
+   /print {player}
+}
+
+for entity = @e[world={world}] {
+   /print {entity}
+}
+
+/print hello, {@s}
+```
+
+### Script Literal
+
+A script literal. The complete syntax must be an exact name of a loaded script.
+This defers to execution (to respect loading) but throws an error if no script is present.
+
+```
+%name%.script
+```
+
+#### Examples
+
+```
+script = other.script
+
+run other.script
+run script [name="BaeFell,age=42]
+```
+
+### Run
+
+Runs an executable, returning its result.
+Any key<->value data store can be provided as a starting variable map.
+The result of the executable is returned.
+
+```
+run_%statement%
+```
+
+```
+run_%statement%_%statement%
+```
+
+#### Examples
+
+```
+run other.script
+run other.script [name="BaeFell,age=42]
+
+var = 10
+run other.script [var=var]
+
+vars = [hello="there"]
+run function vars
+```
+
+### Require
+
+Asserts that the given variable keys are known.
+Their values may be `null`, as long as they have been assigned in the context.
+
+This is designed for input checking of functions and sub-scripts.
+
+```
+require_[%name%,...]
+```
+
+#### Examples
+
+```
+require [name, age]
+require []
+require [name, result]
 ```
 
 ### Null Literal
@@ -263,6 +354,26 @@ null
 ```
 word = null
 assert word == null
+```
+
+### Map Literal
+
+A map of key <-> value pairs.
+This is analogous to a structure but lacks the utility.
+
+There is NO empty map literal `[]` since this is indiscernible from an empty list.
+
+```
+[%name%=%statement%,...]
+```
+
+#### Examples
+
+```
+map = [word="hello", name="BaeFell"]
+var = "hello"
+map = [var=var]
+assert map[var] == var
 ```
 
 ### List Literal

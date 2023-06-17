@@ -1,4 +1,7 @@
-package mx.kenzie.craftscript;
+package mx.kenzie.craftscript.utility;
+
+import mx.kenzie.craftscript.script.Context;
+import mx.kenzie.craftscript.script.ScriptError;
 
 public interface Executable<Result> extends Runnable {
 

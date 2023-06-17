@@ -1,29 +1,33 @@
 package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.statement.ForStatement;
+import mx.kenzie.craftscript.statement.RunStatement;
 import mx.kenzie.craftscript.statement.Statement;
-import mx.kenzie.craftscript.statement.VariableAssignmentStatement;
 
-public class ForParser extends BasicParser {
+public class RunParser extends BasicParser {
 
-    private VariableAssignmentStatement check;
+    private Statement<?> check;
     private Statement<?> then;
 
     @Override
     public boolean matches() {
-        if (!input.startsWith("for ")) return false;
-        int start = 4, original = start;
+        if (!input.startsWith("run ")) return false;
+        int start = 4, begin = start;
         do {
             final int space = input.indexOf(' ', start);
-            if (space < 0) return false;
-            if (start >= input.length()) return false;
             final String before, after;
-            before = input.substring(original, space).trim();
-            after = input.substring(space + 1).trim();
+            if (space < 0) {
+                before = input.substring(begin).trim();
+                after = null;
+            } else {
+                before = input.substring(begin, space).trim();
+                after = input.substring(space + 1).trim();
+            }
             start = space + 1;
-            if (!(parent.parse(before) instanceof VariableAssignmentStatement check)) continue;
-            this.check = check;
+            this.check = parent.parse(before);
+            if (check == null) continue;
+            if (after == null) return true;
+            if (after.isEmpty()) continue;
             this.then = parent.parse(after);
             if (then == null) continue;
             return true;
@@ -33,7 +37,7 @@ public class ForParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
-        return new ForStatement(check, then);
+        return new RunStatement(check, then);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package mx.kenzie.craftscript;
+package mx.kenzie.craftscript.script;
 
 public class ScriptError extends Error {
 
