@@ -181,7 +181,7 @@ assert false ^ true
 
 assert null ? true
 assert "hello" != "there"
-```A
+```
 
 ### String Literal
 
