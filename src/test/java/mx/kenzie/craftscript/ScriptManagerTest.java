@@ -20,6 +20,7 @@ public class ScriptManagerTest {
         AssertParser::new,
         ForParser::new,
         IfParser::new,
+        FunctionParser::new,
         StructParser::new,
         RequireParser::new,
         RunParser::new,
@@ -96,6 +97,28 @@ public class ScriptManagerTest {
             /print {a} {b}
             """, "hello there general kenobi");
         manager.deleteScript(script);
+    }
+
+    @Test
+    public void functionTest() {
+        assert this.test("""
+            func = function blob
+            /print {run func}
+            """, "null");
+        assert this.test("""
+            blob = "hello world"
+            func = function blob
+            /print {run func}
+            """, "null");
+        assert this.test("""
+            func = function blob
+            /print {run func [blob="hello there"]}
+            """, "hello there");
+        assert this.test("""
+            run function {
+                /print general kenobi
+            }
+            """, "general kenobi");
     }
 
     @Test

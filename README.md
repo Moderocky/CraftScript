@@ -466,6 +466,46 @@ if var == 5 {
 }
 ```
 
+### Function Statement
+
+Creates an executable object that can be run under control.
+This is designed to be followed by a block section.
+
+Root variables are unavailable in functions - they must be provided in the `run` statement.
+
+Internally, this simply returns raw child statement.
+
+```
+function_%statement%
+```
+
+#### Examples
+
+```
+run function {
+   /print hello
+}
+
+func = function /print {greeting}
+run func [greeting="hello"]
+
+func = function {
+   require [name, age]
+   /print {name} is {age} years old
+}
+parameters = struct {
+   name = "BaeFell"
+   age = 42
+}
+run func parameters
+
+func = function {
+   assert {var} == null
+}
+var = 10
+run func
+```
+
 ### For Statement
 
 Consumes a list of values, assigning each one to a variable (L). For each value, runs an action statement (R).

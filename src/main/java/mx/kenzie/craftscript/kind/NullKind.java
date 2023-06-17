@@ -19,4 +19,14 @@ public class NullKind extends Kind<Void> {
         return null;
     }
 
+    @Override
+    public String toStringTry(Object object) {
+        return "null";
+    }
+
+    @Override
+    public String toString(Void unused) {
+        return "null";
+    }
+
 }

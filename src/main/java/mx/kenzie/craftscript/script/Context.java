@@ -56,13 +56,11 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
 
         @Override
         public Data clone() {
-            try {
-                return (Data) super.clone();
-            } catch (Throwable ex) {
-                final Data data = new Data();
-                data.script = script;
-                return data;
-            }
+            final Data data = new Data();
+            data.script = script;
+            data.localCommands = new LinkedHashSet<>(localCommands);
+            data.kinds = new LinkedHashSet<>(kinds);
+            return data;
         }
 
     }

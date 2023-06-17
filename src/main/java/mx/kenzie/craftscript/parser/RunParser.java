@@ -6,12 +6,18 @@ import mx.kenzie.craftscript.statement.Statement;
 
 public class RunParser extends BasicParser {
 
-    private Statement<?> check;
-    private Statement<?> then;
+    private Statement<?> runnable;
+    private Statement<?> variables;
 
     @Override
     public boolean matches() {
         if (!input.startsWith("run ")) return false;
+        if (input.startsWith("run function ")) { // special case because it wants to parse `run %variable% %statement%
+            final String string = input.substring(4).trim();
+            this.runnable = parent.parse(string);
+            this.variables = null;
+            return runnable != null;
+        }
         int start = 4, begin = start;
         do {
             final int space = input.indexOf(' ', start);
@@ -24,12 +30,12 @@ public class RunParser extends BasicParser {
                 after = input.substring(space + 1).trim();
             }
             start = space + 1;
-            this.check = parent.parse(before);
-            if (check == null) continue;
+            this.runnable = parent.parse(before);
+            if (runnable == null) continue;
             if (after == null) return true;
             if (after.isEmpty()) continue;
-            this.then = parent.parse(after);
-            if (then == null) continue;
+            this.variables = parent.parse(after);
+            if (variables == null) continue;
             return true;
         } while (start < input.length() && start > 2);
         return false;
@@ -37,14 +43,14 @@ public class RunParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
-        return new RunStatement(check, then);
+        return new RunStatement(runnable, variables);
     }
 
     @Override
     public void close() throws ScriptError {
         super.close();
-        this.check = null;
-        this.then = null;
+        this.runnable = null;
+        this.variables = null;
     }
 
 }
