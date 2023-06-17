@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.craftscript.Context;
 import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
 
@@ -9,7 +10,7 @@ public record LiteralStatement(Object value) implements Statement<Object> {
 
     @Override
     public Object execute(Context context) throws ScriptError {
-        return value;
+        return Wrapper.of(value);
     }
 
     @Override

@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.craftscript.Context;
 import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
 
@@ -10,7 +11,7 @@ public record VariableAssignmentStatement(String name, Statement<?> statement) i
     @Override
     public Object execute(Context context) throws ScriptError {
         final Object result = this.statement.execute(context);
-        context.variables().put(name, result);
+        context.variables().put(name, Wrapper.of(result));
         return result;
     }
 

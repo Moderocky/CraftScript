@@ -1,6 +1,8 @@
 package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.Context;
+import mx.kenzie.craftscript.variable.UnknownObject;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.util.Objects;
 
@@ -21,12 +23,13 @@ public abstract class Kind<Type> {
 
     public static Kind<?> of(Object thing) {
         if (thing == null) return new NullKind();
+        if (thing instanceof Wrapper<?> wrapper) return wrapper.getKind();
+        if (thing instanceof UnknownObject object) return object.getKind();
         if (thing instanceof Kind<?>) return new KindKind();
         if (thing instanceof Class<?> kind) return new UnknownKind(kind);
         final Context context = Context.getLocalContext();
-        if (context != null) {
+        if (context != null)
             for (final Kind<?> kind : context.getKinds()) if (kind.getType().isInstance(thing)) return kind;
-        }
         return new UnknownKind(thing.getClass());
     }
 
@@ -36,7 +39,7 @@ public abstract class Kind<Type> {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
+            case "equals" -> Objects.equals(thing, value);
             default -> null;
         };
     }

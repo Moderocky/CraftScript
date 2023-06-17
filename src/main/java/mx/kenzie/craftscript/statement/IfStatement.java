@@ -2,12 +2,14 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.craftscript.Context;
 import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
 
 public record IfStatement(Statement<?> check, Statement<?> then) implements Statement<Boolean> {
 
-    static boolean value(Object result) {
+    static boolean value(Object object) {
+        final Object result = Wrapper.unwrap(object);
         if (result instanceof Boolean boo) return boo;
         else if (result instanceof Number number) return number.intValue() != 0;
         else return result != null;

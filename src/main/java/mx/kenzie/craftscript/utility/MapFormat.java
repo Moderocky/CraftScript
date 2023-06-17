@@ -41,11 +41,13 @@ package mx.kenzie.craftscript.utility;
  * made subject to such option by the copyright holder.
  */
 
-import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.Serial;
-import java.text.*;
-import java.util.Date;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.MessageFormat;
+import java.text.ParsePosition;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -262,19 +264,7 @@ public class MapFormat extends Format {
      * @return Formatted object
      */
     private String formatObject(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-
-        if (obj instanceof Number) {
-            return NumberFormat.getInstance(locale).format(obj); // fix
-        } else if (obj instanceof Date) {
-            return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale).format(obj); //fix
-        } else if (obj instanceof String) {
-            return (String) obj;
-        }
-
-        return Kind.of(obj).toStringTry(obj);
+        return Wrapper.of(obj).toString();
     }
 
     /**

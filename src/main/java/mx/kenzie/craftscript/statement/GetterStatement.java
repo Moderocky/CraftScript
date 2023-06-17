@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.craftscript.Context;
 import mx.kenzie.craftscript.ScriptError;
 import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
 
@@ -13,7 +14,7 @@ public record GetterStatement(Statement<?> source, String property) implements S
     public Object execute(Context context) throws ScriptError {
         final Object value = source.execute(context);
         final Kind<Object> kind = (Kind<Object>) Kind.of(value);
-        return kind.getProperty(value, property);
+        return Wrapper.of(kind.getProperty(Wrapper.unwrap(value), property));
     }
 
     @Override

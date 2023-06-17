@@ -18,6 +18,7 @@ public class ScriptManagerTest {
         NullParser::new,
         ForParser::new,
         IfParser::new,
+        TypeParser::new,
         InvertParser::new,
         BlockParser::new,
         ListParser::new,
@@ -27,10 +28,11 @@ public class ScriptManagerTest {
         IntegerParser::new,
         DoubleParser::new,
         CommandParser::new,
+        VariableAssignmentParser::new,
+        EqualsParser::new,
         SetterParser::new,
         GetterParser::new,
         InterpolationParser::new,
-        VariableAssignmentParser::new,
         VariableParser::new
     );
 
@@ -57,24 +59,15 @@ public class ScriptManagerTest {
         manager = null;
     }
 
-    public static void main(String[] args) throws Throwable {
-        startup();
-        final CommandSender sender = new OutputCommandSender();
-        final Context.Data data = new Context.Data();
-        data.localCommands.add(new TestPrintCommand());
-        final Context context = new Context(sender, manager, new VariableContainer(), data);
-        Context.setLocalContext(context);
-        final Script script = manager.loadScript("test.csc", """
-            if "baefell"[equals="baefell"] {
-               if "baefell"[equals="baefell"] {
-                 if "baefell"[equals="baefell"] {
-                   /print hi im baefell
-                 }
-               }
-             }
-            """);
-        script.execute(context);
-        tearDown();
+    @Test
+    public void equalsCheck() {
+        assert this.test("""
+            var = "hello"
+            result = var == "hello"
+            if var == result {
+                /print {result}
+            }
+            """, "true");
     }
 
     @Test
@@ -209,7 +202,19 @@ public class ScriptManagerTest {
                  }
                }
              }
-            """, "hi BaeFell im phil");
+            """, "hi im baefell");
+    }
+
+    @Test
+    public void typeDeclaration() {
+        assert this.test("""
+            person = type #person {
+                name = "BaeFell"
+                age = 42
+                height = 1.8
+            }
+            /print {person[name]} is {person[age]} years old and {person[height]}m tall
+            """, "BaeFell is 42 years old and 1.8m tall");
     }
 
     private boolean test(String source, String output) {

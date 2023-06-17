@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.craftscript.Context;
 import mx.kenzie.craftscript.ScriptError;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
 import java.lang.reflect.Array;
@@ -11,30 +12,25 @@ public record ForStatement(VariableAssignmentStatement assignment, Statement<?> 
 
     @Override
     public Boolean execute(Context context) throws ScriptError {
-        final String name = assignment.name();
         final Statement<?> fetch = assignment.statement();
-        final Object values = fetch.execute(context);
+        final Object values = Wrapper.unwrap(fetch.execute(context));
         if (values instanceof Collection<?> collection) for (final Object value : collection) {
-            context.variables().put(name, value);
-            this.then.execute(context);
+            this.trip(context, value);
         }
         else if (values instanceof Object[] objects) for (final Object value : objects) {
-            context.variables().put(name, value);
-            this.then.execute(context);
+            this.trip(context, value);
         }
         else if (values == null) return false;
         else if (values.getClass().isArray()) {
             final int length = Array.getLength(values);
-            for (int i = 0; i < length; i++) {
-                final Object value = Array.get(values, i);
-                context.variables().put(name, value);
-                this.then.execute(context);
-            }
-        } else {
-            context.variables().put(name, values);
-            this.then.execute(context);
-        }
+            for (int i = 0; i < length; i++) this.trip(context, Array.get(values, i));
+        } else this.trip(context, values);
         return true;
+    }
+
+    private void trip(Context context, Object value) {
+        context.variables().put(assignment.name(), Wrapper.of(value));
+        this.then.execute(context);
     }
 
     @Override

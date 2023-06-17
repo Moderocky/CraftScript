@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.craftscript.Context;
 import mx.kenzie.craftscript.ScriptError;
 import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
 
@@ -14,7 +15,7 @@ public record SetterStatement(Statement<?> source, String property, Statement<?>
         final Object object = source.execute(context);
         final Object result = value.execute(context);
         final Kind<Object> kind = (Kind<Object>) Kind.of(object);
-        return kind.setProperty(object, property, result);
+        return kind.setProperty(Wrapper.unwrap(object), property, Wrapper.unwrap(result));
     }
 
     @Override

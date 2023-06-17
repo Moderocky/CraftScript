@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class VariableContainer extends HashMap<String, Object> {
 
-    public static final Pattern VAR_NAME = Pattern.compile("[a-zA-Z _\\-.][a-zA-Z0-9 _\\-.]*");
+    public static final Pattern VAR_NAME = Pattern.compile("[a-zA-Z_\\-.][a-zA-Z0-9 _\\-.]*");
 
     public VariableContainer() {
         super();
