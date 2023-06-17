@@ -21,6 +21,21 @@ The language is designed to be fairly simple but also unambiguous, and imitates 
 commands, selectors and keys. \
 There is some deviation from this, since CraftScript has several features that do not exist in the `.mcfunction` format.
 
+## Keywords
+
+| Word       | Use                                                     |
+|------------|---------------------------------------------------------|
+| `assert`   | Make certain a value is true.                           |
+| `require`  | Make certain variables are present.                     |
+| `if`       | Run a statement on a condition.                         |
+| `for`      | Run a statement for every element in a collection.      |
+| `run`      | Run an executable object.                               |
+| `struct`   | Create a data structure with a fixed set of properties. |
+| `function` | Creates an executable object to run a statement.        |
+| `null`     | The empty value.                                        |
+| `false`    | The false value.                                        |
+| `true`     | The true value.                                         |
+
 ## Language Features
 
 Syntax will be described in the following format:
