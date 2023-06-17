@@ -8,13 +8,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class SimpleScriptLoader implements ScriptLoader {
 
     protected final Supplier<Parser>[] parsers;
+    private final Map<Supplier<Parser>, Parser> cache = new HashMap<>();
     private int line;
     private BufferedReader reader;
 
@@ -61,12 +61,39 @@ public class SimpleScriptLoader implements ScriptLoader {
     @Override
     public Statement<?> parse(String line) {
         for (final Supplier<Parser> supplier : parsers) {
-            try (Parser parser = supplier.get()) {
+            try (final Parser parser = this.getParser(supplier)) {
+                assert parser.canUse();
                 parser.insert(line, this);
                 if (parser.matches()) return parser.parse();
+                assert !parser.canUse();
             }
         }
         return null;
+    }
+
+    private Parser getParser(Supplier<Parser> supplier) {
+        final Parser current = cache.get(supplier);
+        if (current != null && current.canUse()) return current;
+        final Parser replace = supplier.get();
+        if (current == null) cache.put(supplier, replace);
+        return replace;
+    }
+
+    public Iterator<Parser> parsers() {
+        return new Iterator<>() {
+            int index;
+
+            @Override
+            public boolean hasNext() {
+                return index < parsers.length;
+            }
+
+            @Override
+            public Parser next() {
+                final Supplier<Parser> supplier = parsers[index++];
+                return SimpleScriptLoader.this.getParser(supplier);
+            }
+        };
     }
 
     @Override

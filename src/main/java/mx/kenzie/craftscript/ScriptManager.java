@@ -86,10 +86,7 @@ public class ScriptManager implements Closeable {
     }
 
     public void printError(ScriptError error, CommandSender sender) {
-        if (this.isTest()) {
-            error.printStackTrace();
-            return;
-        }
+        if (this.isTest()) throw error;
         final String top;
         if (Context.getLocalContext() != null) top =
             "Script Error in '" +

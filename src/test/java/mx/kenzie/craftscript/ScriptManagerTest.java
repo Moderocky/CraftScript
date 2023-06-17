@@ -15,19 +15,21 @@ public class ScriptManagerTest {
 
     private static final ScriptLoader LOADER = new SimpleScriptLoader(
         NullParser::new,
+        AssertParser::new,
         ForParser::new,
         IfParser::new,
         TypeParser::new,
         InvertParser::new,
+        BooleanParser::new,
         BlockParser::new,
         ListParser::new,
         StringParser::new,
+        InterpolationParser::new,
         KindParser::new,
         CloseParser::new,
         IntegerParser::new,
         DoubleParser::new,
         CommandParser::new,
-        InterpolationParser::new,
         VariableAssignmentParser::new,
         EqualsParser::new,
         PlusParser::new,
@@ -60,6 +62,24 @@ public class ScriptManagerTest {
     public static void tearDown() {
         manager.close();
         manager = null;
+    }
+
+    @Test
+    public void assertCheck() {
+        assert this.test("""
+            three = 1
+            three = three + 2
+            assert three == 3
+            """, null);
+    }
+
+    @Test(expected = ScriptError.class)
+    public void assertCheckFail() {
+        assert this.test("""
+            three = 1
+            three = three + 2
+            assert three == 2
+            """, null);
     }
 
     @Test
@@ -125,6 +145,14 @@ public class ScriptManagerTest {
             var = "hello"
             /print string is {var[length]} chars
             """, "string is 5 chars");
+    }
+
+    @Test
+    public void nestTest() {
+        assert this.test("""
+            var = var = "hello"
+            /print {var} there
+            """, "hello there");
     }
 
     @Test

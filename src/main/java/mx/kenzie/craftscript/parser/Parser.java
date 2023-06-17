@@ -23,4 +23,8 @@ public interface Parser extends Closeable {
     @Override
     void close() throws ScriptError;
 
+    default boolean canUse() {
+        return true;
+    }
+
 }

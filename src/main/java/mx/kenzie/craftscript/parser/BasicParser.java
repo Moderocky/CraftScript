@@ -6,11 +6,13 @@ public abstract class BasicParser implements Parser {
 
     protected String input;
     protected ScriptParser parent;
+    private volatile boolean inUse;
 
     public BasicParser() {}
 
     @Override
     public void insert(String input, ScriptParser parent) {
+        this.inUse = true;
         this.input = input;
         this.parent = parent;
     }
@@ -19,6 +21,11 @@ public abstract class BasicParser implements Parser {
     public void close() throws ScriptError {
         this.input = null;
         this.parent = null;
+        this.inUse = false;
+    }
+
+    public boolean canUse() {
+        return !inUse;
     }
 
 }

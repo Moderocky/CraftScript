@@ -36,4 +36,10 @@ public class StringParser extends BasicParser {
         } else return new StringStatement(input.substring(1, input.length() - 1));
     }
 
+    @Override
+    public void close() throws ScriptError {
+        this.start = 0;
+        super.close();
+    }
+
 }

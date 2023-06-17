@@ -41,4 +41,10 @@ public class CommandParser extends BasicParser {
         } else return new CommandStatement(input.substring(1).trim());
     }
 
+    @Override
+    public void close() throws ScriptError {
+        this.start = 0;
+        super.close();
+    }
+
 }
