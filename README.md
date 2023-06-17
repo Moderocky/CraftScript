@@ -164,6 +164,7 @@ This is typically a boolean. Some comparators can return a numerical or atypical
 %statement%|%statement%
 %statement%^%statement%
 %statement%?%statement%
+%statement%==%statement%
 %statement%!=%statement%
 ```
 
@@ -180,6 +181,8 @@ assert true | false
 assert false ^ true
 
 assert null ? true
+
+assert "hello" == "there"
 assert "hello" != "there"
 ```
 
@@ -546,22 +549,6 @@ for_%variable_assignment%_%statement%
 for word = ["hello", "there"] {
    assert word[length] == 5
 }
-```
-
-### Equals Statement
-
-Compares the result of an antecedent statement (L) to the result of a consequent statement (R).
-Returns the boolean value of the comparison.
-
-```
-%statement%==%statement%
-```
-
-#### Examples
-
-```
-assert 5 == 5
-assert !{5 == 10}
 ```
 
 ### Command Statement
