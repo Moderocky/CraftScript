@@ -153,6 +153,7 @@ This is typically a boolean. Some comparators can return a numerical or atypical
 | `\|`   | Or.                       |
 | `^`    | Exclusive or.             |
 | `?`    | Alternatively (if null).  |
+| `==`   | Equal to.                 |
 | `!=`   | Not equal to.             |
 
 ```
