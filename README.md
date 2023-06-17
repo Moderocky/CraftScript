@@ -107,14 +107,17 @@ if person[name] == "George" /print no
 /print {person[name]} is {person[age]} years old
 ```
 
-### Add
+### Sum
 
-Return the sum of the statement (L) plus the statement (R).
-If either statement provides a string (text) then the result will be a concatenated string.
-If either statement is a non-numerical value the result will be `null`.
+Return the sum of the statement (L) and the statement (R).
+If either statement is a non-numerical value the result will be `null`. \
+The `+` operator will attempt to concatenate strings.
 
 ```
 %statement%+%statement%
+%statement%-%statement%
+%statement%*%statement%
+%statement%/%statement%
 ```
 
 #### Examples
@@ -124,55 +127,61 @@ fifteen = 10 + 5
 result = fifteen + 10
 if result == 25 /print yes
 greeting = "hello " + "there"
-```
 
-### Subtract
-
-Return the statement (L) minus the value of the statement (R).
-If either statement is a non-numerical value the result will be `null`.
-
-```
-%statement%-%statement%
-```
-
-#### Examples
-
-```
 five = 10 - 5
 result = five - 2
-```
 
-### Multiply
-
-Return the sum of the statement (L) multiplied by the statement (R).
-If either statement is a non-numerical value the result will be `null`.
-
-```
-%statement%*%statement%
-```
-
-#### Examples
-
-```
 fifty = 10 * 5
 result = fifty * 10
-```
 
-### Multiply
-
-Return the sum of the statement (L) divided by the statement (R).
-If either statement is a non-numerical value the result will be `null`.
-
-```
-%statement%/%statement%
-```
-
-#### Examples
-
-```
 ten = 50 / 5
 result = ten / 2
 ```
+
+### Compare
+
+Return the comparison result of the statement (L) and the statement (R).
+This is typically a boolean. Some comparators can return a numerical or atypical object result.
+
+| Symbol | Operation                 |
+|--------|---------------------------|
+| `<=`   | Less than or equal to.    |
+| `<`    | Less than.                |
+| `>=`   | Greater than or equal to. |
+| `>`    | Greater than              |
+| `&`    | And.                      |
+| `\|`   | Or.                       |
+| `^`    | Exclusive or.             |
+| `?`    | Alternatively (if null).  |
+| `!=`   | Not equal to.             |
+
+```
+%statement%<=%statement%
+%statement%<%statement%
+%statement%>=%statement%
+%statement%>%statement%
+%statement%&%statement%
+%statement%|%statement%
+%statement%^%statement%
+%statement%?%statement%
+%statement%!=%statement%
+```
+
+#### Examples
+
+```
+assert 10 > 5
+assert 10 >= 10
+assert 5 < 10
+assert 10 <= 10
+
+assert true & true
+assert true | false
+assert false ^ true
+
+assert null ? true
+assert "hello" != "there"
+```A
 
 ### String Literal
 

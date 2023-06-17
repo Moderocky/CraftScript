@@ -2,18 +2,18 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Comparator;
 import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
-import java.util.Objects;
 
-public record EqualsStatement(Statement<?> antecedent, Statement<?> consequent) implements Statement<Boolean> {
+public record CompareStatement(Statement<?> antecedent, Statement<?> consequent,
+                               Comparator comparator) implements Statement<Object> {
 
     @Override
-    public Boolean execute(Context context) throws ScriptError {
+    public Object execute(Context context) throws ScriptError {
         final Object a = Wrapper.unwrap(antecedent.execute(context)), b = Wrapper.unwrap(consequent.execute(context));
-        return Objects.equals(a, b)
-               || (a instanceof Number first && b instanceof Number second && first.doubleValue() == second.doubleValue());
+        return comparator.compare(a, b);
     }
 
     @Override
@@ -25,13 +25,16 @@ public record EqualsStatement(Statement<?> antecedent, Statement<?> consequent) 
         stream.print(", ");
         stream.print("consequent=");
         this.consequent.debug(stream);
+        stream.print(", ");
+        stream.print("comparator=");
+        stream.print(comparator.toString());
         stream.print(']');
     }
 
     @Override
     public void stringify(PrintStream stream) {
         this.antecedent.stringify(stream);
-        stream.print("==");
+        stream.print(comparator.toString());
         this.consequent.stringify(stream);
     }
 

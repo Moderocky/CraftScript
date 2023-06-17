@@ -1,53 +1,69 @@
 package mx.kenzie.craftscript.parser;
 
-import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.statement.*;
+import mx.kenzie.craftscript.utility.Comparator;
 
-import java.util.function.BiFunction;
+public class BinaryParser extends OperatorParser {
 
-public abstract class BinaryParser extends BasicParser {
-
-    protected final String operator;
-    protected final BiFunction<Statement<?>, Statement<?>, Statement<?>> creator;
-    private final int length;
-    protected Statement<?> antecedent, consequent;
-
-    protected BinaryParser(String operator, BiFunction<Statement<?>, Statement<?>, Statement<?>> creator) {
-        this.operator = operator;
-        this.creator = creator;
-        this.length = operator.length();
+    public BinaryParser(Comparator comparator) {
+        super(comparator.toString(),
+            (statement, statement2) -> new CompareStatement(statement, statement2, comparator));
     }
 
-    @Override
-    public boolean matches() {
-        if (!input.contains(operator)) return false;
-        int begin = 0, equals;
-        do {
-            equals = input.indexOf(operator, begin);
-            if (equals < 1) return false;
-            final String first = input.substring(begin, equals).trim();
-            if (first.isEmpty()) return false;
-            final String second = input.substring(equals + length).trim();
-            if (second.isEmpty()) return false;
-            begin = equals + length;
-            this.antecedent = parent.parse(first);
-            if (antecedent == null) continue;
-            this.consequent = parent.parse(second);
-            if (consequent == null) continue;
-            return true;
-        } while (true);
+    public static OperatorParser compareEQ() {
+        return new EqualsParser();
     }
 
-    @Override
-    public Statement<?> parse() throws ScriptError {
-        return creator.apply(antecedent, consequent);
+    public static OperatorParser comparePlus() {
+        return new OperatorParser("+", PlusStatement::new);
     }
 
-    @Override
-    public void close() throws ScriptError {
-        super.close();
-        this.antecedent = null;
-        this.consequent = null;
+    public static OperatorParser compareMinus() {
+        return new OperatorParser("-", MinusStatement::new);
+    }
+
+    public static OperatorParser compareTimes() {
+        return new OperatorParser("*", TimesStatement::new);
+    }
+
+    public static OperatorParser compareDivide() {
+        return new OperatorParser("/", DivideStatement::new);
+    }
+
+    public static BinaryParser compareLT() {
+        return new BinaryParser(Comparator.LESS_THAN);
+    }
+
+    public static BinaryParser compareLE() {
+        return new BinaryParser(Comparator.LESS_EQUAL);
+    }
+
+    public static BinaryParser compareGT() {
+        return new BinaryParser(Comparator.GREATER_THAN);
+    }
+
+    public static BinaryParser compareGE() {
+        return new BinaryParser(Comparator.GREATER_EQUAL);
+    }
+
+    public static BinaryParser compareAND() {
+        return new BinaryParser(Comparator.AND);
+    }
+
+    public static BinaryParser compareOR() {
+        return new BinaryParser(Comparator.OR);
+    }
+
+    public static BinaryParser compareXOR() {
+        return new BinaryParser(Comparator.XOR);
+    }
+
+    public static BinaryParser compareNE() {
+        return new BinaryParser(Comparator.NE);
+    }
+
+    public static BinaryParser compareALT() {
+        return new BinaryParser(Comparator.ALT);
     }
 
 }

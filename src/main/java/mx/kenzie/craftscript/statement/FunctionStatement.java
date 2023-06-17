@@ -24,7 +24,7 @@ public record FunctionStatement(Statement<?> executable) implements Statement<Ob
     @Override
     public void stringify(PrintStream stream) {
         stream.print("function ");
-        this.executable.debug(stream);
+        this.executable.stringify(stream);
     }
 
 }

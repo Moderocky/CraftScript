@@ -39,17 +39,26 @@ public class ScriptManagerTest {
         DoubleParser::new,
         CommandParser::new,
         VariableAssignmentParser::new,
-        EqualsParser::new,
-        PlusParser::new,
-        MinusParser::new,
-        TimesParser::new,
-        DivideParser::new,
+        BinaryParser::compareEQ,
+        BinaryParser::comparePlus,
+        BinaryParser::compareMinus,
+        BinaryParser::compareTimes,
+        BinaryParser::compareDivide,
+        BinaryParser::compareLE,
+        BinaryParser::compareGE,
+        BinaryParser::compareLT,
+        BinaryParser::compareGT,
+        BinaryParser::compareNE,
+        BinaryParser::compareAND,
+        BinaryParser::compareOR,
+        BinaryParser::compareXOR,
+        BinaryParser::compareALT,
         SetterParser::new,
         GetterParser::new,
         VariableParser::new
     );
 
-    private static ScriptManager manager;
+    static ScriptManager manager;
 
     @BeforeClass
     public static void startup() {
@@ -169,11 +178,11 @@ public class ScriptManagerTest {
     public void equalsCheck() {
         assert this.test("""
             var = "hello"
-            result = var == "hello"
+            result = var = "hello"
             if var == result {
                 /print {result}
             }
-            """, "true");
+            """, "hello");
     }
 
     @Test
@@ -291,6 +300,24 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void comparators() {
+        assert this.test("/print {9 < 10}", "true");
+        assert this.test("/print {10 < 10}", "false");
+        assert this.test("/print {9 <= 10}", "true");
+        assert this.test("/print {10 <= 10}", "true");
+        assert this.test("/print {11 <= 10}", "false");
+        assert this.test("/print {9 < 10}", "true");
+        assert this.test("assert 10 > 1");
+        assert this.test("assert 10 >= 1");
+        assert this.test("assert 10 >= 10");
+        assert this.test("assert true & true");
+        assert this.test("assert true | false");
+        assert this.test("assert false | true");
+        assert this.test("assert false ^ true");
+        assert this.test("assert null ? true");
+    }
+
+    @Test
     public void ifKindTest() {
         assert this.test("""
             var = "no"
@@ -381,6 +408,10 @@ public class ScriptManagerTest {
         return true;
     }
 
+    private boolean test(String script) {
+        return this.test(script, null);
+    }
+
     private boolean test(Script script, String output) {
         final TestCommandSender sender = new TestCommandSender();
         assert Objects.equals(sender.output, null) : sender.output;
@@ -390,7 +421,7 @@ public class ScriptManagerTest {
         Context.setLocalContext(context);
         try {
             script.execute(context);
-            if (!Objects.equals(sender.output, output)) {
+            if (output != null && !Objects.equals(sender.output, output)) {
                 script.debug(System.err);
                 assert false : sender.output;
             }

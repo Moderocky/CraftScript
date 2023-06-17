@@ -19,7 +19,10 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
         if (data != null) {
             final Object found = Wrapper.unwrap(data.execute(context));
             if (found instanceof Map<?, ?> map) variables = new VariableContainer((Map<String, Object>) map);
-            else variables = new VariableContainer();
+            else {
+                variables = new VariableContainer();
+                variables.put("$parameters", found);
+            }
         } else variables = new VariableContainer();
         final Context sub = new Context(context.source(), context.manager(), variables, context.data().clone());
         Context.setLocalContext(sub);
@@ -51,9 +54,9 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
     @Override
     public void stringify(PrintStream stream) {
         stream.print("run ");
-        this.statement.debug(stream);
+        this.statement.stringify(stream);
         stream.print(' ');
-        if (data != null) this.data.debug(stream);
+        if (data != null) this.data.stringify(stream);
     }
 
 }

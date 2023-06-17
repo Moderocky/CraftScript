@@ -8,7 +8,7 @@ import java.io.PrintStream;
 
 public record IfStatement(Statement<?> check, Statement<?> then) implements Statement<Boolean> {
 
-    static boolean value(Object object) {
+    public static boolean value(Object object) {
         final Object result = Wrapper.unwrap(object);
         if (result instanceof Boolean boo) return boo;
         else if (result instanceof Number number) return number.intValue() != 0;

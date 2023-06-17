@@ -1,0 +1,27 @@
+
+person = struct {
+    name = "Jay"
+    age = 20
+}
+
+/print hello {person[name]} how was your day ?
+
+if person[age] < 18 {
+    /print you are too young to work in pub !!
+}
+
+beep = function {
+    /print beep!!!
+}
+
+greet = function {
+    require [name]
+    /print hello {name}!
+}
+
+run beep
+run beep
+
+run greet person
+run greet [name="Kenzie"]
+
