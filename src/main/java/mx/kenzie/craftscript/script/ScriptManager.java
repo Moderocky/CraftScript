@@ -96,7 +96,7 @@ public class ScriptManager implements Closeable {
         final String top;
         if (Context.getLocalContext() != null) top =
             "Script Error in '" +
-            Context.getLocalContext().data().script.name() + "':";
+                Context.getLocalContext().data().script.name() + "':";
         else top = "Script Error:";
         sender.sendMessage(Component.textOfChildren(
             text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),

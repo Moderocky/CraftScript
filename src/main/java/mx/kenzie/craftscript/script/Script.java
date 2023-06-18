@@ -6,7 +6,7 @@ import mx.kenzie.craftscript.utility.Executable;
 import java.io.PrintStream;
 import java.util.Objects;
 
-public record Script(String name, Statement<?>... statements) implements Executable<Object> {
+public record Script(String name, Statement<?>... statements) implements Statement<Object>, Executable<Object> {
 
     @Override
     public Object execute(Context context) throws ScriptError {
@@ -31,6 +31,7 @@ public record Script(String name, Statement<?>... statements) implements Executa
         return name;
     }
 
+    @Override
     public void debug(PrintStream stream) {
         stream.println("Script '" + name + "':");
         for (final Statement<?> statement : statements) {
@@ -40,6 +41,7 @@ public record Script(String name, Statement<?>... statements) implements Executa
         }
     }
 
+    @Override
     public void stringify(PrintStream stream) {
         for (final Statement<?> statement : statements) {
             statement.stringify(stream);

@@ -23,6 +23,7 @@ public class ScriptManagerTest {
         FunctionParser::new,
         StructParser::new,
         RequireParser::new,
+        ImportParser::new,
         RunParser::new,
         InvertParser::new,
         BooleanParser::new,
@@ -76,12 +77,24 @@ public class ScriptManagerTest {
         manager.registerKind(new ListKind());
         manager.registerKind(new CollectionKind());
         manager.registerKind(new KindKind());
+        manager.loadScript(Libraries.MATH);
     }
 
     @AfterClass
     public static void tearDown() {
         manager.close();
         manager = null;
+    }
+
+    @Test
+    public void importTest() {
+        assert this.test("""
+            import [math]
+            result = run math[floor] 10.5
+            assert result == 10
+            result = run math[abs] -5
+            /print {result}
+            """, "5");
     }
 
     @Test
@@ -103,7 +116,7 @@ public class ScriptManagerTest {
         assert this.test("""
             a = run blob.script [text="hello there"]
             script = blob.script
-            b = run script [text="general kenobi"]
+            b = run script ["general kenobi"]
             /print {a} {b}
             """, "hello there general kenobi");
         manager.deleteScript(script);

@@ -6,7 +6,7 @@ import mx.kenzie.craftscript.kind.Kind;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-public class UnknownObject extends VariableContainer {
+public class StructObject extends VariableContainer {
 
     public static final Pattern TYPE_NAME = Pattern.compile("#[a-zA-Z_\\-.][a-zA-Z0-9_\\-.]*");
     private static final CustomKind KIND = new CustomKind();
@@ -29,7 +29,7 @@ public class UnknownObject extends VariableContainer {
         }
     }
 
-    public Kind<UnknownObject> getKind() {
+    public Kind<StructObject> getKind() {
         return KIND;
     }
 

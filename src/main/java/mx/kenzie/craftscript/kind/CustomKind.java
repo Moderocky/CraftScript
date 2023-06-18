@@ -1,17 +1,17 @@
 package mx.kenzie.craftscript.kind;
 
-import mx.kenzie.craftscript.variable.UnknownObject;
+import mx.kenzie.craftscript.variable.StructObject;
 
 import java.util.ArrayList;
 
-public class CustomKind extends Kind<UnknownObject> {
+public class CustomKind extends Kind<StructObject> {
 
     public CustomKind() {
-        super(UnknownObject.class);
+        super(StructObject.class);
     }
 
     @Override
-    public Object getProperty(UnknownObject thing, String property) {
+    public Object getProperty(StructObject thing, String property) {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this;
@@ -21,7 +21,7 @@ public class CustomKind extends Kind<UnknownObject> {
     }
 
     @Override
-    public Object setProperty(UnknownObject thing, String property, Object value) {
+    public Object setProperty(StructObject thing, String property, Object value) {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this.equals(Kind.asKind(value));
@@ -31,12 +31,12 @@ public class CustomKind extends Kind<UnknownObject> {
     }
 
     @Override
-    public UnknownObject fromString(String string) {
+    public StructObject fromString(String string) {
         return null;
     }
 
     @Override
-    public String toString(UnknownObject unknownObject) {
+    public String toString(StructObject unknownObject) {
         return unknownObject.toString();
     }
 

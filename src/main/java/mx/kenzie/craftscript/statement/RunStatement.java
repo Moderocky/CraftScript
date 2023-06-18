@@ -7,34 +7,41 @@ import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.io.PrintStream;
-import java.util.Map;
+import java.util.*;
 
 public record RunStatement(Statement<?> statement, Statement<?> data) implements Statement<Object> {
+
+    static Object run(Executable<?> executable, Context context, VariableContainer container) {
+        final Context sub = new Context(context.source(), context.manager(), container, context.data().clone());
+        Context.setLocalContext(sub);
+        try {
+            return executable.execute(sub);
+        } finally {
+            Context.setLocalContext(context);
+        }
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public Object execute(Context context) throws ScriptError {
         final Object result = Wrapper.unwrap(statement.execute(context));
-        final VariableContainer variables;
+        final VariableContainer variables = new VariableContainer();
         if (data != null) {
             final Object found = Wrapper.unwrap(data.execute(context));
-            if (found instanceof Map<?, ?> map) variables = new VariableContainer((Map<String, Object>) map);
-            else {
-                variables = new VariableContainer();
-                variables.put("$parameters", found);
-            }
-        } else variables = new VariableContainer();
-        final Context sub = new Context(context.source(), context.manager(), variables, context.data().clone());
-        Context.setLocalContext(sub);
-        try {
-            if (result instanceof Executable<?> executable) return executable.execute(sub);
-            else if (result instanceof Runnable runnable) {
-                runnable.run();
-                return null;
-            } else throw new ScriptError("Unable to run object '" + result + "'.");
-        } finally {
-            Context.setLocalContext(context);
-        }
+            if (found instanceof Map<?, ?> map) {
+                variables.putAll((Map<String, Object>) map);
+                variables.put("$parameters", new ArrayList<>(map.values()));
+            } else if (found instanceof Collection<?> collection) {
+                variables.put("$parameters", new ArrayList<>(collection));
+            } else if (found instanceof Object[] objects) {
+                variables.put("$parameters", Arrays.asList(objects));
+            } else variables.put("$parameters", Collections.singletonList(found));
+        } else variables.put("$parameters", Collections.emptyList());
+        if (result instanceof Executable<?> executable) return run(executable, context, variables);
+        else if (result instanceof Runnable runnable) {
+            runnable.run();
+            return null;
+        } else throw new ScriptError("Unable to run object '" + result + "'.");
     }
 
     @Override

@@ -63,7 +63,7 @@ public class LazyInterpolatingMap extends AbstractMap<String, Object> {
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (LazyEntry) obj;
             return Objects.equals(this.getKey, that.getKey) &&
-                   Objects.equals(this.statement, that.statement);
+                Objects.equals(this.statement, that.statement);
         }
 
         @Override
@@ -74,8 +74,8 @@ public class LazyInterpolatingMap extends AbstractMap<String, Object> {
         @Override
         public String toString() {
             return "LazyEntry[" +
-                   "getKey=" + getKey + ", " +
-                   "statement=" + statement + ']';
+                "getKey=" + getKey + ", " +
+                "statement=" + statement + ']';
         }
 
     }

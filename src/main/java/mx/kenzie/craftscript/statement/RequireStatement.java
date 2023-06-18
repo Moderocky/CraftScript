@@ -12,21 +12,15 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
     @Override
     public Boolean execute(Context context) throws ScriptError {
         final VariableContainer container = context.variables();
-        list:
-        if (container.containsKey("$parameters")) {
-            final Object parameters = container.get("$parameters");
-            if (parameters == null) break list;
-            final Object[] objects;
-            if (parameters instanceof Collection<?> collection) objects = collection.toArray();
-            else if (parameters instanceof Object[] array) objects = array;
-            else objects = new Object[]{parameters};
+        if (container.get("$parameters") instanceof Collection<?> collection) {
+            final Object[] objects = collection.toArray();
             for (int i = 0; i < names.length; i++) {
                 final String name = names[i];
+                if (container.containsKey(name)) continue;
                 if (i < objects.length) {
                     final Object alt = objects[i];
                     container.put(names[i], alt);
-                } else if (!container.containsKey(name))
-                    throw new ScriptError("The variable '" + name + "' is not present.");
+                } else throw new ScriptError("The variable '" + name + "' is not present.");
             }
             return true;
         }

@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.variable;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -10,6 +11,7 @@ public class VariableContainer extends HashMap<String, Object> {
 
     public VariableContainer() {
         super();
+        this.put("$parameters", Collections.emptyList());
     }
 
     public VariableContainer(Map<String, Object> container) {

@@ -2,15 +2,15 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.variable.UnknownObject;
+import mx.kenzie.craftscript.variable.StructObject;
 
 import java.io.PrintStream;
 
-public record StructStatement(BlockStatement block) implements Statement<UnknownObject> {
+public record StructStatement(BlockStatement block) implements Statement<StructObject> {
 
     @Override
-    public UnknownObject execute(Context context) throws ScriptError {
-        final UnknownObject object = new UnknownObject();
+    public StructObject execute(Context context) throws ScriptError {
+        final StructObject object = new StructObject();
         final Context sub = new Context(context.source(), context.manager(), object, context.data());
         this.block.execute(sub);
         return object;

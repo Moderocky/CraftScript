@@ -13,7 +13,7 @@ public record EqualsStatement(Statement<?> antecedent, Statement<?> consequent) 
     public Boolean execute(Context context) throws ScriptError {
         final Object a = Wrapper.unwrap(antecedent.execute(context)), b = Wrapper.unwrap(consequent.execute(context));
         return Objects.equals(a, b)
-               || (a instanceof Number first && b instanceof Number second && first.doubleValue() == second.doubleValue());
+            || (a instanceof Number first && b instanceof Number second && first.doubleValue() == second.doubleValue());
     }
 
     @Override

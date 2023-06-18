@@ -1,7 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.variable.UnknownObject;
+import mx.kenzie.craftscript.variable.StructObject;
 import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.util.Objects;
@@ -24,7 +24,7 @@ public abstract class Kind<Type> {
     public static Kind<?> of(Object thing) {
         if (thing == null) return new NullKind();
         if (thing instanceof Wrapper<?> wrapper) return wrapper.getKind();
-        if (thing instanceof UnknownObject object) return object.getKind();
+        if (thing instanceof StructObject object) return object.getKind();
         if (thing instanceof Kind<?>) return new KindKind();
         if (thing instanceof Class<?> kind) return new UnknownKind(kind);
         final Context context = Context.getLocalContext();
