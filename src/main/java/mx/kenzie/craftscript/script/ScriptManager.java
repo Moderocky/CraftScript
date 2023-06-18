@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 import static net.kyori.adventure.text.Component.text;
@@ -30,6 +31,7 @@ public class ScriptManager implements Closeable {
     protected final JavaPlugin plugin;
     protected final ScriptLoader loader;
     protected final Map<String, Script> scripts = new LinkedHashMap<>();
+    protected final Map<String, Object> globalVariables = new ConcurrentHashMap<>();
     protected final Set<Kind<?>> kinds = new LinkedHashSet<>();
     protected final boolean test;
 
@@ -119,6 +121,10 @@ public class ScriptManager implements Closeable {
         else top = "Script Error:";
         sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
             text(top, NamedTextColor.RED), Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
+    }
+
+    public Map<String, Object> getGlobalVariables() {
+        return globalVariables;
     }
 
     @Override
