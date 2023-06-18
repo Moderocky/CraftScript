@@ -27,6 +27,7 @@ There is some deviation from this, since CraftScript has several features that d
 |------------|---------------------------------------------------------|
 | `assert`   | Make certain a value is true.                           |
 | `require`  | Make certain variables are present.                     |
+| `import`   | Obtains the output of an external program.              |
 | `if`       | Run a statement on a condition.                         |
 | `for`      | Run a statement for every element in a collection.      |
 | `run`      | Run an executable object.                               |
@@ -350,10 +351,38 @@ vars = [hello="there"]
 run function vars
 ```
 
+### Import
+
+Acquires a resource from an external script.
+This runs the script and stores its result in the named variable.
+
+This does NOT provide the script object, since this is already obtainable using the Script Literal syntax.
+
+This is primarily designed for interfacing with native libraries (e.g. `math`).
+
+```
+import_[%name%,...]
+```
+
+#### Examples
+
+```
+import [math]
+
+result = run math[floor] 5.5
+assert result == 5
+
+result = run math[ceil] 5.5
+assert result == 6
+
+/print {run math[max] [5, 6]} is 6 
+```
+
 ### Require
 
 Asserts that the given variable keys are known.
 Their values may be `null`, as long as they have been assigned in the context.
+This will attempt to pack anonymous arguments into the variable keys if none are present.
 
 This is designed for input checking of functions and sub-scripts.
 

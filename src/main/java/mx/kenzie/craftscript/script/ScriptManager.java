@@ -39,13 +39,33 @@ public class ScriptManager implements Closeable {
         this.test = plugin == null || Bukkit.getServer() == null;
     }
 
-    public Script loadScript(String name, InputStream stream) {
+    public AbstractScript parseScript(String content) {
+        return this.parseScript(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    public AbstractScript parseScript(InputStream content) {
         try {
-            final Script script = loader.load(name, stream);
-            return this.loadScript(script);
+            return loader.parse(content);
         } catch (IOException ex) {
             throw new ScriptError("Error loading script content.", ex);
         }
+    }
+
+    public Script parseScript(String name, String content) {
+        return this.parseScript(name, new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    public Script parseScript(String name, InputStream stream) {
+        try {
+            return loader.parse(name, stream);
+        } catch (IOException ex) {
+            throw new ScriptError("Error loading script content.", ex);
+        }
+    }
+
+    public Script loadScript(String name, InputStream stream) {
+        final Script script = this.parseScript(name, stream);
+        return this.loadScript(script);
     }
 
     public Script loadScript(String name, String content) {
@@ -94,16 +114,11 @@ public class ScriptManager implements Closeable {
     public void printError(ScriptError error, CommandSender sender) {
         if (this.isTest()) throw error;
         final String top;
-        if (Context.getLocalContext() != null) top =
-            "Script Error in '" +
-                Context.getLocalContext().data().script.name() + "':";
+        if (Context.getLocalContext() != null)
+            top = "Script Error in '" + Context.getLocalContext().data().script.name() + "':";
         else top = "Script Error:";
-        sender.sendMessage(Component.textOfChildren(
-            text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
-            text(top, NamedTextColor.RED),
-            Component.newline(),
-            text(error.getMessage(), NamedTextColor.GRAY)
-        ));
+        sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
+            text(top, NamedTextColor.RED), Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
     }
 
     @Override

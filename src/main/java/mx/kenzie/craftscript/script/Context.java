@@ -50,7 +50,7 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
 
     public static class Data {
 
-        public Script script;
+        public AbstractScript script;
         public Set<MinecraftCommand> localCommands = new LinkedHashSet<>();
         public Set<Kind<?>> kinds = new LinkedHashSet<>();
 

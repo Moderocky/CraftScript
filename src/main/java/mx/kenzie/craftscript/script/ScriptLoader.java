@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 public interface ScriptLoader extends ScriptParser {
 
-    Script load(String name, InputStream stream) throws IOException;
+    Script parse(String name, InputStream stream) throws IOException;
+
+    AbstractScript parse(InputStream stream) throws IOException;
 
 }

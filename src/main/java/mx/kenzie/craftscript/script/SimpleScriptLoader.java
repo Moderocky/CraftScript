@@ -21,7 +21,16 @@ public class SimpleScriptLoader implements ScriptLoader {
     public SimpleScriptLoader(Supplier<Parser>... parsers) {this.parsers = parsers;}
 
     @Override
-    public synchronized Script load(String name, InputStream stream) throws IOException {
+    public AbstractScript parse(InputStream stream) throws IOException {
+        return new AnonymousScript(this.parseStatements(stream));
+    }
+
+    @Override
+    public synchronized Script parse(String name, InputStream stream) throws IOException {
+        return new Script(name, this.parseStatements(stream));
+    }
+
+    private Statement<?>[] parseStatements(InputStream stream) throws IOException {
         this.line = 0;
         final List<Statement<?>> list = new ArrayList<>();
         try {
@@ -41,7 +50,7 @@ public class SimpleScriptLoader implements ScriptLoader {
         } finally {
             if (reader != null) reader.close();
         }
-        return new Script(name, list.toArray(new Statement[0]));
+        return list.toArray(new Statement[0]);
     }
 
     @Override

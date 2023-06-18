@@ -95,6 +95,18 @@ public class ScriptManagerTest {
             result = run math[abs] -5
             /print {result}
             """, "5");
+        final Script script = manager.loadScript("other.script", """
+            struct {
+                test = function {
+                    /print hello there!
+                }
+            }
+            """);
+        assert this.test("""
+            import [other]
+            run other[test]
+            """, "hello there!");
+        manager.deleteScript(script);
     }
 
     @Test
