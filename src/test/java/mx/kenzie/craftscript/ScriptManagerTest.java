@@ -78,12 +78,45 @@ public class ScriptManagerTest {
         manager.registerKind(new CollectionKind());
         manager.registerKind(new KindKind());
         manager.loadScript(Libraries.MATH);
+        manager.loadScript(Libraries.PARSER);
+        manager.loadScript(Libraries.GLOBAL);
     }
 
     @AfterClass
     public static void tearDown() {
         manager.close();
         manager = null;
+    }
+
+    @Test
+    public void parserImportTest() {
+        assert this.test("""
+            import [parser]
+            script = run parser "/print hello"
+            run script
+            """, "hello");
+    }
+
+    @Test
+    public void globalTest() {
+        assert !manager.getGlobalVariables().containsKey("test");
+        assert this.test("""
+            import [global]
+            assert global[test] == null
+            global[test="hello"]
+            """);
+        assert manager.getGlobalVariables().containsKey("test");
+        assert this.test("""
+            import [global]
+            assert global[test] != null
+            assert global[test] == "hello"
+            """);
+        manager.getGlobalVariables().remove("test");
+        assert this.test("""
+            import [global]
+            assert global[test] == null
+            """);
+        assert !manager.getGlobalVariables().containsKey("test");
     }
 
     @Test
