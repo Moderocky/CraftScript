@@ -17,4 +17,9 @@ public interface ScriptController {
         return this.getScriptManager(sender).getScripts();
     }
 
+    default Object runScript(Script script, CommandSender sender) {
+        final ScriptManager manager = this.getScriptManager(sender);
+        return manager.runScript(script, sender);
+    }
+
 }
