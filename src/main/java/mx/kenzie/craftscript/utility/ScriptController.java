@@ -20,7 +20,7 @@ public interface ScriptController {
 
     default void runScript(AbstractScript script, CommandSender sender) {
         final ScriptManager manager = this.getScriptManager(sender);
-        manager.runScript(script, sender);
+        manager.runScriptSafely(script, sender);
     }
 
 }

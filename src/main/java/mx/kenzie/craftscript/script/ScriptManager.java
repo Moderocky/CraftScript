@@ -117,14 +117,20 @@ public class ScriptManager implements Closeable {
         Context.setLocalContext(context);
         try {
             return script.execute(context);
+        } finally {
+            Context.removeLocalContext();
+        }
+    }
+
+    public Object runScriptSafely(AbstractScript script, CommandSender source) {
+        try {
+            return this.runScript(script, source);
         } catch (ScriptError error) {
-            this.printError(error, context.source());
+            this.printError(error, source);
         } catch (ThreadDeath death) { // planned termination
             throw death;
         } catch (Throwable ex) {
-            this.printError(new ScriptError("An unknown error occurred.", ex), context.source());
-        } finally {
-            Context.removeLocalContext();
+            this.printError(new ScriptError("An unknown error occurred.", ex), source);
         }
         return null;
     }
