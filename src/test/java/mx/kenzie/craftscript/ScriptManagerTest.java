@@ -2,8 +2,6 @@ package mx.kenzie.craftscript;
 
 
 import mx.kenzie.craftscript.kind.*;
-import mx.kenzie.craftscript.parser.ScriptParser;
-import mx.kenzie.craftscript.parser.*;
 import mx.kenzie.craftscript.script.*;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import org.junit.AfterClass;
@@ -15,55 +13,11 @@ import java.util.Objects;
 
 public class ScriptManagerTest {
 
-    private static final ScriptLoader LOADER = new SimpleScriptLoader(
-        NullParser::new,
-        AssertParser::new,
-        ForParser::new,
-        IfParser::new,
-        FunctionParser::new,
-        StructParser::new,
-        RequireParser::new,
-        ImportParser::new,
-        RunParser::new,
-        InvertParser::new,
-        BooleanParser::new,
-        SelectorParser::new,
-        ScriptParser::new,
-        BlockParser::new,
-        MapParser::new,
-        ListParser::new,
-        StringParser::new,
-        InterpolationParser::new,
-        KindParser::new,
-        CloseParser::new,
-        IntegerParser::new,
-        DoubleParser::new,
-        CommandParser::new,
-        VariableAssignmentParser::new,
-        BinaryParser::compareEQ,
-        BinaryParser::comparePlus,
-        BinaryParser::compareMinus,
-        BinaryParser::compareTimes,
-        BinaryParser::compareDivide,
-        BinaryParser::compareLE,
-        BinaryParser::compareGE,
-        BinaryParser::compareLT,
-        BinaryParser::compareGT,
-        BinaryParser::compareNE,
-        BinaryParser::compareAND,
-        BinaryParser::compareOR,
-        BinaryParser::compareXOR,
-        BinaryParser::compareALT,
-        SetterParser::new,
-        GetterParser::new,
-        VariableParser::new
-    );
-
     static ScriptManager manager;
 
     @BeforeClass
     public static void startup() {
-        manager = new ScriptManager(null, LOADER);
+        manager = new ScriptManager(null, ScriptLoader.BASIC);
         manager.registerKind(new StringKind());
         manager.registerKind(new PlayerKind());
         manager.registerKind(new CommandSenderKind());
