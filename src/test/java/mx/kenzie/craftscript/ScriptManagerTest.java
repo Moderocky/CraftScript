@@ -43,6 +43,22 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void whileTest() {
+        assert this.test("""
+            var = 0
+            while var < 5 var = var + 1
+            /print {var}
+            """, "5");
+        assert this.test("""
+            var = 5
+            while var > 0 {
+                var = var - 1
+            }
+            /print {var}
+            """, "0");
+    }
+
+    @Test
     public void parserImportTest() {
         assert this.test("""
             import [parser]

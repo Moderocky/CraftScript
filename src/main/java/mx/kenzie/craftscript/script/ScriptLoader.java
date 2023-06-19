@@ -12,6 +12,7 @@ public interface ScriptLoader extends ScriptParser {
         AssertParser::new,
         ForParser::new,
         IfParser::new,
+        WhileParser::new,
         FunctionParser::new,
         StructParser::new,
         RequireParser::new,

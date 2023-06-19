@@ -6,13 +6,17 @@ import mx.kenzie.craftscript.statement.Statement;
 
 public class IfParser extends BasicParser {
 
-    private Statement<?> check;
-    private Statement<?> then;
+    protected Statement<?> check;
+    protected Statement<?> then;
 
     @Override
     public boolean matches() {
         if (!input.startsWith("if ")) return false;
-        int start = 3, begin = start;
+        return parse(3);
+    }
+
+    protected boolean parse(int begin) {
+        int start = begin;
         do {
             final int space = input.indexOf(' ', start);
             if (space < 0) return false;
