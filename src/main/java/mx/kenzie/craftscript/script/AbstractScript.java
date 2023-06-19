@@ -17,19 +17,13 @@ public interface AbstractScript extends Statement<Object> {
     @Override
     default Object execute(Context context) throws ScriptError {
         context.data().script = this;
-        Object result = null;
-        for (final Statement<?> statement : this.statements()) {
-            try {
-                result = statement.execute(context);
-            } catch (ScriptError error) {
-                context.manager().printError(error, context.source());
-                return null;
-            } catch (Throwable ex) {
-                context.manager().printError(new ScriptError("Unknown error.", ex), context.source());
-                return null;
-            }
+        final Statement<?>[] statements = this.statements();
+        for (int i = 0; i < statements.length; i++) {
+            final Statement<?> statement = statements[i];
+            if (i == statements.length - 1) return statement.execute(context);
+            else statement.execute(context);
         }
-        return result;
+        return null;
     }
 
     @Override

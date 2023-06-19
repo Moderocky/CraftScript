@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.utility;
 
+import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Script;
 import mx.kenzie.craftscript.script.ScriptManager;
 import org.bukkit.command.CommandSender;
@@ -17,9 +18,9 @@ public interface ScriptController {
         return this.getScriptManager(sender).getScripts();
     }
 
-    default Object runScript(Script script, CommandSender sender) {
+    default void runScript(AbstractScript script, CommandSender sender) {
         final ScriptManager manager = this.getScriptManager(sender);
-        return manager.runScript(script, sender);
+        manager.runScript(script, sender);
     }
 
 }

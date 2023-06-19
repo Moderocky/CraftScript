@@ -18,7 +18,9 @@ public class SimpleScriptLoader implements ScriptLoader {
     private int line;
     private BufferedReader reader;
 
-    public SimpleScriptLoader(Supplier<Parser>... parsers) {this.parsers = parsers;}
+    public SimpleScriptLoader(Supplier<Parser>... parsers) {
+        this.parsers = parsers;
+    }
 
     @Override
     public AbstractScript parse(InputStream stream) throws IOException {
