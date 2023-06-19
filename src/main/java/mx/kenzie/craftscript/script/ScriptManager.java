@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.script;
 
 import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.utility.TaskExecutor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -23,17 +24,29 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 import static net.kyori.adventure.text.Component.text;
 
 public class ScriptManager implements Closeable {
 
+    public static final TaskExecutor DISPATCHER = (context, task) -> {
+        try {
+            if (Bukkit.isPrimaryThread()) return task.get();
+            else return Bukkit.getScheduler().callSyncMethod(context.manager().getPlugin(), task::get).get();
+        } catch (ExecutionException | CommandException e) {
+            throw new ScriptError("An unknown error occurred while running task.", e);
+        } catch (InterruptedException e) {
+            throw new ScriptError("Failed to run task.", e);
+        }
+    };
     protected final JavaPlugin plugin;
     protected final ScriptLoader loader;
     protected final Map<String, Script> scripts = new LinkedHashMap<>();
     protected final Map<String, Object> globalVariables = new ConcurrentHashMap<>();
     protected final Set<Kind<?>> kinds = new LinkedHashSet<>();
     protected final boolean test;
+    protected TaskExecutor executor = DISPATCHER;
 
     public ScriptManager(JavaPlugin plugin, ScriptLoader loader) {
         this.plugin = plugin;
@@ -134,6 +147,10 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    public void setExecutor(TaskExecutor executor) {
+        this.executor = executor;
+    }
+
     public JavaPlugin getPlugin() {
         return plugin;
     }
@@ -180,16 +197,11 @@ public class ScriptManager implements Closeable {
         if (this.isTest()) {
             return false;
         }
-        try {
-            if (Bukkit.isPrimaryThread()) return Bukkit.dispatchCommand(context.source(), command);
-            else return Bukkit.getScheduler()
-                .callSyncMethod(context.manager().getPlugin(), () -> Bukkit.dispatchCommand(context.source(), command))
-                .get();
-        } catch (ExecutionException | CommandException e) {
-            throw new ScriptError("An unknown error occurred while running '" + command + "'.", e);
-        } catch (InterruptedException e) {
-            throw new ScriptError("Failed to run '" + command + "'.", e);
-        }
+        return (boolean) this.executeOnPrimary(context, () -> Bukkit.dispatchCommand(context.source(), command));
+    }
+
+    protected Object executeOnPrimary(Context context, Supplier<Object> supplier) {
+        return executor.execute(context, supplier);
     }
 
 }
