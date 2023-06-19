@@ -13,13 +13,22 @@ import java.util.function.Supplier;
 
 public class SimpleScriptLoader implements ScriptLoader {
 
-    protected final Supplier<Parser>[] parsers;
     private final Map<Supplier<Parser>, Parser> cache = new HashMap<>();
+    protected Supplier<Parser>[] parsers;
     private int line;
     private BufferedReader reader;
 
+    @SafeVarargs
     public SimpleScriptLoader(Supplier<Parser>... parsers) {
         this.parsers = parsers;
+    }
+
+    @SafeVarargs
+    public final void addParsers(Supplier<Parser>... parsers) {
+        final List<Supplier<Parser>> list = new ArrayList<>(this.parsers.length + parsers.length);
+        list.addAll(List.of(this.parsers));
+        list.addAll(List.of(parsers));
+        this.parsers = list.toArray(new Supplier[0]);
     }
 
     @Override
