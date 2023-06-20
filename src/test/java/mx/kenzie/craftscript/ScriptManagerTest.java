@@ -43,6 +43,31 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void elseTest() {
+        assert this.test("""
+            if 5 > 6 {
+                /print yes
+            } else {
+                /print no
+            }
+            """, "no");
+        assert this.test("""
+            if 5 > 3 {
+                /print yes
+            } else {
+                /print no
+            }
+            """, "yes");
+        assert this.test("""
+            /print bean
+            if 5 > 6 {
+                /print yes
+            } else {
+            }
+            """, "bean");
+    }
+
+    @Test
     public void whileTest() {
         assert this.test("""
             var = 0
