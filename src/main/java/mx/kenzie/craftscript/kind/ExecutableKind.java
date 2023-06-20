@@ -1,8 +1,11 @@
 package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.script.AbstractScript;
+import mx.kenzie.craftscript.script.core.SupplierStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.utility.Executable;
+
+import java.util.Objects;
 
 public class ExecutableKind extends Kind<Executable> {
 
@@ -43,6 +46,7 @@ public class ExecutableKind extends Kind<Executable> {
     @Override
     public String toString(Executable executable) {
         if (executable instanceof AbstractScript) return executable.toString();
+        if (executable instanceof SupplierStatement statement) return Objects.toString(statement.supplier().get());
         return "<executable>";
     }
 
