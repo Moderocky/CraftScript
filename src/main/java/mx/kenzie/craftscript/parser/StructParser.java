@@ -1,10 +1,7 @@
 package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.statement.BlockStatement;
-import mx.kenzie.craftscript.statement.Statement;
-import mx.kenzie.craftscript.statement.StructStatement;
-import mx.kenzie.craftscript.statement.VariableAssignmentStatement;
+import mx.kenzie.craftscript.statement.*;
 
 public class StructParser extends BasicParser {
 
@@ -20,8 +17,15 @@ public class StructParser extends BasicParser {
             "The structure in line " + line + " is not followed by a block opener '{'");
         this.block = block;
         for (final Statement<?> child : block.statements()) {
-            if (!(child instanceof VariableAssignmentStatement)) throw new ScriptError(
-                "The structure in line " + line + " contains a non-variable assignment element.");
+            if (child instanceof VariableAssignmentStatement) continue;
+            else if (child instanceof LineStatement wrapper
+                && wrapper.statement() instanceof VariableAssignmentStatement) continue;
+            final Statement<?> real;
+            if (child instanceof LineStatement wrapper) real = wrapper.statement();
+            else real = child;
+            throw new ScriptError(
+                "The structure in line " + line + " contains a non-variable assignment element '" + real.getClass()
+                    .getSimpleName() + "'.");
         }
         return true;
     }
