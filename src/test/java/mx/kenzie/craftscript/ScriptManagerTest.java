@@ -29,6 +29,7 @@ public class ScriptManagerTest {
         manager.registerKind(new BlockKind());
         manager.registerKind(new MapKind());
         manager.registerKind(new ListKind());
+        manager.registerKind(new ExecutableKind());
         manager.registerKind(new CollectionKind());
         manager.registerKind(new KindKind());
         manager.loadScript(Libraries.MATH);
