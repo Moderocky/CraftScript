@@ -3,9 +3,12 @@ package mx.kenzie.craftscript.command;
 import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.centurion.TypedArgument;
 import mx.kenzie.craftscript.script.AbstractScript;
-import mx.kenzie.craftscript.script.Script;
+import mx.kenzie.craftscript.script.LibraryScript;
 import mx.kenzie.craftscript.utility.ScriptController;
 import org.bukkit.command.CommandSender;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScriptArgument extends TypedArgument<AbstractScript> {
 
@@ -28,10 +31,14 @@ public class ScriptArgument extends TypedArgument<AbstractScript> {
 
     @Override
     public String[] possibilities() {
-        final AbstractScript[] scripts = controller.getScripts(MinecraftCommand.<CommandSender>getContext().getSender());
-        final String[] strings = new String[scripts.length];
-        for (int i = 0; i < scripts.length; i++) strings[i] = scripts[i].name();
-        return strings;
+        final CommandSender sender = MinecraftCommand.<CommandSender>getContext().getSender();
+        final AbstractScript[] scripts = controller.getScripts(sender);
+        final List<String> list = new ArrayList<>();
+        for (final AbstractScript script : scripts) {
+            if (script instanceof LibraryScript) continue;
+            list.add(script.name());
+        }
+        return list.toArray(new String[0]);
     }
 
 }
