@@ -1,6 +1,8 @@
 package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.statement.ChoiceBlockStatement;
+import mx.kenzie.craftscript.statement.IfElseStatement;
 import mx.kenzie.craftscript.statement.IfStatement;
 import mx.kenzie.craftscript.statement.Statement;
 
@@ -36,6 +38,7 @@ public class IfParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
+        if (then instanceof ChoiceBlockStatement choice) return new IfElseStatement(check, choice);
         return new IfStatement(check, then);
     }
 

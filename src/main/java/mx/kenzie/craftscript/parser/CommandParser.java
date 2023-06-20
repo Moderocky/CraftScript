@@ -22,7 +22,8 @@ public class CommandParser extends BasicParser {
         if (space < 0) label = input.substring(1).trim();
         else label = input.substring(1, space).trim();
         if (Bukkit.getServer() == null) return true;
-        return Bukkit.getCommandMap().getCommand(label) != null;
+        if (Bukkit.getCommandMap().getCommand(label) != null) return true;
+        throw new ScriptError("Line " + parent.getLine() + ": '/" + label + "' is not a known command.");
     }
 
     @Override
