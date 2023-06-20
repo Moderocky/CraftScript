@@ -36,18 +36,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>mx.kenzie</groupId>
-            <artifactId>argo</artifactId>
-            <version>1.2.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>mx.kenzie</groupId>
-            <artifactId>nbt</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.20-R0.1-SNAPSHOT</version>
@@ -64,12 +52,6 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>mx.kenzie</groupId>
-            <artifactId>clockwork</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>mx.kenzie</groupId>
