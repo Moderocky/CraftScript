@@ -1,7 +1,7 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.script.Script;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.script.ScriptManager;
 import mx.kenzie.craftscript.variable.VariableContainer;
@@ -15,7 +15,7 @@ public record ImportStatement(String... names) implements Statement<Boolean> {
         final VariableContainer container = context.variables();
         final ScriptManager manager = context.manager();
         for (final String name : names) {
-            final Script script = manager.getScript(name + ".script");
+            final AbstractScript script = manager.getScript(name + ".script");
             if (script == null) throw new ScriptError("The script '" + name + ".script' is not loaded.");
             final Object result = RunStatement.run(script, context, new VariableContainer());
             container.put(name, result);

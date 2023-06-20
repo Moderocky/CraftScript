@@ -9,12 +9,12 @@ public interface ScriptController {
 
     ScriptManager getScriptManager(CommandSender sender);
 
-    default Script getScript(CommandSender sender, String name) {
+    default AbstractScript getScript(CommandSender sender, String name) {
         final ScriptManager manager = this.getScriptManager(sender);
         return manager.getScript(name);
     }
 
-    default Script[] getScripts(CommandSender sender) {
+    default AbstractScript[] getScripts(CommandSender sender) {
         return this.getScriptManager(sender).getScripts();
     }
 

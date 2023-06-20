@@ -1,16 +1,16 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.script.Script;
 import mx.kenzie.craftscript.script.ScriptError;
 
 import java.io.PrintStream;
 
-public record ScriptStatement(String name) implements Statement<Script> {
+public record ScriptStatement(String name) implements Statement<AbstractScript> {
 
     @Override
-    public Script execute(Context context) throws ScriptError {
-        final Script script = context.manager().getScript(name);
+    public AbstractScript execute(Context context) throws ScriptError {
+        final AbstractScript script = context.manager().getScript(name);
         if (script == null) throw new ScriptError("Script '" + name + "' is not loaded.");
         return script;
     }

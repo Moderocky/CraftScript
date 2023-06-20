@@ -42,7 +42,7 @@ public class ScriptManager implements Closeable {
     };
     protected final JavaPlugin plugin;
     protected final ScriptLoader loader;
-    protected final Map<String, Script> scripts = new LinkedHashMap<>();
+    protected final Map<String, AbstractScript> scripts = new LinkedHashMap<>();
     protected final Map<String, Object> globalVariables = new ConcurrentHashMap<>();
     protected final Set<Kind<?>> kinds = new LinkedHashSet<>();
     protected final boolean test;
@@ -87,14 +87,16 @@ public class ScriptManager implements Closeable {
         return this.loadScript(name, new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
     }
 
-    public Script loadScript(Script script) {
+    public <Type extends AbstractScript> Type loadScript(Type script) {
+        if (script instanceof AnonymousScript)
+            throw new ScriptError("Unable to load anonymous script into environment.");
         synchronized (scripts) {
             this.scripts.put(script.name(), script);
         }
         return script;
     }
 
-    public Script getScript(String name) {
+    public AbstractScript getScript(String name) {
         synchronized (scripts) {
             return scripts.get(name);
         }
@@ -106,7 +108,7 @@ public class ScriptManager implements Closeable {
         }
     }
 
-    public void deleteScript(Script script) {
+    public void deleteScript(AbstractScript script) {
         synchronized (scripts) {
             this.scripts.values().removeIf(script::equals);
         }
@@ -135,8 +137,8 @@ public class ScriptManager implements Closeable {
         return null;
     }
 
-    public Script[] getScripts() {
-        return scripts.values().toArray(new Script[0]);
+    public AbstractScript[] getScripts() {
+        return scripts.values().toArray(new AbstractScript[0]);
     }
 
     public void printError(ScriptError error, CommandSender sender) {

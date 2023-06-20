@@ -2,16 +2,17 @@ package mx.kenzie.craftscript.command;
 
 import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.centurion.TypedArgument;
+import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Script;
 import mx.kenzie.craftscript.utility.ScriptController;
 import org.bukkit.command.CommandSender;
 
-public class ScriptArgument extends TypedArgument<Script> {
+public class ScriptArgument extends TypedArgument<AbstractScript> {
 
     private final ScriptController controller;
 
     public ScriptArgument(ScriptController controller) {
-        super(Script.class);
+        super(AbstractScript.class);
         this.controller = controller;
     }
 
@@ -21,13 +22,13 @@ public class ScriptArgument extends TypedArgument<Script> {
     }
 
     @Override
-    public Script parse(String s) {
+    public AbstractScript parse(String s) {
         return controller.getScript(MinecraftCommand.<CommandSender>getContext().getSender(), s);
     }
 
     @Override
     public String[] possibilities() {
-        final Script[] scripts = controller.getScripts(MinecraftCommand.<CommandSender>getContext().getSender());
+        final AbstractScript[] scripts = controller.getScripts(MinecraftCommand.<CommandSender>getContext().getSender());
         final String[] strings = new String[scripts.length];
         for (int i = 0; i < scripts.length; i++) strings[i] = scripts[i].name();
         return strings;
