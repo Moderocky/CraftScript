@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.script;
 
 import mx.kenzie.craftscript.parser.Parser;
 import mx.kenzie.craftscript.statement.CloseStatement;
+import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.statement.Statement;
 
 import java.io.BufferedReader;
@@ -56,7 +57,7 @@ public class SimpleScriptLoader implements ScriptLoader {
                     throw new ScriptError("Line " + this.line + ": '" + line + "' was not recognised.");
                 if (statement instanceof CloseStatement)
                     throw new ScriptError("Line " + this.line + ": '" + line + "' closed an un-opened block.");
-                list.add(statement);
+                list.add(new LineStatement(statement, this.line));
             } while (true);
         } finally {
             if (reader != null) reader.close();

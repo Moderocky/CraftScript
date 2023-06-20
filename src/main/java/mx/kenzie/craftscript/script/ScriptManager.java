@@ -141,12 +141,20 @@ public class ScriptManager implements Closeable {
 
     public void printError(ScriptError error, CommandSender sender) {
         if (this.isTest()) throw error;
-        final String top;
-        if (Context.getLocalContext() != null)
-            top = "Script Error in '" + Context.getLocalContext().data().script.name() + "':";
-        else top = "Script Error:";
+        final Context context = Context.getLocalContext();
+        if (context == null) {
+            sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
+                text("Script Error:", NamedTextColor.RED), Component.newline(),
+                text(error.getMessage(), NamedTextColor.GRAY)));
+            return;
+        }
         sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
-            text(top, NamedTextColor.RED), Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
+            text("Script Error in '" + Context.getLocalContext().data().script.name() + "':", NamedTextColor.RED),
+            Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)
+        ));
+        if (context.data().line == null) return;
+        sender.sendMessage(
+            text("Line " + context.data().line + ": " + context.data().line.stringify(), NamedTextColor.GRAY));
     }
 
     public Map<String, Object> getGlobalVariables() {

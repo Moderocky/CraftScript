@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.script;
 
 import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.utility.MapFormat;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import org.bukkit.command.CommandSender;
@@ -53,6 +54,7 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         public AbstractScript script;
         public Set<MinecraftCommand> localCommands = new LinkedHashSet<>();
         public Set<Kind<?>> kinds = new LinkedHashSet<>();
+        public LineStatement line;
 
         @Override
         public Data clone() {

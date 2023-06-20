@@ -30,7 +30,7 @@ public class BlockParser extends BasicParser {
                     list = or;
                     continue;
                 }
-                list.add(statement);
+                list.add(new LineStatement(statement, parent.getLine(), "\t"));
             } catch (IOException ex) {
                 throw new ScriptError("Error reading line " + parent.getLine() + " in block.", ex);
             }
