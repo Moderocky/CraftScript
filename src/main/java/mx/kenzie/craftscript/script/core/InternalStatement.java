@@ -6,6 +6,7 @@ import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.Statement;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -14,7 +15,8 @@ public record InternalStatement(Function<Arguments, Object> function) implements
     @Override
     public Object execute(Context context) throws ScriptError {
         final Arguments arguments;
-        final Collection<?> parameters = (Collection<?>) context.variables().get("$parameters");
+        final Collection<?> parameters = (Collection<?>) context.variables()
+            .getOrDefault("$parameters", new ArrayList<>());
         if (parameters != null) arguments = Arguments.of(parameters.toArray());
         else arguments = Arguments.of();
         return function.apply(arguments);

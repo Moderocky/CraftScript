@@ -30,6 +30,12 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         return local.get();
     }
 
+    public static Context requireLocalContext() {
+        final Context context = getLocalContext();
+        if (context == null) throw new ScriptError("No script environment context is available.");
+        return context;
+    }
+
     public static void setLocalContext(Context context) {
         local.set(context);
     }
