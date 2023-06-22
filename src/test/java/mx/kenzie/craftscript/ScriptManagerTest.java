@@ -44,6 +44,18 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void resourceKeyTest() {
+        assert this.test("""
+            key = minecraft:test
+            /print {key[type]}
+            """, "#namespacedkey");
+        assert this.test("""
+            key = minecraft:test
+            /print {key}
+            """, "minecraft:test");
+    }
+
+    @Test
     public void elseTest() {
         assert this.test("""
             if 5 > 6 {
