@@ -13,7 +13,7 @@ public class GetterParser extends BasicParser {
     public boolean matches() {
         if (input.length() < 2) return false;
         if (!input.endsWith("]")) return false;
-        final int index = input.indexOf('[', 1);
+        final int index = input.lastIndexOf('[');
         if (index < 0) return false;
         final String label = input.substring(0, index).trim();
         this.property = input.substring(index + 1, input.length() - 1).trim();

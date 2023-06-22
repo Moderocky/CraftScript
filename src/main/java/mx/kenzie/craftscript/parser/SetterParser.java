@@ -14,7 +14,7 @@ public class SetterParser extends BasicParser {
     public boolean matches() {
         if (input.length() < 2) return false;
         if (!input.endsWith("]")) return false;
-        final int index = input.indexOf('[', 1);
+        final int index = this.openingBracket();
         if (index < 0) return false;
         final String label = input.substring(0, index).trim();
         final String string = input.substring(index + 1, input.length() - 1).trim();
@@ -30,6 +30,18 @@ public class SetterParser extends BasicParser {
         if (source == null) return false;
         this.value = parent.parse(value);
         return this.value != null;
+    }
+
+    private int openingBracket() {
+        int start = input.length() - 2;
+        do {
+            final int open = input.lastIndexOf('[', start);
+            final int close = input.lastIndexOf(']', start);
+            if (close < 1) return open;
+            else if (close >= open) start = open - 1;
+            else return open;
+        } while (start > 0);
+        return -1;
     }
 
     @Override
