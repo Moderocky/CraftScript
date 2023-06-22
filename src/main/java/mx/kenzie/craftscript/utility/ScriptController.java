@@ -1,7 +1,6 @@
 package mx.kenzie.craftscript.utility;
 
 import mx.kenzie.craftscript.script.AbstractScript;
-import mx.kenzie.craftscript.script.Script;
 import mx.kenzie.craftscript.script.ScriptManager;
 import org.bukkit.command.CommandSender;
 

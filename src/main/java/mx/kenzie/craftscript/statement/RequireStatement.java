@@ -9,11 +9,6 @@ import java.util.Collection;
 
 public record RequireStatement(String... names) implements Statement<Boolean> {
 
-    @Override
-    public Boolean execute(Context context) throws ScriptError {
-        return require(context, names).length == names.length;
-    }
-
     public static Object[] require(Context context, String... names) {
         final VariableContainer container = context.variables();
         final Object[] required = new Object[names.length];
@@ -36,6 +31,11 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
             required[i] = container.get(name);
         }
         return required;
+    }
+
+    @Override
+    public Boolean execute(Context context) throws ScriptError {
+        return require(context, names).length == names.length;
     }
 
     @Override
