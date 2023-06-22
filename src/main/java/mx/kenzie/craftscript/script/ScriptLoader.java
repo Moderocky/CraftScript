@@ -28,6 +28,7 @@ public interface ScriptLoader extends ScriptParser {
         ListParser::new,
         StringParser::new,
         InterpolationParser::new,
+        ResourceParser::new,
         KindParser::new,
         CloseParser::new,
         IntegerParser::new,
