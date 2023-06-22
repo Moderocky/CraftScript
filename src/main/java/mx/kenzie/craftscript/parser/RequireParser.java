@@ -13,6 +13,7 @@ public class RequireParser extends BasicParser {
     @Override
     public boolean matches() {
         if (!input.startsWith("require")) return false;
+        if (!input.endsWith("]")) return false;
         if (input.length() < 9) return false;
         final int start = input.indexOf('['), end = input.lastIndexOf(']');
         if (start < 0 || end < 0) return false;

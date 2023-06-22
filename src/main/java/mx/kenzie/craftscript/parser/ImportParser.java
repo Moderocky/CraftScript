@@ -11,6 +11,7 @@ public class ImportParser extends BasicParser {
     @Override
     public boolean matches() {
         if (!input.startsWith("import")) return false;
+        if (!input.endsWith("]")) return false;
         if (input.length() < 7) return false;
         final int start = input.indexOf('['), end = input.lastIndexOf(']');
         if (start < 0 || end < 0) return false;
