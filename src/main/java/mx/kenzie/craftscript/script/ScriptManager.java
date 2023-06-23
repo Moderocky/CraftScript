@@ -274,6 +274,15 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    public boolean hasListeners(AbstractScript script) {
+        for (final ListenerList value : listenerMap.values()) {
+            for (final EventListener listener : value) {
+                if (listener.getDetails().data().script == script) return true;
+            }
+        }
+        return false;
+    }
+
     public Collection<EventListener> getListeners() {
         final List<EventListener> listeners = new LinkedList<>();
         for (final ListenerList value : listenerMap.values()) listeners.addAll(value);
