@@ -8,6 +8,7 @@ import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.listener.GameEventListener;
 import mx.kenzie.craftscript.utility.BackgroundTaskExecutor;
 import mx.kenzie.craftscript.utility.TaskExecutor;
+import mx.kenzie.craftscript.variable.VariableContainer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -250,6 +251,21 @@ public class ScriptManager implements Closeable {
         return executor.execute(context, supplier);
     }
 
+    public void registerListener(EventListener listener) {
+        final NamespacedKey key = listener.event();
+        this.listenerMap.putIfAbsent(key, new ListenerList());
+        final ListenerList listeners = listenerMap.get(key);
+        listeners.add(listener);
+    }
+
+    public void unregisterListener(EventListener listener) {
+        final NamespacedKey key = listener.event();
+        final ListenerList listeners = listenerMap.get(key);
+        if (listeners == null) return;
+        listeners.remove(listener);
+        if (listeners.isEmpty()) listenerMap.remove(key);
+    }
+
     public void emit(Event event) {
         final NamespacedKey key = event.key();
         if (!listenerMap.containsKey(key)) return;
@@ -257,9 +273,10 @@ public class ScriptManager implements Closeable {
             if (!listener.isRelevant(event)) continue;
             final EventListener.Details details = listener.getDetails();
             try {
-                final Context context = new Context(details.owner(), this);
+                final Context.Data data = details.data().clone();
+                final Context context = new Context(details.owner(), this, new VariableContainer(), data);
                 context.variables().put("event", event);
-                BACKGROUND.execute(details.source(), listener, context);
+                BACKGROUND.execute(data.script, listener, context);
             } catch (ThreadDeath death) {
                 throw death;
             } catch (Throwable ex) {

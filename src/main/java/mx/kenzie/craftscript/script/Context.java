@@ -68,6 +68,7 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
             data.script = script;
             data.localCommands = new LinkedHashSet<>(localCommands);
             data.kinds = new LinkedHashSet<>(kinds);
+            data.line = line;
             return data;
         }
 

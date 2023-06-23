@@ -10,9 +10,12 @@ public record AssertStatement(Statement<?> check) implements Statement<Boolean> 
 
     @Override
     public Boolean execute(Context context) throws ScriptError {
-        final Object result = this.check.execute(context);
+        final Object result = Wrapper.unwrap(this.check.execute(context));
         final boolean test = IfStatement.value(result);
         if (test) return true;
+        if (result instanceof Boolean)
+            throw new ScriptError("The statement '" + check.stringify() + "' returned '" + Wrapper.of(result)
+                .toString() + "'.");
         else throw new ScriptError("The statement '" + check.stringify() + "' returned '" + Wrapper.of(result)
             .toString() + "' which evaluated to false.");
     }

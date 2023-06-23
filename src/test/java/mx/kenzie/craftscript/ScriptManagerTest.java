@@ -45,6 +45,19 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void eventListenerTest() {
+        assert this.test("""
+            on test:event {
+                /print hello
+            }
+            """, null);
+        assert Objects.equals(sender.output, null);
+        manager.emit(new TestEvent());
+        assert Objects.equals(sender.output, "hello");
+        this.sender.output = null;
+    }
+
+    @Test
     public void resourceKeyTest() {
         assert this.test("""
             key = minecraft:test
@@ -479,9 +492,9 @@ public class ScriptManagerTest {
         return this.test(script, null);
     }
 
+    private final TestCommandSender sender = new TestCommandSender();
+
     private boolean test(Script script, String output) {
-        final TestCommandSender sender = new TestCommandSender();
-        assert Objects.equals(sender.output, null) : sender.output;
         final Context.Data data = new Context.Data();
         data.localCommands.add(new TestPrintCommand());
         final Context context = new Context(sender, manager, new VariableContainer(), data);
@@ -494,6 +507,7 @@ public class ScriptManagerTest {
             }
         } finally {
             Context.removeLocalContext();
+            this.sender.output = null;
         }
         return true;
     }

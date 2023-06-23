@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.emitter;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
-public class ListenerList extends ArrayList<EventListener> {
+public class ListenerList extends HashSet<EventListener> {
 }

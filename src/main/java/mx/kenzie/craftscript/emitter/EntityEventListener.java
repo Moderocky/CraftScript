@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.emitter;
 import mx.kenzie.craftscript.utility.Executable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 
@@ -17,12 +18,14 @@ public class EntityEventListener extends EventListener {
     protected final Reference<CommandSender> reference;
     protected transient Location previous;
 
-    protected EntityEventListener(Details details, Executable<?> trigger, double radius, CommandSender source) {
-        super(details, trigger, radius);
+    public EntityEventListener(Details details, NamespacedKey key, Executable<?> trigger, double radius, CommandSender source) {
+        super(details, key, trigger, radius);
         this.reference = new WeakReference<>(source);
         this.previous = source instanceof Entity entity
             ? entity.getLocation()
-            : Bukkit.getWorlds().get(0).getSpawnLocation();
+            : Bukkit.getServer() != null
+            ? Bukkit.getWorlds().get(0).getSpawnLocation()
+            : new Location(null, 0, 0, 0);
     }
 
     @Override
