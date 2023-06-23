@@ -7,7 +7,6 @@ import mx.kenzie.craftscript.emitter.ListenerList;
 import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.listener.GameEventListener;
 import mx.kenzie.craftscript.utility.BackgroundTaskExecutor;
-import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.TaskExecutor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -45,7 +44,8 @@ public class ScriptManager implements Closeable {
             throw new ScriptError("Failed to run task.", e);
         }
     };
-    public static final BackgroundTaskExecutor BACKGROUND = Executable::execute;
+    public static final BackgroundTaskExecutor BACKGROUND = (source, executable, context) -> executable.execute(
+        context);
     protected final JavaPlugin plugin;
     protected final ScriptLoader loader;
     protected final Map<String, AbstractScript> scripts = new LinkedHashMap<>();
@@ -255,7 +255,7 @@ public class ScriptManager implements Closeable {
             try {
                 final Context context = new Context(details.owner(), this);
                 context.variables().put("event", event);
-                BACKGROUND.execute(listener, context);
+                BACKGROUND.execute(details.source(), listener, context);
             } catch (ThreadDeath death) {
                 throw death;
             } catch (Throwable ex) {
