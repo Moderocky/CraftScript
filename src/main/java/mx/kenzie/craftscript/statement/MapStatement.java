@@ -57,7 +57,7 @@ public record MapStatement(Statement<?>... statements) implements Statement<Map<
             builder.append(statement.prettyPrint(profile));
         }
         builder.append(Component.text(']', profile.pop()));
-        return builder.build();
+        return builder.build().hoverEvent(Component.text("A key<-> value map of objects.", profile.light()));
     }
 
 }

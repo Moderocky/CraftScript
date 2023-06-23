@@ -52,7 +52,8 @@ public record SelectorStatement(String text, Universe<?> universe,
 
     @Override
     public Component prettyPrint(ColorProfile profile) {
-        return Component.text(text, profile.light());
+        return Component.text(text, profile.light())
+            .hoverEvent(Component.text("Finds entities in the world.", profile.light()));
     }
 
 }

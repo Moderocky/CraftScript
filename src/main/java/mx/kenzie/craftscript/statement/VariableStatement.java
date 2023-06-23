@@ -30,7 +30,8 @@ public record VariableStatement(String name) implements Statement<Object> {
 
     @Override
     public Component prettyPrint(ColorProfile profile) {
-        return Component.text(name, profile.highlight());
+        return Component.text(name, profile.highlight())
+            .hoverEvent(Component.text("The (value of) <" + name + "> variable."));
     }
 
 }

@@ -52,7 +52,7 @@ public record IfStatement(Statement<?> check, Statement<?> then) implements Stat
             this.check.prettyPrint(profile),
             Component.space(),
             this.then.prettyPrint(profile)
-        );
+        ).hoverEvent(Component.text("If the condition is true, runs the following statement."));
     }
 
 }

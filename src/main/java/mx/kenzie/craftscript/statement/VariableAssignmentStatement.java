@@ -42,7 +42,7 @@ public record VariableAssignmentStatement(String name, Statement<?> statement) i
             Component.text(name, profile.highlight()),
             Component.text(" = ", profile.pop()),
             this.statement.prettyPrint(profile)
-        );
+        ).hoverEvent(Component.text("Sets the variable <" + name + "> to a value."));
     }
 
 }

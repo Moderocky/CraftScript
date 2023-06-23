@@ -75,13 +75,13 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
         if (data == null) return Component.textOfChildren(
             Component.text("run ", profile.dark()),
             this.statement.prettyPrint(profile)
-        );
+        ).hoverEvent(Component.text("Run an executable task.", profile.light()));
         else return Component.textOfChildren(
             Component.text("run ", profile.dark()),
             this.statement.prettyPrint(profile),
             Component.space(),
             this.data.prettyPrint(profile)
-        );
+        ).hoverEvent(Component.text("Run an executable task with inputs.", profile.light()));
     }
 
 }

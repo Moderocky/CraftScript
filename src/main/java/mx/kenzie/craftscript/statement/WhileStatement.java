@@ -46,7 +46,7 @@ public record WhileStatement(Statement<?> check, Statement<?> then) implements S
             this.check.prettyPrint(profile),
             Component.space(),
             this.then.prettyPrint(profile)
-        );
+        ).hoverEvent(Component.text("Runs a statement as long as the condition is true."));
     }
 
 }

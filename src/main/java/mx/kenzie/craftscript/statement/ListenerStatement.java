@@ -73,19 +73,20 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
 
     @Override
     public Component prettyPrint(ColorProfile profile) {
+        final Component hover = Component.text("Run code when an event occurs.", profile.light());
         if (details == null) return Component.textOfChildren(
             Component.text("on ", profile.dark()),
             this.key.prettyPrint(profile),
             Component.space(),
             this.task.prettyPrint(profile)
-        );
+        ).hoverEvent(hover);
         else return Component.textOfChildren(
             Component.text("on ", profile.dark()),
             this.key.prettyPrint(profile),
             this.details.prettyPrint(profile),
             Component.space(),
             this.task.prettyPrint(profile)
-        );
+        ).hoverEvent(hover);
     }
 
 }

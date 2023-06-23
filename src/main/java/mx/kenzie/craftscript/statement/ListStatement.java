@@ -54,7 +54,7 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
             builder.append(statement.prettyPrint(profile));
         }
         builder.append(Component.text(']', profile.pop()));
-        return builder.build();
+        return builder.build().hoverEvent(Component.text("A list of objects.", profile.light()));
     }
 
 }

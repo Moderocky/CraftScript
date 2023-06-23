@@ -51,7 +51,7 @@ public record ImportStatement(String... names) implements Statement<Boolean> {
             builder.append(Component.text(names[i], profile.highlight()));
         }
         builder.append(Component.text(']', profile.pop()));
-        return builder.build();
+        return builder.build().hoverEvent(Component.text("Imports resources from an external program."));
     }
 
 }

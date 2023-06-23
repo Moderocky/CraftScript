@@ -35,7 +35,7 @@ public record FunctionStatement(Statement<?> executable) implements Statement<Ob
             Component.text("function ", profile.dark()),
             Component.space(),
             this.executable.prettyPrint(profile)
-        );
+        ).hoverEvent(Component.text("Creates an executable function object."));
     }
 
 }

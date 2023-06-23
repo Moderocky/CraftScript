@@ -38,7 +38,7 @@ public record KindStatement(String name) implements Statement<Object> {
         return Component.textOfChildren(
             Component.text('#', profile.pop()),
             Component.text(name, profile.highlight())
-        );
+        ).hoverEvent(Component.text("An object type."));
     }
 
 }
