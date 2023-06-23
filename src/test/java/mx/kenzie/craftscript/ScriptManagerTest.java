@@ -46,15 +46,19 @@ public class ScriptManagerTest {
 
     @Test
     public void eventListenerTest() {
-        assert this.test("""
+        final Script script = manager.loadScript("test.script", """
             on test:event {
                 /print hello
             }
-            """, null);
+            """);
+        assert this.test(script, null);
         assert Objects.equals(sender.output, null);
         manager.emit(new TestEvent());
         assert Objects.equals(sender.output, "hello");
+        manager.deleteScript(script);
         this.sender.output = null;
+        manager.emit(new TestEvent());
+        assert Objects.equals(sender.output, null);
     }
 
     @Test
