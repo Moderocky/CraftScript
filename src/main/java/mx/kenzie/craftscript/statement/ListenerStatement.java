@@ -18,7 +18,7 @@ import java.util.Map;
 public record ListenerStatement(Statement<?> key, Statement<?> details, Statement<?> task)
     implements Statement<Object> {
 
-    public static final double DEFAULT_EVENT_RADIUS = 32;
+    public static final double DEFAULT_EVENT_RADIUS = 32, MAX_EVENT_RADIUS = 128;
 
     @Override
     public Object execute(Context context) throws ScriptError {
@@ -31,7 +31,9 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
             final Object b = details.execute(context);
             if (!(Wrapper.unwrap(b) instanceof Map<?, ?> map))
                 throw new ScriptError("Object '" + b + "' was not an event detail map.");
-            final double radius = map.get("radius") instanceof Double d ? d : DEFAULT_EVENT_RADIUS;
+            final double radius = Math.min(Math.max(0, map.get("radius") instanceof Double d
+                ? d
+                : DEFAULT_EVENT_RADIUS), MAX_EVENT_RADIUS);
             final Object at = map.get("at");
             if (at instanceof Location location)
                 listener = new StaticEventListener(data, key, task, radius, location);
