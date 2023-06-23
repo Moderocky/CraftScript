@@ -61,7 +61,7 @@ public class ScriptManager implements Closeable {
         this.plugin = plugin;
         this.loader = loader;
         this.test = plugin == null || Bukkit.getServer() == null;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this::registerListeners);
+        if (!test) Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this::registerListeners);
     }
 
     protected void registerListeners() {
