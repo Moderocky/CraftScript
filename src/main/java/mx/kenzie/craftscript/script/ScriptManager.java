@@ -1,15 +1,23 @@
 package mx.kenzie.craftscript.script;
 
 import mx.kenzie.centurion.MinecraftCommand;
+import mx.kenzie.craftscript.emitter.Event;
+import mx.kenzie.craftscript.emitter.EventListener;
+import mx.kenzie.craftscript.emitter.ListenerList;
 import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.listener.GameEventListener;
+import mx.kenzie.craftscript.utility.BackgroundTaskExecutor;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.TaskExecutor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.world.GenericGameEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +26,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
@@ -40,18 +45,31 @@ public class ScriptManager implements Closeable {
             throw new ScriptError("Failed to run task.", e);
         }
     };
+    public static final BackgroundTaskExecutor BACKGROUND = Executable::execute;
     protected final JavaPlugin plugin;
     protected final ScriptLoader loader;
     protected final Map<String, AbstractScript> scripts = new LinkedHashMap<>();
     protected final Map<String, Object> globalVariables = new ConcurrentHashMap<>();
+    protected final Map<NamespacedKey, ListenerList> listenerMap = new HashMap<>();
     protected final Set<Kind<?>> kinds = new LinkedHashSet<>();
     protected final boolean test;
     protected TaskExecutor executor = DISPATCHER;
+    protected BackgroundTaskExecutor backgroundExecutor = BACKGROUND;
+    protected GameEventListener listener = new GameEventListener(this);
 
     public ScriptManager(JavaPlugin plugin, ScriptLoader loader) {
         this.plugin = plugin;
         this.loader = loader;
         this.test = plugin == null || Bukkit.getServer() == null;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this::registerListeners);
+    }
+
+    protected void registerListeners() {
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
+    }
+
+    protected void unregisterListeners() {
+        GenericGameEvent.getHandlerList().unregister(listener);
     }
 
     public AbstractScript parseScript(String content) {
@@ -165,6 +183,7 @@ public class ScriptManager implements Closeable {
 
     @Override
     public void close() {
+        this.unregisterListeners();
         synchronized (scripts) {
             this.scripts.clear();
         }
@@ -225,6 +244,24 @@ public class ScriptManager implements Closeable {
 
     protected Object executeOnPrimary(Context context, Supplier<Object> supplier) {
         return executor.execute(context, supplier);
+    }
+
+    public void emit(Event event) {
+        final NamespacedKey key = event.key();
+        if (!listenerMap.containsKey(key)) return;
+        for (final EventListener listener : listenerMap.get(key)) {
+            if (!listener.isRelevant(event)) continue;
+            final EventListener.Details details = listener.getDetails();
+            try {
+                final Context context = new Context(details.owner(), this);
+                context.variables().put("event", event);
+                BACKGROUND.execute(listener, context);
+            } catch (ThreadDeath death) {
+                throw death;
+            } catch (Throwable ex) {
+                this.printError(new ScriptError("Error in event listener.", ex), details.owner());
+            }
+        }
     }
 
 }

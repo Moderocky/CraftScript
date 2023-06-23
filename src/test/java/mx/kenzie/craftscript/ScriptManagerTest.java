@@ -27,6 +27,7 @@ public class ScriptManagerTest {
         manager.registerKind(new VectorKind());
         manager.registerKind(new BlockDataKind());
         manager.registerKind(new BlockKind());
+        manager.registerKind(new EventKind());
         manager.registerKind(new MapKind());
         manager.registerKind(new ListKind());
         manager.registerKind(new ExecutableKind());
