@@ -1,9 +1,11 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
 import mx.kenzie.craftscript.utility.MapFormat;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -39,6 +41,15 @@ public record StringStatement(String value, InterpolationStatement... interpolat
         stream.print('"');
         stream.print(value);
         stream.print('"');
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.textOfChildren(
+            Component.text('"', profile.pop()),
+            Component.text(value, profile.light()),
+            Component.text('"', profile.pop())
+        );
     }
 
 }

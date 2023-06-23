@@ -1,7 +1,10 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
 
@@ -35,6 +38,19 @@ public record BlockStatement(Statement<?>... statements) implements Statement<Ob
             stream.println();
         }
         stream.print('}');
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        final TextComponent.Builder text = Component.text();
+        text.append(Component.text('{', profile.pop()));
+        for (final Statement<?> statement : statements) {
+            text.append(Component.text('\t'));
+            text.append(statement.prettyPrint(profile));
+            text.append(Component.newline());
+        }
+        text.append(Component.text('}', profile.pop()));
+        return text.build();
     }
 
 }

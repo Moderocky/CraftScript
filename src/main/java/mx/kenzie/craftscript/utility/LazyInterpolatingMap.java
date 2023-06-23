@@ -27,6 +27,10 @@ public class LazyInterpolatingMap extends AbstractMap<String, Object> {
         return entrySet;
     }
 
+    public Set<Entry<String, Statement<?>>> realEntrySet() {
+        return map.entrySet();
+    }
+
     @Override
     public Object get(Object key) {
         return map.get(key).execute(context);

@@ -1,12 +1,14 @@
 package mx.kenzie.craftscript.script.core;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.Statement;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record ConstantStatement(Object value) implements Statement<Object> {
+public record ConstantStatement(Object value) implements NativeStatement<Object> {
 
     @Override
     public Object execute(Context context) throws ScriptError {

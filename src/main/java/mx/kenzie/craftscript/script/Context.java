@@ -55,6 +55,12 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         return MapFormat.format(input, variables);
     }
 
+    public int getLine() {
+        if (data == null) return -1;
+        if (data.line == null) return -1;
+        return data.line.line();
+    }
+
     public static class Data {
 
         public AbstractScript script;

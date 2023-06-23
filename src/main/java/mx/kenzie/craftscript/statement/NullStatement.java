@@ -1,7 +1,9 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -22,6 +24,11 @@ public record NullStatement() implements Statement<Void> {
     @Override
     public void stringify(PrintStream stream) {
         stream.print("null");
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.text("null", profile.dark());
     }
 
 }

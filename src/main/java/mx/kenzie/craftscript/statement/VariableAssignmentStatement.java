@@ -1,8 +1,10 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.variable.Wrapper;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -32,6 +34,15 @@ public record VariableAssignmentStatement(String name, Statement<?> statement) i
         stream.print(name);
         stream.print("=");
         this.statement.stringify(stream);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.textOfChildren(
+            Component.text(name, profile.highlight()),
+            Component.text(" = ", profile.pop()),
+            this.statement.prettyPrint(profile)
+        );
     }
 
 }

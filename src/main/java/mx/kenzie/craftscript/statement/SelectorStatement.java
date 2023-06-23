@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.centurion.selector.Selector;
 import mx.kenzie.centurion.selector.Universe;
 import mx.kenzie.craftscript.script.Context;
@@ -7,6 +8,7 @@ import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
 import mx.kenzie.craftscript.utility.MapFormat;
 import mx.kenzie.craftscript.variable.Wrapper;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -46,6 +48,11 @@ public record SelectorStatement(String text, Universe<?> universe,
     @Override
     public void stringify(PrintStream stream) {
         stream.print(text);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.text(text, profile.light());
     }
 
 }

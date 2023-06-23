@@ -1,7 +1,9 @@
 package mx.kenzie.craftscript.script;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.utility.Executable;
+import net.kyori.adventure.text.Component;
 
 public record AnonymousScript(
     Statement<?>... statements) implements AbstractScript, Statement<Object>, Executable<Object> {
@@ -13,7 +15,13 @@ public record AnonymousScript(
 
     @Override
     public String name() {
-        return "<anonymous>.script";
+        return "???.script";
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return AbstractScript.super.prettyPrint(profile)
+            .hoverEvent(Component.text("An unnamed runnable script object.", profile.light()));
     }
 
 }

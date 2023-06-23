@@ -1,7 +1,9 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -25,6 +27,15 @@ public record FunctionStatement(Statement<?> executable) implements Statement<Ob
     public void stringify(PrintStream stream) {
         stream.print("function ");
         this.executable.stringify(stream);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.textOfChildren(
+            Component.text("function ", profile.dark()),
+            Component.space(),
+            this.executable.prettyPrint(profile)
+        );
     }
 
 }

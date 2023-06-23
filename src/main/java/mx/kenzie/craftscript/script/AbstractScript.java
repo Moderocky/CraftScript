@@ -1,6 +1,9 @@
 package mx.kenzie.craftscript.script;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.statement.Statement;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
 
@@ -12,7 +15,6 @@ public interface AbstractScript extends Statement<Object> {
     String name();
 
     Statement<?>[] statements();
-
 
     @Override
     default Object execute(Context context) throws ScriptError {
@@ -42,6 +44,16 @@ public interface AbstractScript extends Statement<Object> {
             statement.stringify(stream);
             stream.println();
         }
+    }
+
+    @Override
+    default Component prettyPrint(ColorProfile profile) {
+        final TextComponent.Builder builder = Component.text();
+        for (final Statement<?> statement : statements()) {
+            builder.append(statement.prettyPrint(profile));
+        }
+        return builder.build()
+            .hoverEvent(Component.text("A runnable script object.", profile.light()));
     }
 
 }

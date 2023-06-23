@@ -1,11 +1,13 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.emitter.EntityEventListener;
 import mx.kenzie.craftscript.emitter.EventListener;
 import mx.kenzie.craftscript.emitter.StaticEventListener;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.variable.Wrapper;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -65,6 +67,23 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
         if (details != null) this.details.stringify(stream);
         stream.print(' ');
         this.task.stringify(stream);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        if (details == null) return Component.textOfChildren(
+            Component.text("on ", profile.dark()),
+            this.key.prettyPrint(profile),
+            Component.space(),
+            this.task.prettyPrint(profile)
+        );
+        else return Component.textOfChildren(
+            Component.text("on ", profile.dark()),
+            this.key.prettyPrint(profile),
+            this.details.prettyPrint(profile),
+            Component.space(),
+            this.task.prettyPrint(profile)
+        );
     }
 
 }

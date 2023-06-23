@@ -1,7 +1,9 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -26,6 +28,14 @@ public record InvertStatement(Statement<?> check) implements Statement<Boolean> 
     public void stringify(PrintStream stream) {
         stream.print("!");
         this.check.stringify(stream);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.textOfChildren(
+            Component.text('!', profile.pop()),
+            this.check.prettyPrint(profile)
+        );
     }
 
 }

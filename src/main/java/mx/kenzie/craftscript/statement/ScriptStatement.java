@@ -1,8 +1,10 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -27,6 +29,11 @@ public record ScriptStatement(String name) implements Statement<AbstractScript> 
     @Override
     public void stringify(PrintStream stream) {
         stream.print(name);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.text(name, profile.light());
     }
 
 }

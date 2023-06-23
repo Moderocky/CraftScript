@@ -1,10 +1,12 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.craftscript.variable.Wrapper;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 import java.util.*;
@@ -62,8 +64,24 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
     public void stringify(PrintStream stream) {
         stream.print("run ");
         this.statement.stringify(stream);
-        stream.print(' ');
-        if (data != null) this.data.stringify(stream);
+        if (data != null) {
+            stream.print(' ');
+            this.data.stringify(stream);
+        }
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        if (data == null) return Component.textOfChildren(
+            Component.text("run ", profile.dark()),
+            this.statement.prettyPrint(profile)
+        );
+        else return Component.textOfChildren(
+            Component.text("run ", profile.dark()),
+            this.statement.prettyPrint(profile),
+            Component.space(),
+            this.data.prettyPrint(profile)
+        );
     }
 
 }

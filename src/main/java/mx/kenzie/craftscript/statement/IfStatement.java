@@ -1,8 +1,10 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.variable.Wrapper;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -41,6 +43,16 @@ public record IfStatement(Statement<?> check, Statement<?> then) implements Stat
         this.check.stringify(stream);
         stream.print(' ');
         this.then.stringify(stream);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.textOfChildren(
+            Component.text("if ", profile.dark()),
+            this.check.prettyPrint(profile),
+            Component.space(),
+            this.then.prettyPrint(profile)
+        );
     }
 
 }

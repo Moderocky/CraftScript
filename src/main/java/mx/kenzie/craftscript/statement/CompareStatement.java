@@ -1,9 +1,11 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.Comparator;
 import mx.kenzie.craftscript.variable.Wrapper;
+import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
@@ -36,6 +38,17 @@ public record CompareStatement(Statement<?> antecedent, Statement<?> consequent,
         this.antecedent.stringify(stream);
         stream.print(comparator.toString());
         this.consequent.stringify(stream);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return Component.textOfChildren(
+            this.antecedent.prettyPrint(profile),
+            Component.space(),
+            Component.text(comparator.toString(), profile.pop()),
+            Component.space(),
+            this.consequent.prettyPrint(profile)
+        );
     }
 
 }

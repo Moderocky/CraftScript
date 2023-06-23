@@ -1,8 +1,11 @@
 package mx.kenzie.craftscript.statement;
 
+import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.variable.VariableContainer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
 import java.util.Collection;
@@ -51,6 +54,19 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
         stream.print("require [");
         stream.print(String.join(", ", names));
         stream.print(']');
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        final TextComponent.Builder builder = Component.text();
+        builder.append(Component.text("require ", profile.dark()));
+        builder.append(Component.text('[', profile.pop()));
+        for (int i = 0; i < names.length; i++) {
+            if (i > 0) builder.append(Component.text(", ", profile.pop()));
+            builder.append(Component.text(names[i], profile.highlight()));
+        }
+        builder.append(Component.text(']', profile.pop()));
+        return builder.build();
     }
 
 }
