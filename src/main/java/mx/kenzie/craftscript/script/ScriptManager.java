@@ -51,7 +51,7 @@ public class ScriptManager implements Closeable {
     protected final ScriptLoader loader;
     protected final Map<String, AbstractScript> scripts = new LinkedHashMap<>();
     protected final Map<String, Object> globalVariables = new ConcurrentHashMap<>();
-    protected final Map<NamespacedKey, ListenerList> listenerMap = new HashMap<>();
+    protected final Map<NamespacedKey, ListenerList> listenerMap = new ConcurrentHashMap<>();
     protected final Set<Kind<?>> kinds = new LinkedHashSet<>();
     protected final boolean test;
     protected TaskExecutor executor = DISPATCHER;
@@ -122,15 +122,18 @@ public class ScriptManager implements Closeable {
     }
 
     public void deleteScript(String name) {
+        final AbstractScript script;
         synchronized (scripts) {
-            this.scripts.remove(name);
+            script = this.scripts.remove(name);
         }
+        if (script != null) this.unregisterListeners(script);
     }
 
     public void deleteScript(AbstractScript script) {
         synchronized (scripts) {
             this.scripts.values().removeIf(script::equals);
         }
+        this.unregisterListeners(script);
     }
 
     public Object runScript(AbstractScript script, CommandSender source) {
@@ -171,8 +174,7 @@ public class ScriptManager implements Closeable {
         final Context context = error.getContext();
         sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
             text("Script Error in '" + Context.getLocalContext().data().script.name() + "':", NamedTextColor.RED),
-            Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)
-        ));
+            Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
         if (context.data().line == null) return;
         sender.sendMessage(
             text("Line " + context.data().line + ": " + context.data().line.stringify(), NamedTextColor.GRAY));
@@ -264,6 +266,18 @@ public class ScriptManager implements Closeable {
         if (listeners == null) return;
         listeners.remove(listener);
         if (listeners.isEmpty()) listenerMap.remove(key);
+    }
+
+    public void unregisterListeners(AbstractScript script) {
+        for (final EventListener listener : this.getListeners()) {
+            if (listener.getDetails().data().script == script) this.unregisterListener(listener);
+        }
+    }
+
+    public Collection<EventListener> getListeners() {
+        final List<EventListener> listeners = new LinkedList<>();
+        for (final ListenerList value : listenerMap.values()) listeners.addAll(value);
+        return listeners;
     }
 
     public void emit(Event event) {
