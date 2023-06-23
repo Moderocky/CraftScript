@@ -36,6 +36,7 @@ public class ScriptManagerTest {
         manager.loadScript(Libraries.MATH);
         manager.loadScript(Libraries.PARSER);
         manager.loadScript(Libraries.GLOBAL);
+        manager.loadScript(Libraries.DEBUG);
     }
 
     @AfterClass

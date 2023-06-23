@@ -15,6 +15,34 @@ import java.util.Map;
 
 public record CommandStatement(String input, InterpolationStatement... interpolations) implements Statement<Boolean> {
 
+    public static List<Object> interpolateForPrinting(String string, InterpolationStatement... statements) {
+        final LazyInterpolatingMap map = new LazyInterpolatingMap(new Context(null, null), statements);
+        List<Object> list = List.of(string);
+        for (final Map.Entry<String, Statement<?>> entry : map.realEntrySet()) {
+            final String key = entry.getKey();
+            final List<Object> replacement = new LinkedList<>();
+            for (final Object object : list) {
+                if (!(object instanceof String text)) {
+                    replacement.add(object);
+                    continue;
+                }
+                final int index = text.indexOf(key);
+                if (index < 0) {
+                    replacement.add(text);
+                    continue;
+                }
+                final String before = text.substring(0, index), after;
+                after = text.substring(index + key.length());
+                replacement.add(before);
+                replacement.add(entry.getValue());
+                replacement.add(after);
+            }
+            if (replacement.size() < 2) continue;
+            list = replacement;
+        }
+        return list;
+    }
+
     @Override
     public Boolean execute(Context context) throws ScriptError {
         final String command;
@@ -65,34 +93,6 @@ public record CommandStatement(String input, InterpolationStatement... interpola
             Component.text('/', profile.pop()),
             Component.text(input, profile.light())
         ).hoverEvent(Component.text("A runnable command.", profile.light()));
-    }
-
-    public static List<Object> interpolateForPrinting(String string, InterpolationStatement... statements) {
-        final LazyInterpolatingMap map = new LazyInterpolatingMap(new Context(null, null), statements);
-        List<Object> list = List.of(string);
-        for (final Map.Entry<String, Statement<?>> entry : map.realEntrySet()) {
-            final String key = entry.getKey();
-            final List<Object> replacement = new LinkedList<>();
-            for (final Object object : list) {
-                if (!(object instanceof String text)) {
-                    replacement.add(object);
-                    continue;
-                }
-                final int index = text.indexOf(key);
-                if (index < 0) {
-                    replacement.add(text);
-                    continue;
-                }
-                final String before = text.substring(0, index), after;
-                after = text.substring(index + key.length());
-                replacement.add(before);
-                replacement.add(entry.getValue());
-                replacement.add(after);
-            }
-            if (replacement.size() < 2) continue;
-            list = replacement;
-        }
-        return list;
     }
 
 }

@@ -22,8 +22,21 @@ public class DebugLibrary extends LibraryObject {
             Component.text("' line ", profile.dark()),
             Component.text(context.getLine(), profile.highlight())
         ));
-        final String line = context.data().line.stringify();
-        sender.sendMessage(Component.text(line)); // todo i want a pretty print debugger
+        sender.sendMessage(context.data().line.prettyPrint(profile));
+        return null;
+    };
+    private static final Executable<?> SCRIPT = context -> {
+        final ColorProfile profile = ScriptArgument.COLOR_PROFILE;
+        final CommandSender sender = context.source();
+        sender.sendMessage(Component.textOfChildren(
+            Component.text("Current Script:", profile.dark())
+        ));
+        sender.sendMessage(Component.textOfChildren(
+            Component.text("File '", profile.dark()),
+            Component.text(context.data().script.name(), profile.highlight()),
+            Component.text("'", profile.dark())
+        ));
+        sender.sendMessage(context.data().script.prettyPrint(profile));
         return null;
     };
     private static final Executable<?> VARIABLES = context -> {
@@ -57,6 +70,7 @@ public class DebugLibrary extends LibraryObject {
         return switch (key) {
             case "variables" -> VARIABLES;
             case "line" -> LINE;
+            case "script" -> SCRIPT;
             default -> null;
         };
     }
