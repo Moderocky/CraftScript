@@ -49,7 +49,10 @@ public interface AbstractScript extends Statement<Object> {
     @Override
     default Component prettyPrint(ColorProfile profile) {
         final TextComponent.Builder builder = Component.text();
+        boolean first = true;
         for (final Statement<?> statement : statements()) {
+            if (first) first = false;
+            else builder.append(Component.newline());
             builder.append(statement.prettyPrint(profile));
         }
         return builder.build()

@@ -22,6 +22,7 @@ public class ScriptArgument extends TypedArgument<AbstractScript> {
     public ScriptArgument(ScriptController controller) {
         super(AbstractScript.class);
         this.controller = controller;
+        this.label = "script";
     }
 
     @Override
