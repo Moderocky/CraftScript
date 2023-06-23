@@ -46,4 +46,11 @@ public abstract class EventListener implements Executable<Object> {
 
     public record Details(CommandSender owner, Script source, int line) {}
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof EventListener listener)) return false;
+        return trigger == listener.trigger && details.source == listener.details.source;
+    }
+
 }

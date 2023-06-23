@@ -193,6 +193,10 @@ public class ScriptManager implements Closeable {
         this.executor = executor;
     }
 
+    public void setBackgroundExecutor(BackgroundTaskExecutor executor) {
+        this.backgroundExecutor = executor;
+    }
+
     public JavaPlugin getPlugin() {
         return plugin;
     }
