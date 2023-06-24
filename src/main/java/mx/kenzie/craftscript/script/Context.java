@@ -56,6 +56,16 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         return data.parentContext;
     }
 
+    public Context getRootContext() {
+        var context = this;
+        do {
+            if (context.data == null) return context;
+            if (context.data.parentContext == null) return context;
+            context = data().parentContext;
+        } while (context != null);
+        return this;
+    }
+
     public String interpolate(String input) {
         return MapFormat.format(input, variables);
     }

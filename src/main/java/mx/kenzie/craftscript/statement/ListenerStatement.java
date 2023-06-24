@@ -25,10 +25,12 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
         final Object a = key.execute(context);
         if (!(Wrapper.unwrap(a) instanceof NamespacedKey key))
             throw new ScriptError("Object '" + a + "' was not an event key.");
-        final EventListener.Details data = new EventListener.Details(context.source(), context.data());
+        final Context.Data data = context.data().clone();
+        data.script = context.getRootContext().data().script;
+        final EventListener.Details details = new EventListener.Details(context.source(), data);
         final EventListener listener;
-        if (details != null) {
-            final Object b = details.execute(context);
+        if (this.details != null) {
+            final Object b = this.details.execute(context);
             if (!(Wrapper.unwrap(b) instanceof Map<?, ?> map))
                 throw new ScriptError("Object '" + b + "' was not an event detail map.");
             final double radius = Math.min(Math.max(0, map.get("radius") instanceof Double d
@@ -36,11 +38,11 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
                 : DEFAULT_EVENT_RADIUS), MAX_EVENT_RADIUS);
             final Object at = map.get("at");
             if (at instanceof Location location)
-                listener = new StaticEventListener(data, key, task, radius, location);
+                listener = new StaticEventListener(details, key, task, radius, location);
             else if (at instanceof CommandSender sender)
-                listener = new EntityEventListener(data, key, task, radius, sender);
-            else listener = new EntityEventListener(data, key, task, radius, context.source());
-        } else listener = new EntityEventListener(data, key, task, DEFAULT_EVENT_RADIUS, context.source());
+                listener = new EntityEventListener(details, key, task, radius, sender);
+            else listener = new EntityEventListener(details, key, task, radius, context.source());
+        } else listener = new EntityEventListener(details, key, task, DEFAULT_EVENT_RADIUS, context.source());
         context.manager().registerListener(listener);
         return listener;
     }
