@@ -16,9 +16,10 @@ import java.util.Objects;
 public class ReflectionLibrary extends LibraryObject {
 
     private static final Executable<?> LINE = new InternalStatement(arguments -> {
-        if (arguments.isEmpty()) return Context.requireLocalContext().data().line;
+        final Context context = Context.requireLocalContext().getParentContext();
+        if (arguments.isEmpty()) return context.data().line;
         else if (arguments.get(0) instanceof Number number) {
-            for (Statement<?> statement : Context.requireLocalContext().data().script.statements()) {
+            for (Statement<?> statement : context.data().script.statements()) {
                 if (statement instanceof LineStatement line && line.line() == number.intValue()) return statement;
             }
         } else if (arguments.get(0) instanceof AbstractScript script && arguments.get(1) instanceof Number number) {
@@ -28,10 +29,10 @@ public class ReflectionLibrary extends LibraryObject {
         }
         return null;
     });
-    private static final Executable<?> SCRIPT = context -> context.data().script;
-    private static final Executable<?> VARIABLES = Context::variables;
+    private static final Executable<?> SCRIPT = context -> context.getParentContext().data().script;
+    private static final Executable<?> VARIABLES = context -> context.getParentContext().variables();
     private static final Executable<?> INTERPOLATE = new InternalStatement(arguments -> {
-        final Context context = Context.requireLocalContext();
+        final Context context = Context.requireLocalContext().getParentContext();
         final String text = Objects.toString(arguments.get(0));
         final InterpolationStatement[] statements = StringParser
             .interpolations(text, context.manager().getParser());

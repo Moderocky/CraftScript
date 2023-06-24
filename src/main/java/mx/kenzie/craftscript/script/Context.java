@@ -16,6 +16,7 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
 
     public Context(Context context) {
         this(context.source, context.manager, new VariableContainer(context.variables), context.data.clone());
+        this.data.parentContext = context;
     }
 
     public Context(CommandSender source, ScriptManager manager) {
@@ -51,6 +52,10 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         return kinds;
     }
 
+    public Context getParentContext() {
+        return data.parentContext;
+    }
+
     public String interpolate(String input) {
         return MapFormat.format(input, variables);
     }
@@ -67,6 +72,7 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         public Set<MinecraftCommand> localCommands = new LinkedHashSet<>();
         public Set<Kind<?>> kinds = new LinkedHashSet<>();
         public LineStatement line;
+        public Context parentContext;
 
         @Override
         public Data clone() {

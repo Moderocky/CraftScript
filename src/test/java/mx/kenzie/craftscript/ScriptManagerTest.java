@@ -48,6 +48,23 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void reflectionTest() {
+        assert this.test("""
+            import [reflection]
+            var = 10
+            variables = run reflection[variables]
+            variables[var=5]
+            /print {var}
+            """, "5");
+        assert this.test("""
+            import [reflection]
+            var = 10
+            script = run reflection[script]
+            /print {script}
+            """, "test.script");
+    }
+
+    @Test
     public void eventListenerTest() {
         final Script script = manager.loadScript("test.script", """
             on test:event {

@@ -15,6 +15,7 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
 
     static Object run(Executable<?> executable, Context context, VariableContainer container) {
         final Context sub = new Context(context.source(), context.manager(), container, context.data().clone());
+        sub.data().parentContext = context;
         Context.setLocalContext(sub);
         try {
             return executable.execute(sub);
