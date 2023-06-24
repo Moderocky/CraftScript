@@ -1,9 +1,12 @@
 package mx.kenzie.craftscript.kind;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 public class MapKind extends Kind<Map> {
+
+    private volatile int step;
 
     public MapKind() {
         super(Map.class);
@@ -33,6 +36,37 @@ public class MapKind extends Kind<Map> {
     @Override
     public Map fromString(String string) {
         return null;
+    }
+
+    @Override
+    public String toString(Map map) {
+        final Iterator iterator = map.entrySet().iterator();
+        if (!iterator.hasNext()) return "[]";
+        final StringBuilder builder = new StringBuilder();
+        builder.append('[');
+        synchronized (this) {
+            this.step++;
+        }
+        try {
+            while (iterator.hasNext()) {
+                final Map.Entry e = (Map.Entry) iterator.next();
+                final Object key = e.getKey(), value = e.getValue();
+                if (step < 8) {
+                    builder.append(key == this ? "???" : key);
+                    builder.append('=');
+                    builder.append(value == this ? "???" : value);
+                } else {
+                    builder.append("???=???");
+                }
+                if (!iterator.hasNext()) return builder.append(']').toString();
+                builder.append(',').append(' ');
+            }
+        } finally {
+            synchronized (this) {
+                this.step--;
+            }
+        }
+        return builder.append(']').toString();
     }
 
 }

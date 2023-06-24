@@ -249,7 +249,7 @@ public class ScriptManager implements Closeable {
         return (boolean) this.executeOnPrimary(context, () -> Bukkit.dispatchCommand(context.source(), command));
     }
 
-    protected Object executeOnPrimary(Context context, Supplier<Object> supplier) {
+    public Object executeOnPrimary(Context context, Supplier<Object> supplier) {
         return executor.execute(context, supplier);
     }
 

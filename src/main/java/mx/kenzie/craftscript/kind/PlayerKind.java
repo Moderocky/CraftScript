@@ -28,7 +28,7 @@ public class PlayerKind extends Kind<Player> {
             case "x" -> thing.getLocation().getX();
             case "y" -> thing.getLocation().getY();
             case "z" -> thing.getLocation().getZ();
-            case "compass" -> thing.getCompassTarget();
+            case "compass_target" -> thing.getCompassTarget();
             case "can_fly" -> thing.getAllowFlight();
             case "bed_location" -> thing.getBedSpawnLocation();
             case "arrows_in_body" -> thing.getArrowsInBody();
