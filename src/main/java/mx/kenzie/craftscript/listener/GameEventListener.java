@@ -16,7 +16,7 @@ public class GameEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEvent(GenericGameEvent event) {
         if (event.isCancelled()) return;
-        manager.emit(new MinecraftEvent(event));
+        this.manager.emit(new MinecraftEvent(event));
     }
 
 }

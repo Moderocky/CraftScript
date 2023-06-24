@@ -52,7 +52,9 @@ public abstract class Kind<Type> {
         return new String[0];
     }
 
-    public abstract Type fromString(String string);
+    public Type fromString(String string) {
+        return null;
+    }
 
     public String toString(Type type) {
         return Objects.toString(type);
