@@ -14,6 +14,7 @@ import java.util.Objects;
 public class ScriptManagerTest {
 
     static ScriptManager manager;
+    private final TestCommandSender sender = new TestCommandSender();
 
     @BeforeClass
     public static void startup() {
@@ -37,6 +38,7 @@ public class ScriptManagerTest {
         manager.loadScript(Libraries.PARSER);
         manager.loadScript(Libraries.GLOBAL);
         manager.loadScript(Libraries.DEBUG);
+        manager.loadScript(Libraries.REFLECTION);
     }
 
     @AfterClass
@@ -496,8 +498,6 @@ public class ScriptManagerTest {
     private boolean test(String script) {
         return this.test(script, null);
     }
-
-    private final TestCommandSender sender = new TestCommandSender();
 
     private boolean test(Script script, String output) {
         final Context.Data data = new Context.Data();

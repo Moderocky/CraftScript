@@ -308,4 +308,8 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    public ScriptParser getParser() {
+        return loader;
+    }
+
 }

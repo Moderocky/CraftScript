@@ -6,12 +6,7 @@ import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import org.bukkit.Bukkit;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CommandParser extends BasicParser {
-
-    private int start;
 
     @Override
     public boolean matches() {
@@ -28,24 +23,8 @@ public class CommandParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
-        if (input.indexOf('}') > input.indexOf('{')) {
-            final List<InterpolationStatement> list = new ArrayList<>();
-            do {
-                final int open = input.indexOf('{', start), close = input.indexOf('}', open);
-                if (open < 0 || close < 0) break;
-                final String key = input.substring(open, close + 1);
-                final Statement<?> statement = parent.parse(key);
-                if (statement instanceof InterpolationStatement interpolation) list.add(interpolation);
-                this.start = close;
-            } while (true);
-            return new CommandStatement(input.substring(1).trim(), list.toArray(new InterpolationStatement[0]));
-        } else return new CommandStatement(input.substring(1).trim());
-    }
-
-    @Override
-    public void close() throws ScriptError {
-        this.start = 0;
-        super.close();
+        final InterpolationStatement[] statements = StringParser.interpolations(input, parent);
+        return new CommandStatement(input.substring(1).trim(), statements);
     }
 
 }

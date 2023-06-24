@@ -18,6 +18,7 @@ public class TestCommandSender implements CommandSender {
 
     public volatile String output;
     public Object raw;
+
     public TestCommandSender() {
         super();
     }

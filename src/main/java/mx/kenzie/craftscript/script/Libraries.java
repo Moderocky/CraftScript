@@ -12,6 +12,7 @@ public interface Libraries {
             return context.manager().parseScript((String) arguments.get(0));
         })));
     LibraryScript DEBUG = new LibraryScript("debug.script", new LibraryStatement(new DebugLibrary()));
+    LibraryScript REFLECTION = new LibraryScript("reflection.script", new LibraryStatement(new ReflectionLibrary()));
     LibraryScript GLOBAL = new LibraryScript("global.script", new SupplierStatement(() -> {
         final Context context = Context.getLocalContext();
         if (context == null) throw new ScriptError("No script environment is available here.");

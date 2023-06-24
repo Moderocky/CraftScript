@@ -62,7 +62,7 @@ public class DebugLibrary extends LibraryObject {
     };
 
     public DebugLibrary() {
-        super("variables");
+        super("variables", "line", "script");
     }
 
     @Override
