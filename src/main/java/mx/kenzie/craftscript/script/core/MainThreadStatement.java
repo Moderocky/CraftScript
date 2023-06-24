@@ -13,10 +13,6 @@ public record MainThreadStatement(BiFunction<Context, Arguments, Object> functio
         this((context, arguments) -> function.apply(arguments));
     }
 
-    public MainThreadStatement(InternalStatement.VoidFunction function) {
-        this((Function<Arguments, Object>) function);
-    }
-
     @Override
     public Object execute(Context context) throws ScriptError {
         final Arguments arguments = InternalStatement.extractArguments(context);

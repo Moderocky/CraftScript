@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public record Context(CommandSender source, ScriptManager manager, VariableContainer variables, Data data) {
 
@@ -43,6 +44,12 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
 
     public static void removeLocalContext() {
         local.remove();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <Type> Type executeOnPrimary(Supplier<Type> supplier) {
+        final Context context = requireLocalContext();
+        return (Type) context.manager.executeOnPrimary(context, (Supplier<Object>) supplier);
     }
 
     public Set<Kind<?>> getKinds() {
