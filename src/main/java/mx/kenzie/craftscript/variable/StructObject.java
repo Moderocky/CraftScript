@@ -14,10 +14,10 @@ public class StructObject extends VariableContainer {
     @Override
     public String toString() {
         if (this.isEmpty()) return "[]";
-        final Iterator<Entry<String, Object>> iterator = entrySet().iterator();
+        final Iterator<Entry<String, Object>> iterator = this.entrySet().iterator();
         final StringBuilder builder = new StringBuilder();
         builder.append('[');
-        for (; ; ) {
+        while (iterator.hasNext()) {
             final Entry<String, Object> entry = iterator.next();
             final String key = entry.getKey();
             final Object value = entry.getValue();
@@ -27,6 +27,7 @@ public class StructObject extends VariableContainer {
             if (!iterator.hasNext()) return builder.append(']').toString();
             builder.append(',').append(' ');
         }
+        return builder.append(']').toString();
     }
 
     public Kind<StructObject> getKind() {
