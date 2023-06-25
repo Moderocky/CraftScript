@@ -7,34 +7,20 @@ import mx.kenzie.craftscript.utility.Executable;
 
 import java.util.Objects;
 
-public class ExecutableKind extends Kind<Executable> {
+public class StatementKind extends ExecutableKind {
 
-    public ExecutableKind() {
-        super(Executable.class);
-    }
-
-    protected ExecutableKind(Class<? extends Executable> type) {
-        super((Class<Executable>) type);
+    public StatementKind() {
+        super(Statement.class);
     }
 
     @Override
     public Object getProperty(Executable thing, String property) {
         if (thing == null) return null;
+        if (!(thing instanceof Statement<?> statement)) return super.getProperty(thing, property);
         return switch (property) {
             case "type" -> this;
-            case "debug" -> thing instanceof Statement<?> statement
-                ? statement.stringify() : thing.toString();
-            default -> null;
-        };
-    }
-
-    @Override
-    public Object setProperty(Executable thing, String property, Object value) {
-        if (thing == null) return null;
-        return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
-            default -> null;
+            case "debug" -> statement.stringify();
+            default -> super.getProperty(thing, property);
         };
     }
 
@@ -47,7 +33,12 @@ public class ExecutableKind extends Kind<Executable> {
     public String toString(Executable executable) {
         if (executable instanceof AbstractScript) return executable.toString();
         if (executable instanceof SupplierStatement statement) return Objects.toString(statement.supplier().get());
-        return "<function>";
+        if (executable == null) return "null";
+        final Class<?> type = executable.getClass();
+        if (type.isAnonymousClass() || type.isSynthetic() || type.isHidden()) return "<statement>";
+        final String name = type.getSimpleName().replaceAll("([A-Z]+)([A-Z][a-z])", "$1 $2");
+        final String converted = name.replaceAll("([a-z])([A-Z])", "$1 $2");
+        return "<" + converted.toLowerCase() + ">";
     }
 
 }

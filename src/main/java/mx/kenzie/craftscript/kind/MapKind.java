@@ -1,5 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
+import mx.kenzie.craftscript.variable.Wrapper;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -52,9 +54,9 @@ public class MapKind extends Kind<Map> {
                 final Map.Entry e = (Map.Entry) iterator.next();
                 final Object key = e.getKey(), value = e.getValue();
                 if (step < 8) {
-                    builder.append(key == this ? "???" : key);
+                    builder.append(Wrapper.unwrap(key) == map ? "<this>" : key);
                     builder.append('=');
-                    builder.append(value == this ? "???" : value);
+                    builder.append(Wrapper.unwrap(value) == map ? "<this>" : value);
                 } else {
                     builder.append("???=???");
                 }

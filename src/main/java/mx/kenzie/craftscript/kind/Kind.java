@@ -61,6 +61,7 @@ public abstract class Kind<Type> {
     }
 
     public String toStringTry(Object object) {
+        object = Wrapper.unwrap(object);
         if (this.getType().isInstance(object)) return this.toString((Type) object);
         return Objects.toString(type);
     }
