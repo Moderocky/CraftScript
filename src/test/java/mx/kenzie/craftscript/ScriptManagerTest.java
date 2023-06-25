@@ -49,6 +49,17 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void reflectionInterpolateTest() {
+        assert this.test("""
+            import [reflection]
+            var = "there"
+            text = "hello {" + "var}"
+            result = run reflection[interpolate] text
+            /print {result}
+            """, "hello there");
+    }
+
+    @Test
     public void commentTest() {
         assert this.test("""
             var = 10 // comment

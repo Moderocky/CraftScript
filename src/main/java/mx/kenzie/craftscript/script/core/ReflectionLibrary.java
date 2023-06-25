@@ -32,8 +32,8 @@ public class ReflectionLibrary extends LibraryObject {
     private static final Executable<?> SCRIPT = context -> context.getParentContext().data().script;
     private static final Executable<?> ROOT = context -> context.getRootContext().data().script;
     private static final Executable<?> VARIABLES = context -> context.getParentContext().variables();
-    private static final Executable<?> INTERPOLATE = new InternalStatement(arguments -> {
-        final Context context = Context.requireLocalContext().getParentContext();
+    private static final Executable<?> INTERPOLATE = new InternalStatement((ours, arguments) -> {
+        final Context context = ours.getParentContext();
         final String text = Objects.toString(arguments.get(0));
         final InterpolationStatement[] statements = StringParser
             .interpolations(text, context.manager().getParser());

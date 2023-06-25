@@ -17,12 +17,19 @@ public class StringParser extends BasicParser {
             start = 0;
             final List<InterpolationStatement> list = new ArrayList<>();
             do {
-                final int open = input.indexOf('{', start), close = input.indexOf('}', open);
-                if (open < 0 || close < 0) break;
-                final String value = input.substring(open, close + 1);
+                int open = input.indexOf('{', start), close = input.indexOf('}', open);
+                if (open < 0) break;
+                do {
+                    if (close < 0) break;
+                    final String value = input.substring(open, close + 1);
+                    final Statement<?> statement = parser.parse(value);
+                    if (statement instanceof InterpolationStatement interpolation) {
+                        list.add(interpolation);
+                        break;
+                    }
+                    close = input.indexOf('}', close + 1);
+                } while (close < input.length());
                 start = close;
-                final Statement<?> statement = parser.parse(value);
-                if (statement instanceof InterpolationStatement interpolation) list.add(interpolation);
             } while (true);
             return list.toArray(new InterpolationStatement[0]);
         } else return new InterpolationStatement[0];
@@ -31,7 +38,20 @@ public class StringParser extends BasicParser {
     @Override
     public boolean matches() {
         if (input.length() < 2) return false;
-        return input.charAt(0) == '"' && input.charAt(input.length() - 1) == '"';
+        return input.charAt(0) == '"' && input.charAt(input.length() - 1) == '"' && this.insideHasNoBreaks();
+    }
+
+    private boolean insideHasNoBreaks() {
+        if (input.length() == 2) return true;
+        final String inside = input.substring(1, input.length() - 1);
+        int quote = inside.indexOf('"');
+        if (quote < 0) return true;
+        if (quote == 0) return false;
+        do {
+            if (inside.charAt(quote - 1) != '\\') return false;
+            quote = inside.indexOf('"', quote + 1);
+        } while (quote > 0 && quote < inside.length());
+        return true;
     }
 
     @Override
