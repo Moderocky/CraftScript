@@ -60,6 +60,24 @@ public class ScriptManagerTest {
             run func 5
             run func variables
             """, "10");
+        assert this.test("""
+            var = 10
+            func = function {
+                var = 5
+            }
+            run func
+            /print {var}
+            """, "10");
+        assert this.test("""
+            import [reflection]
+            var = 10
+            func = function {
+                var = 5
+            }
+            variables = run reflection[variables]
+            run func variables
+            /print {var}
+            """, "5");
     }
 
     @Test
