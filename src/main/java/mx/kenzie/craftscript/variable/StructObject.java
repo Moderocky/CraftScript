@@ -11,8 +11,28 @@ public class StructObject extends VariableContainer {
     public static final Pattern TYPE_NAME = Pattern.compile("#[a-zA-Z_\\-.][a-zA-Z0-9_\\-.]*");
     private static final CustomKind KIND = new CustomKind();
 
+    protected boolean frozen;
+
     public StructObject() {
         super((Void) null);
+    }
+
+    public void freeze() {
+        this.frozen = true;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void unfreeze() {
+        this.frozen = false;
+    }
+
+    @Override
+    public Object put(String key, Object value) {
+        if (!frozen || this.containsKey(key)) return super.put(key, value);
+        return null;
     }
 
     @Override

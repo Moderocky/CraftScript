@@ -15,6 +15,7 @@ public record StructStatement(BlockStatement block) implements Statement<StructO
         final StructObject object = new StructObject();
         final Context sub = new Context(context.source(), context.manager(), object, context.data());
         this.block.execute(sub);
+        object.freeze();
         return object;
     }
 

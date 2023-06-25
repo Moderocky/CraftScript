@@ -78,6 +78,20 @@ public class ScriptManagerTest {
             run func variables
             /print {var}
             """, "5");
+        assert this.test("""
+            person = struct {
+                name = "BaeFell"
+                age = 42
+            }
+            func = function {
+                assert age == 42
+                beans = "hello"
+                age = 41
+                assert beans == null
+            }
+            run func person
+            /print {person[age]}
+            """, "41");
     }
 
     @Test
