@@ -81,12 +81,23 @@ public abstract class LibraryObject extends StructObject implements Map<String, 
     @NotNull
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        return Collections.emptySet();
+        final Set<Entry<String, Object>> set = new HashSet<>();
+        for (String key : keys) set.add(new Property(key, this.get(key)));
+        return set;
     }
 
     public boolean verify() { // for testing
         for (String key : keys) if (this.get(key) == null) return false;
         return true;
+    }
+
+    record Property(String getKey, Object getValue) implements Entry<String, Object> {
+
+        @Override
+        public Object setValue(Object value) {
+            throw new ScriptError("Unable to change library function.");
+        }
+
     }
 
 }

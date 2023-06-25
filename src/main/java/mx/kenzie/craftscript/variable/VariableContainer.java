@@ -14,6 +14,10 @@ public class VariableContainer extends HashMap<String, Object> {
         this.put("$parameters", Collections.emptyList());
     }
 
+    protected VariableContainer(Void unused) {
+        super();
+    }
+
     public VariableContainer(Map<String, Object> container) {
         super(container);
     }

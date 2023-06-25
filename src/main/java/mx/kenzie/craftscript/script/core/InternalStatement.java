@@ -16,12 +16,6 @@ public record InternalStatement(BiFunction<Context, Arguments, Object> function)
         this((context, arguments) -> function.apply(arguments));
     }
 
-    @Override
-    public Object execute(Context context) throws ScriptError {
-        final Arguments arguments = extractArguments(context);
-        return function.apply(context, arguments);
-    }
-
     static Arguments extractArguments(Context context) {
         final Arguments arguments;
         final Collection<?> parameters = (Collection<?>) context.variables()
@@ -32,6 +26,12 @@ public record InternalStatement(BiFunction<Context, Arguments, Object> function)
             arguments = Arguments.of(converted.toArray());
         } else arguments = Arguments.of();
         return arguments;
+    }
+
+    @Override
+    public Object execute(Context context) throws ScriptError {
+        final Arguments arguments = extractArguments(context);
+        return function.apply(context, arguments);
     }
 
 }

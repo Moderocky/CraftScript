@@ -11,6 +11,10 @@ public class StructObject extends VariableContainer {
     public static final Pattern TYPE_NAME = Pattern.compile("#[a-zA-Z_\\-.][a-zA-Z0-9_\\-.]*");
     private static final CustomKind KIND = new CustomKind();
 
+    public StructObject() {
+        super((Void) null);
+    }
+
     @Override
     public String toString() {
         if (this.isEmpty()) return "[]";
@@ -23,7 +27,7 @@ public class StructObject extends VariableContainer {
             final Object value = entry.getValue();
             builder.append(key);
             builder.append('=');
-            builder.append(value == this ? "this" : value);
+            builder.append(Wrapper.unwrap(value) == this ? "this" : Kind.of(value).toStringTry(value));
             if (!iterator.hasNext()) return builder.append(']').toString();
             builder.append(',').append(' ');
         }

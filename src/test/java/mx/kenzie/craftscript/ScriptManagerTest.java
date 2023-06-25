@@ -29,9 +29,10 @@ public class ScriptManagerTest {
         manager.registerKind(new BlockDataKind());
         manager.registerKind(new BlockKind());
         manager.registerKind(new EventKind());
+        manager.registerKind(new StatementKind());
+        manager.registerKind(new ExecutableKind());
         manager.registerKind(new MapKind());
         manager.registerKind(new ListKind());
-        manager.registerKind(new ExecutableKind());
         manager.registerKind(new CollectionKind());
         manager.registerKind(new KindKind());
         manager.loadScript(Libraries.MATH);
@@ -45,6 +46,20 @@ public class ScriptManagerTest {
     public static void tearDown() {
         manager.close();
         manager = null;
+    }
+
+    @Test
+    public void variablePassingTest() {
+        assert this.test("""
+            import [reflection]
+            var = 10
+            func = function {
+                /print {var}
+            }
+            variables = run reflection[variables]
+            run func 5
+            run func variables
+            """, "10");
     }
 
     @Test

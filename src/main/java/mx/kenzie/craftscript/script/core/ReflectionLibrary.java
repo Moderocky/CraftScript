@@ -30,6 +30,7 @@ public class ReflectionLibrary extends LibraryObject {
         return null;
     });
     private static final Executable<?> SCRIPT = context -> context.getParentContext().data().script;
+    private static final Executable<?> ROOT = context -> context.getRootContext().data().script;
     private static final Executable<?> VARIABLES = context -> context.getParentContext().variables();
     private static final Executable<?> INTERPOLATE = new InternalStatement(arguments -> {
         final Context context = Context.requireLocalContext().getParentContext();
@@ -43,7 +44,7 @@ public class ReflectionLibrary extends LibraryObject {
     });
 
     public ReflectionLibrary() {
-        super("variables", "line", "script", "interpolate");
+        super("variables", "line", "script", "root", "interpolate");
     }
 
     @Override
@@ -52,6 +53,7 @@ public class ReflectionLibrary extends LibraryObject {
             case "variables" -> VARIABLES;
             case "line" -> LINE;
             case "script" -> SCRIPT;
+            case "root" -> ROOT;
             case "interpolate" -> INTERPOLATE;
             default -> null;
         };

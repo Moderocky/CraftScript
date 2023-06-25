@@ -28,10 +28,15 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
     @SuppressWarnings("unchecked")
     public Object execute(Context context) throws ScriptError {
         final Object result = Wrapper.unwrap(statement.execute(context));
-        final VariableContainer variables = new VariableContainer();
+        VariableContainer variables = new VariableContainer();
         if (data != null) {
             final Object found = Wrapper.unwrap(data.execute(context));
-            if (found instanceof Map<?, ?> map) {
+            if (found instanceof VariableContainer container) {
+                variables = container;
+//            }
+//            if (found != null && found.getClass() == VariableContainer.class) {
+//                variables = (VariableContainer) found; // special reflective case!
+            } else if (found instanceof Map<?, ?> map) {
                 variables.putAll((Map<String, Object>) map);
                 variables.put("$parameters", new ArrayList<>(map.values()));
             } else if (found instanceof Collection<?> collection) {
