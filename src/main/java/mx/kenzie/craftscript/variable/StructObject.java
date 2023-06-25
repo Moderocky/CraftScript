@@ -3,6 +3,8 @@ package mx.kenzie.craftscript.variable;
 import mx.kenzie.craftscript.kind.CustomKind;
 import mx.kenzie.craftscript.kind.Kind;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,7 @@ public class StructObject extends VariableContainer {
     protected boolean frozen;
 
     public StructObject() {
-        super((Void) null);
+        super(new HashMap<>(), Collections.emptyList());
     }
 
     public void freeze() {

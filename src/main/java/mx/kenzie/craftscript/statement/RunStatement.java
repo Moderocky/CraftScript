@@ -9,7 +9,9 @@ import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 public record RunStatement(Statement<?> statement, Statement<?> data) implements Statement<Object> {
 
@@ -33,18 +35,17 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
             final Object found = Wrapper.unwrap(data.execute(context));
             if (found instanceof VariableContainer container) {
                 variables = container;
-//            }
 //            if (found != null && found.getClass() == VariableContainer.class) {
 //                variables = (VariableContainer) found; // special reflective case!
             } else if (found instanceof Map<?, ?> map) {
                 variables.putAll((Map<String, Object>) map);
-                variables.put("$parameters", new ArrayList<>(map.values()));
+                variables.getParameters().addAll(map.values());
             } else if (found instanceof Collection<?> collection) {
-                variables.put("$parameters", new ArrayList<>(collection));
+                variables.getParameters().addAll(collection);
             } else if (found instanceof Object[] objects) {
-                variables.put("$parameters", Arrays.asList(objects));
-            } else variables.put("$parameters", Collections.singletonList(found));
-        } else variables.put("$parameters", Collections.emptyList());
+                variables.getParameters().addAll(Arrays.asList(objects));
+            } else variables.getParameters().add(found);
+        }
         if (result instanceof Executable<?> executable) return run(executable, context, variables);
         else if (result instanceof Runnable runnable) {
             runnable.run();

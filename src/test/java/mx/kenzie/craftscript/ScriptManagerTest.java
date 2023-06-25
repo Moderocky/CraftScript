@@ -133,6 +133,29 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void variablePassGlobal() {
+        assert this.test("""
+            import [global]
+            global[var=10]
+            func = function {
+                /print {var}
+            }
+            run func 5
+            run func global
+            """, "10");
+        assert this.test("""
+            import [global]
+            global[var=null]
+            func = function {
+                var = 8
+            }
+            run func global
+            /print {global[var]}
+            global[var=null]
+            """, "8");
+    }
+
+    @Test
     public void reflectionTest() {
         assert this.test("""
             import [reflection]

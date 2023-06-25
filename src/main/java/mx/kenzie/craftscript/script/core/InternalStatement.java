@@ -18,8 +18,7 @@ public record InternalStatement(BiFunction<Context, Arguments, Object> function)
 
     static Arguments extractArguments(Context context) {
         final Arguments arguments;
-        final Collection<?> parameters = (Collection<?>) context.variables()
-            .getOrDefault("$parameters", new ArrayList<>()), converted;
+        final Collection<?> parameters = context.variables().getParameters(), converted;
         if (parameters != null) {
             converted = new ArrayList<>(parameters.size());
             for (final Object parameter : parameters) converted.add(Wrapper.unwrap(parameter));

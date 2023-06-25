@@ -15,6 +15,7 @@ public abstract class LibraryObject extends StructObject implements Map<String, 
 
     protected LibraryObject(String... keys) {
         this.keys = new HashSet<>(List.of(keys));
+        this.freeze();
     }
 
     @Override

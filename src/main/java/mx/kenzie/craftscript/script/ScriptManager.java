@@ -8,6 +8,7 @@ import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.listener.GameEventListener;
 import mx.kenzie.craftscript.utility.BackgroundTaskExecutor;
 import mx.kenzie.craftscript.utility.TaskExecutor;
+import mx.kenzie.craftscript.variable.ConcurrentVariableContainer;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -50,7 +51,7 @@ public class ScriptManager implements Closeable {
     protected final JavaPlugin plugin;
     protected final ScriptLoader loader;
     protected final Map<String, AbstractScript> scripts = new LinkedHashMap<>();
-    protected final Map<String, Object> globalVariables = new ConcurrentHashMap<>();
+    protected final Map<String, Object> globalVariables = ConcurrentVariableContainer.noParameters();
     protected final Map<NamespacedKey, ListenerList> listenerMap = new ConcurrentHashMap<>();
     protected final Set<Kind<?>> kinds = new LinkedHashSet<>();
     protected final boolean test;
