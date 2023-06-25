@@ -49,6 +49,17 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void commentTest() {
+        assert this.test("""
+            var = 10 // comment
+            // other comment
+            text = "hello // there"
+            text = "hello // there" // comment
+            /print {text}
+            """, "hello // there");
+    }
+
+    @Test
     public void variablePassingTest() {
         assert this.test("""
             import [reflection]
@@ -92,6 +103,22 @@ public class ScriptManagerTest {
             run func person
             /print {person[age]}
             """, "41");
+        assert this.test("""
+            import [reflection]
+                        
+            number = 10
+            word = "hello"
+                        
+            func = function {
+                number = 5
+                word = "there"
+            }
+                        
+            run func run reflection[variables]
+                        
+            assert number == 5
+            assert word == "there"
+            """, null);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.script;
 
+import mx.kenzie.craftscript.parser.CommentParser;
 import mx.kenzie.craftscript.parser.Parser;
 import mx.kenzie.craftscript.statement.CloseStatement;
 import mx.kenzie.craftscript.statement.LineStatement;
@@ -15,6 +16,7 @@ import java.util.function.Supplier;
 public class SimpleScriptLoader implements ScriptLoader {
 
     private final Map<Supplier<Parser>, Parser> cache = new HashMap<>();
+    private final CommentParser comment = new CommentParser();
     protected Supplier<Parser>[] parsers;
     private int line;
     private BufferedReader reader;
@@ -52,6 +54,7 @@ public class SimpleScriptLoader implements ScriptLoader {
                 final String line = reader.readLine();
                 if (line == null) break;
                 if (line.isBlank()) continue;
+                if (this.checkEmpty(line)) continue;
                 final Statement<?> statement = this.parse(line.trim());
                 if (statement == null)
                     throw new ScriptError("Line " + this.line + ": '" + line + "' was not recognised.");
@@ -72,11 +75,19 @@ public class SimpleScriptLoader implements ScriptLoader {
             final String line = reader.readLine();
             if (line == null) throw new ScriptError("Reached end of script when expecting line.");
             if (line.isBlank()) continue;
+            if (this.checkEmpty(line)) continue;
             final Statement<?> statement = this.parse(line.trim());
             if (statement == null)
                 throw new ScriptError("Line " + this.line + ": '" + line + "' was not recognised.");
             return statement;
         } while (true);
+    }
+
+    public boolean checkEmpty(String line) {
+        try (final Parser parser = comment) {
+            parser.insert(line.trim(), this);
+            return (parser.matches() && parser.parse() == null);
+        }
     }
 
     @Override
