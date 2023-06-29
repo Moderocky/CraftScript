@@ -30,7 +30,11 @@ public record InternalStatement(BiFunction<Context, Arguments, Object> function)
     @Override
     public Object execute(Context context) throws ScriptError {
         final Arguments arguments = extractArguments(context);
-        return function.apply(context, arguments);
+        try {
+            return function.apply(context, arguments);
+        } catch (ClassCastException ex) {
+            throw new ScriptError("Incorrect input types were provided.", ex);
+        }
     }
 
 }
