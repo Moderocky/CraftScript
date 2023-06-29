@@ -13,6 +13,7 @@ public class TestEvent implements Event {
 
     @Override
     public Object getProperty(String property) {
+        if (property.equals("test")) return "yes";
         return null;
     }
 

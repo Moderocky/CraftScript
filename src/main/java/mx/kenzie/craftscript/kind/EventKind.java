@@ -1,6 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.emitter.Event;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 public class EventKind extends Kind<Event> {
 
@@ -11,7 +12,7 @@ public class EventKind extends Kind<Event> {
     @Override
     public Object getProperty(Event thing, String property) {
         if (thing == null) return null;
-        return thing.getProperty(property);
+        return Wrapper.of(thing.getProperty(property));
     }
 
     @Override

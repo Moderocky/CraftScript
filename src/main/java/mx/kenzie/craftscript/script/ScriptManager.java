@@ -48,8 +48,11 @@ public class ScriptManager implements Closeable {
             throw new ScriptError("Failed to run task.", e);
         }
     };
-    public static final BackgroundTaskExecutor BACKGROUND = (source, executable, context) -> executable.execute(
-        context);
+    public static final BackgroundTaskExecutor BACKGROUND = (source, executable, context) -> {
+        Context.setLocalContext(context);
+        executable.execute(context);
+        Context.removeLocalContext();
+    };
     protected final JavaPlugin plugin;
     protected final ScriptLoader loader;
     protected final Map<String, AbstractScript> scripts = new LinkedHashMap<>();
