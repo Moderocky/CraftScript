@@ -4,12 +4,14 @@ import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.craftscript.emitter.Event;
 import mx.kenzie.craftscript.emitter.EventListener;
 import mx.kenzie.craftscript.emitter.ListenerList;
+import mx.kenzie.craftscript.kind.EventKind;
 import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.listener.GameEventListener;
 import mx.kenzie.craftscript.utility.BackgroundTaskExecutor;
 import mx.kenzie.craftscript.utility.TaskExecutor;
 import mx.kenzie.craftscript.variable.ConcurrentVariableContainer;
 import mx.kenzie.craftscript.variable.VariableContainer;
+import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -299,7 +301,7 @@ public class ScriptManager implements Closeable {
             try {
                 final Context.Data data = details.data().clone();
                 final Context context = new Context(details.owner(), this, new VariableContainer(), data);
-                context.variables().put("event", event);
+                context.variables().put("event", new Wrapper<>(event, new EventKind()));
                 BACKGROUND.execute(data.script, listener, context);
             } catch (ThreadDeath death) {
                 throw death;

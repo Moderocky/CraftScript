@@ -9,21 +9,21 @@ public class ResourceParser extends BasicParser {
 
     private String[] parts;
 
-    private static boolean isValidNamespaceChar(char c) {
+    public static boolean isValidNamespaceChar(char c) {
         return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-';
     }
 
-    private static boolean isValidKeyChar(char c) {
+    public static boolean isValidKeyChar(char c) {
         return isValidNamespaceChar(c) || c == '/';
     }
 
-    private static boolean isValidNamespace(String namespace) {
+    public static boolean isValidNamespace(String namespace) {
         if (namespace == null || namespace.isBlank()) return false;
         for (final char c : namespace.toCharArray()) if (!isValidNamespaceChar(c)) return false;
         return true;
     }
 
-    private static boolean isValidKey(String key) {
+    public static boolean isValidKey(String key) {
         if (key == null || key.isBlank()) return false;
         for (final char c : key.toCharArray()) if (!isValidKeyChar(c)) return false;
         return true;
