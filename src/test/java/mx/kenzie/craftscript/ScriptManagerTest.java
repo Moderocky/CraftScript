@@ -34,6 +34,7 @@ public class ScriptManagerTest {
         manager.registerKind(new MapKind());
         manager.registerKind(new ListKind());
         manager.registerKind(new CollectionKind());
+        manager.registerKind(new EnumKind<>());
         manager.registerKind(new KindKind());
         manager.loadScript(Libraries.MATH);
         manager.loadScript(Libraries.PARSER);
