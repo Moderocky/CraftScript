@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.kind;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.variable.StructObject;
 import mx.kenzie.craftscript.variable.Wrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -64,6 +65,12 @@ public abstract class Kind<Type> {
         object = Wrapper.unwrap(object);
         if (this.getType().isInstance(object)) return this.toString((Type) object);
         return Objects.toString(type);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static @NotNull String print(Object object) {
+        final Kind<Object> kind = (Kind<Object>) of(object);
+        return kind.toString(object);
     }
 
     public Class<Type> getType() {
