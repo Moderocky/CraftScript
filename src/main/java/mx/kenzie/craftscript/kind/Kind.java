@@ -1,6 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.script.Context;
+import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.variable.StructObject;
 import mx.kenzie.craftscript.variable.Wrapper;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,12 @@ public abstract class Kind<Type> {
         return new UnknownKind(thing.getClass());
     }
 
+    @SuppressWarnings("unchecked")
+    public static @NotNull String print(Object object) {
+        final Kind<Object> kind = (Kind<Object>) of(object);
+        return kind.toString(object);
+    }
+
     public abstract Object getProperty(Type thing, String property);
 
     public Object setProperty(Type thing, String property, Object value) {
@@ -53,6 +60,17 @@ public abstract class Kind<Type> {
         return new String[0];
     }
 
+    public Type convert(Object object) {
+        final Wrapper<Object> wrapper = Wrapper.of(object);
+        final Kind<Object> theirs = wrapper.getKind();
+        return this.convert(object, theirs);
+    }
+
+    public <Theirs> Type convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object == null) return null;
+        throw new ScriptError("Unable to convert a " + kind + " to a " + this);
+    }
+
     public Type fromString(String string) {
         return null;
     }
@@ -65,12 +83,6 @@ public abstract class Kind<Type> {
         object = Wrapper.unwrap(object);
         if (this.getType().isInstance(object)) return this.toString((Type) object);
         return Objects.toString(type);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static @NotNull String print(Object object) {
-        final Kind<Object> kind = (Kind<Object>) of(object);
-        return kind.toString(object);
     }
 
     public Class<Type> getType() {
