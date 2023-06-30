@@ -8,6 +8,8 @@ import java.util.Map;
 
 public class MapKind extends Kind<Map> {
 
+    public static final MapKind MAP = new MapKind();
+
     private volatile int step;
 
     public MapKind() {

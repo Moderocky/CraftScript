@@ -1,7 +1,8 @@
 package mx.kenzie.craftscript;
 
 
-import mx.kenzie.craftscript.kind.*;
+import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.kind.Kinds;
 import mx.kenzie.craftscript.script.*;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import org.junit.AfterClass;
@@ -19,23 +20,7 @@ public class ScriptManagerTest {
     @BeforeClass
     public static void startup() {
         manager = new ScriptManager(null, ScriptLoader.BASIC);
-        manager.registerKind(new StringKind());
-        manager.registerKind(new PlayerKind());
-        manager.registerKind(new CommandSenderKind());
-        manager.registerKind(new NumberKind());
-        manager.registerKind(new NullKind());
-        manager.registerKind(new LocationKind());
-        manager.registerKind(new VectorKind());
-        manager.registerKind(new BlockDataKind());
-        manager.registerKind(new BlockKind());
-        manager.registerKind(new EventKind());
-        manager.registerKind(new StatementKind());
-        manager.registerKind(new ExecutableKind());
-        manager.registerKind(new MapKind());
-        manager.registerKind(new ListKind());
-        manager.registerKind(new CollectionKind());
-        manager.registerKind(new EnumKind<>());
-        manager.registerKind(new KindKind());
+        for (final Kind<?> kind : Kinds.kinds) manager.registerKind(kind);
         manager.loadScript(Libraries.MATH);
         manager.loadScript(Libraries.PARSER);
         manager.loadScript(Libraries.GLOBAL);

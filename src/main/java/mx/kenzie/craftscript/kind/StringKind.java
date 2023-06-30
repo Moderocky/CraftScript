@@ -2,6 +2,8 @@ package mx.kenzie.craftscript.kind;
 
 public class StringKind extends Kind<String> {
 
+    public static final StringKind STRING = new StringKind();
+
     public StringKind() {
         super(String.class);
     }

@@ -9,6 +9,8 @@ import java.util.Objects;
 
 public class ExecutableKind extends Kind<Executable> {
 
+    public static final ExecutableKind EXECUTABLE = new ExecutableKind();
+
     public ExecutableKind() {
         super(Executable.class);
     }
@@ -23,7 +25,7 @@ public class ExecutableKind extends Kind<Executable> {
         return switch (property) {
             case "type" -> this;
             case "debug" -> thing instanceof Statement<?> statement
-                    ? statement.stringify() : thing.toString();
+                ? statement.stringify() : thing.toString();
             default -> null;
         };
     }

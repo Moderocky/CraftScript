@@ -4,6 +4,8 @@ import mx.kenzie.craftscript.variable.LibraryObject;
 
 public class LibraryKind extends Kind<LibraryObject> {
 
+    public static final LibraryKind LIBRARY = new LibraryKind();
+
     public LibraryKind() {
         super(LibraryObject.class);
     }

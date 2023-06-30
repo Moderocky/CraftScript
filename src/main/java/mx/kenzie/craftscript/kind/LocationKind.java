@@ -1,9 +1,16 @@
 package mx.kenzie.craftscript.kind;
 
 
+import mx.kenzie.craftscript.script.Context;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 
 public class LocationKind extends Kind<Location> {
+
+    public static final LocationKind LOCATION = new LocationKind();
 
     public LocationKind() {
         super(Location.class);
@@ -39,6 +46,16 @@ public class LocationKind extends Kind<Location> {
             case "distance_squared" -> thing.distanceSquared(((Location) value));
             default -> null;
         };
+    }
+
+    @Override
+    public <Theirs> Location convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object instanceof Vector vector && Context.requireLocalContext().source() instanceof Entity entity)
+            return vector.toLocation(entity.getWorld());
+        if (object instanceof Entity entity) return entity.getLocation();
+        if (object instanceof Block block) return block.getLocation();
+        if (object instanceof BlockState state) return state.getLocation();
+        return super.convert(object, kind);
     }
 
     @Override

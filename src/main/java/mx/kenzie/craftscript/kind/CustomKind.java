@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class CustomKind extends Kind<StructObject> {
 
+    public static final CustomKind STRUCTURE = new CustomKind();
+
     public CustomKind() {
         super(StructObject.class);
     }

@@ -9,6 +9,8 @@ import java.util.Objects;
 
 public class StatementKind extends ExecutableKind {
 
+    public static final StatementKind STATEMENT = new StatementKind();
+
     public StatementKind() {
         super(Statement.class);
     }

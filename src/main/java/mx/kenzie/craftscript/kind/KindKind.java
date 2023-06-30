@@ -2,6 +2,8 @@ package mx.kenzie.craftscript.kind;
 
 public class KindKind extends Kind<Class> {
 
+    public static final KindKind KIND = new KindKind();
+
     public KindKind() {
         super(Class.class);
     }

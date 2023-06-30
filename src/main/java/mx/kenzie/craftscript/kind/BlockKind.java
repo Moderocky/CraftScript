@@ -1,8 +1,12 @@
 package mx.kenzie.craftscript.kind;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 
 public class BlockKind extends Kind<Block> {
+
+    public static final BlockKind BLOCK = new BlockKind();
 
     public BlockKind() {
         super(Block.class);
@@ -22,8 +26,15 @@ public class BlockKind extends Kind<Block> {
             case "z" -> thing.getZ();
             case "state" -> thing.getState();
             case "data" -> thing.getBlockData();
-            default -> null;
+            default -> BlockDataKind.BLOCK_DATA.getProperty(thing.getBlockData(), property);
         };
+    }
+
+    @Override
+    public <Theirs> Block convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object instanceof Location location) return location.getBlock();
+        if (object instanceof Entity entity) return entity.getLocation().getBlock();
+        return super.convert(object, kind);
     }
 
     @Override

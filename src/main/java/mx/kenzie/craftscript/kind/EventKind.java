@@ -5,6 +5,8 @@ import mx.kenzie.craftscript.variable.Wrapper;
 
 public class EventKind extends Kind<Event> {
 
+    public static final EventKind EVENT = new EventKind();
+
     public EventKind() {
         super(Event.class);
     }

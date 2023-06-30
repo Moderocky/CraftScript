@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class NullKind extends Kind<Void> {
 
+    public static final NullKind NULL = new NullKind();
+
     public NullKind() {
         super(Void.class);
     }
@@ -22,6 +24,11 @@ public class NullKind extends Kind<Void> {
     @Override
     public String toString(Void unused) {
         return "null";
+    }
+
+    @Override
+    public <Theirs> Void convert(Theirs object, Kind<? super Theirs> kind) {
+        return null;
     }
 
 }

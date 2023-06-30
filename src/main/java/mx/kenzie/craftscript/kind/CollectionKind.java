@@ -3,15 +3,19 @@ package mx.kenzie.craftscript.kind;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 public class CollectionKind extends Kind<Collection> {
+
+    public static final CollectionKind COLLECTION = new CollectionKind();
 
     public CollectionKind() {
         super(Collection.class);
     }
 
-    protected CollectionKind(Class<Collection> type) {
-        super(type);
+    @SuppressWarnings("unchecked")
+    protected CollectionKind(Class<? extends Collection> type) {
+        super((Class<Collection>) type);
     }
 
     @Override
@@ -54,6 +58,13 @@ public class CollectionKind extends Kind<Collection> {
         }
         builder.append(']');
         return builder.toString();
+    }
+
+    @Override
+    public <Theirs> Collection convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object instanceof Collection<?> collection) return new ArrayList<>(collection);
+        if (object instanceof Map<?, ?> map) return new ArrayList<>(map.values());
+        return super.convert(object, kind);
     }
 
 }

@@ -1,6 +1,9 @@
 package mx.kenzie.craftscript.kind;
 
 public class IntegerKind extends NumberKind {
+
+    public static final IntegerKind INTEGER = new IntegerKind();
+
     public IntegerKind() {
         super(Integer.class);
     }
@@ -10,4 +13,5 @@ public class IntegerKind extends NumberKind {
         if (object instanceof Number number) return number.intValue();
         else return super.convert(object, kind).intValue();
     }
+
 }

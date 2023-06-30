@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class NumberKind extends Kind<Number> {
 
+    public static final NumberKind NUMBER = new NumberKind();
+
     public NumberKind() {
         super(Number.class);
     }
