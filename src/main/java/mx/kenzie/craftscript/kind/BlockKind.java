@@ -27,11 +27,6 @@ public class BlockKind extends Kind<Block> {
     }
 
     @Override
-    public Block fromString(String string) {
-        return null;
-    }
-
-    @Override
     public String toString(Block block) {
         return block.getBlockData().getAsString(true);
     }

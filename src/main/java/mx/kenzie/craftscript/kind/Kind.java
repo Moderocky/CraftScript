@@ -60,19 +60,16 @@ public abstract class Kind<Type> {
         return new String[0];
     }
 
-    public Type convert(Object object) {
+    public final Type convert(Object object) {
         final Wrapper<Object> wrapper = Wrapper.of(object);
         final Kind<Object> theirs = wrapper.getKind();
-        return this.convert(object, theirs);
+        if (type.isInstance(object)) return type.cast(object);
+        else return this.convert(wrapper.getValue(), theirs);
     }
 
     public <Theirs> Type convert(Theirs object, Kind<? super Theirs> kind) {
         if (object == null) return null;
         throw new ScriptError("Unable to convert a " + kind + " to a " + this);
-    }
-
-    public Type fromString(String string) {
-        return null;
     }
 
     public String toString(Type type) {

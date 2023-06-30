@@ -39,8 +39,9 @@ public class StringKind extends Kind<String> {
     }
 
     @Override
-    public String fromString(String string) {
-        return string;
+    public <Theirs> String convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object != null) return kind.toString(object);
+        return null;
     }
 
     @Override

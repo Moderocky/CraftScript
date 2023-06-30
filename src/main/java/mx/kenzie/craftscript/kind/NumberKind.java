@@ -8,6 +8,11 @@ public class NumberKind extends Kind<Number> {
         super(Number.class);
     }
 
+    @SuppressWarnings("unchecked")
+    protected NumberKind(Class<? extends Number> type) {
+        super((Class<Number>) type);
+    }
+
     @Override
     public Object getProperty(Number thing, String property) {
         if (Objects.equals(property, "type")) return this;
@@ -15,12 +20,10 @@ public class NumberKind extends Kind<Number> {
     }
 
     @Override
-    public Number fromString(String string) {
-        try {
-            return string.contains(".") ? Double.parseDouble(string) : Integer.parseInt(string);
-        } catch (Throwable ex) {
-            return 0;
-        }
+    public <Theirs> Number convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object == null) return 0;
+        else if (object instanceof String string) return Double.valueOf(string);
+        else return super.convert(object, kind).intValue();
     }
 
 }

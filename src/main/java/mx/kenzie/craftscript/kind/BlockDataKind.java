@@ -1,7 +1,6 @@
 package mx.kenzie.craftscript.kind;
 
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.data.BlockData;
 
 public class BlockDataKind extends Kind<BlockData> {
@@ -22,11 +21,6 @@ public class BlockDataKind extends Kind<BlockData> {
             case "requires_tool" -> thing.requiresCorrectToolForDrops();
             default -> null;
         };
-    }
-
-    @Override
-    public BlockData fromString(String string) {
-        return Bukkit.createBlockData(string);
     }
 
     @Override

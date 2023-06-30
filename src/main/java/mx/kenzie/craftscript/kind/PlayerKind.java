@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class PlayerKind extends Kind<Player> {
 
     public PlayerKind() {
@@ -67,8 +69,10 @@ public class PlayerKind extends Kind<Player> {
     }
 
     @Override
-    public Player fromString(String string) {
-        return Bukkit.getPlayer(string);
+    public <Theirs> Player convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object instanceof String string) return Bukkit.getPlayer(string);
+        else if (object instanceof UUID uuid) return Bukkit.getPlayer(uuid);
+        return super.convert(object, kind);
     }
 
     @Override

@@ -43,11 +43,6 @@ public class CollectionKind extends Kind<Collection> {
     }
 
     @Override
-    public Collection fromString(String string) {
-        return null;
-    }
-
-    @Override
     public String toString(Collection collection) {
         final Iterator iterator = collection.iterator();
         final StringBuilder builder = new StringBuilder();

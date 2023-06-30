@@ -38,13 +38,6 @@ public class VectorKind extends Kind<Vector> {
     }
 
     @Override
-    public Vector fromString(String string) {
-        final String[] parts = string.split(" ");
-        if (parts.length != 3) return new Vector();
-        return new Vector(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]), Double.parseDouble(parts[2]));
-    }
-
-    @Override
     public String toString(Vector location) {
         return location.getX() + " " + location.getY() + " " + location.getZ();
     }

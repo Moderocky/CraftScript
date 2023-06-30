@@ -15,11 +15,6 @@ public class NullKind extends Kind<Void> {
     }
 
     @Override
-    public Void fromString(String string) {
-        return null;
-    }
-
-    @Override
     public String toStringTry(Object object) {
         return "null";
     }

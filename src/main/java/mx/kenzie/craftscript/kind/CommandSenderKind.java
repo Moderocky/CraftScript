@@ -1,6 +1,5 @@
 package mx.kenzie.craftscript.kind;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,13 +28,6 @@ public class CommandSenderKind extends Kind<CommandSender> {
             case "has_permission" -> thing.hasPermission((String) value);
             default -> null;
         };
-    }
-
-    @Override
-    public CommandSender fromString(String string) {
-        final CommandSender sender = Bukkit.getPlayer(string);
-        if (sender == null) return Bukkit.getConsoleSender();
-        return sender;
     }
 
     @Override

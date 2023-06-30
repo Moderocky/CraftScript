@@ -23,7 +23,7 @@ public class ExecutableKind extends Kind<Executable> {
         return switch (property) {
             case "type" -> this;
             case "debug" -> thing instanceof Statement<?> statement
-                ? statement.stringify() : thing.toString();
+                    ? statement.stringify() : thing.toString();
             default -> null;
         };
     }
@@ -36,11 +36,6 @@ public class ExecutableKind extends Kind<Executable> {
             case "equals" -> thing.equals(value);
             default -> null;
         };
-    }
-
-    @Override
-    public Executable fromString(String string) {
-        return null;
     }
 
     @Override

@@ -27,10 +27,4 @@ public class EnumKind<Type extends Enum<Type>> extends Kind<Enum<Type>> {
         return typeEnum.name().toLowerCase();
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Enum<Type> fromString(String string) {
-        return (Enum<Type>) Enum.valueOf((Class<? extends Enum>) type, string.toUpperCase());
-    }
-
 }

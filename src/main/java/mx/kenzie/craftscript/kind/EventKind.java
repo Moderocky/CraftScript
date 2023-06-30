@@ -16,11 +16,6 @@ public class EventKind extends Kind<Event> {
     }
 
     @Override
-    public Event fromString(String string) {
-        return null;
-    }
-
-    @Override
     public String toString(Event event) {
         return event.key().toString();
     }

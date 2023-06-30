@@ -17,9 +17,4 @@ public class LibraryKind extends Kind<LibraryObject> {
         };
     }
 
-    @Override
-    public LibraryObject fromString(String string) {
-        return null;
-    }
-
 }

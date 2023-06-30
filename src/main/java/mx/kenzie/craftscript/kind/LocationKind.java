@@ -1,11 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
 
-import mx.kenzie.craftscript.script.Context;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 
 public class LocationKind extends Kind<Location> {
 
@@ -43,18 +39,6 @@ public class LocationKind extends Kind<Location> {
             case "distance_squared" -> thing.distanceSquared(((Location) value));
             default -> null;
         };
-    }
-
-    @Override
-    public Location fromString(String string) {
-        final String[] parts = string.split(" ");
-        if (parts.length != 3) return null;
-        final World world;
-        if (Context.getLocalContext() != null && Context.getLocalContext().source() instanceof Entity entity)
-            world = entity.getWorld();
-        else world = Bukkit.getWorlds().get(0);
-        return new Location(world, Double.parseDouble(parts[0]), Double.parseDouble(parts[1]),
-            Double.parseDouble(parts[2]));
     }
 
     @Override

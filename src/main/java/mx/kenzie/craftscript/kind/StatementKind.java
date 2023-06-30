@@ -25,11 +25,6 @@ public class StatementKind extends ExecutableKind {
     }
 
     @Override
-    public Executable fromString(String string) {
-        return null;
-    }
-
-    @Override
     public String toString(Executable executable) {
         if (executable instanceof AbstractScript) return executable.toString();
         if (executable instanceof SupplierStatement statement) return Objects.toString(statement.supplier().get());

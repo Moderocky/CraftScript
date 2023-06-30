@@ -31,11 +31,6 @@ public class CustomKind extends Kind<StructObject> {
     }
 
     @Override
-    public StructObject fromString(String string) {
-        return null;
-    }
-
-    @Override
     public String toString(StructObject unknownObject) {
         return unknownObject.toString();
     }

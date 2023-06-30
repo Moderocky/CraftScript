@@ -36,11 +36,6 @@ public class MapKind extends Kind<Map> {
     }
 
     @Override
-    public Map fromString(String string) {
-        return null;
-    }
-
-    @Override
     public String toString(Map map) {
         final Iterator iterator = map.entrySet().iterator();
         if (!iterator.hasNext()) return "[]";

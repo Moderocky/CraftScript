@@ -17,9 +17,4 @@ public class UnknownKind extends Kind<Object> {
         };
     }
 
-    @Override
-    public Object fromString(String string) {
-        return null;
-    }
-
 }

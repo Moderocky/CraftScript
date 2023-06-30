@@ -33,15 +33,6 @@ public class KindKind extends Kind<Class> {
     }
 
     @Override
-    public Class fromString(String string) {
-        try {
-            return Class.forName(string);
-        } catch (Throwable ex) {
-            return null;
-        }
-    }
-
-    @Override
     public String toString(Class string) {
         if (string == Kind.class || string == Class.class) return "#class";
         return Kind.of(string).toString();
