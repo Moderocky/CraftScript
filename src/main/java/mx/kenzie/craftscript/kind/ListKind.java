@@ -27,4 +27,9 @@ public class ListKind extends CollectionKind {
         return super.convert(object, kind);
     }
 
+    @Override
+    public Kind<?> superKind() {
+        return COLLECTION;
+    }
+
 }

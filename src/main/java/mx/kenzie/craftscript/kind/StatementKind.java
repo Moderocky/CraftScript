@@ -27,6 +27,11 @@ public class StatementKind extends ExecutableKind {
     }
 
     @Override
+    public String[] getProperties() {
+        return this.superKind().getProperties();
+    }
+
+    @Override
     public String toString(Executable executable) {
         if (executable instanceof AbstractScript) return executable.toString();
         if (executable instanceof SupplierStatement statement) return Objects.toString(statement.supplier().get());
@@ -36,6 +41,11 @@ public class StatementKind extends ExecutableKind {
         final String name = type.getSimpleName().replaceAll("([A-Z]+)([A-Z][a-z])", "$1 $2");
         final String converted = name.replaceAll("([a-z])([A-Z])", "$1 $2");
         return "<" + converted.toLowerCase() + ">";
+    }
+
+    @Override
+    public Kind<?> superKind() {
+        return EXECUTABLE;
     }
 
 }

@@ -31,6 +31,11 @@ public class ExecutableKind extends Kind<Executable> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "debug"};
+    }
+
+    @Override
     public Object setProperty(Executable thing, String property, Object value) {
         if (thing == null) return null;
         return switch (property) {

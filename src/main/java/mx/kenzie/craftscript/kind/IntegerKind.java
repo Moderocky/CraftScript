@@ -14,4 +14,9 @@ public class IntegerKind extends NumberKind {
         else return super.convert(object, kind).intValue();
     }
 
+    @Override
+    public Kind<?> superKind() {
+        return NUMBER;
+    }
+
 }

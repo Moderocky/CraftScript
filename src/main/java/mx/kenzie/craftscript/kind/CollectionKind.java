@@ -61,6 +61,11 @@ public class CollectionKind extends Kind<Collection> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "size", "is_empty", "clone"};
+    }
+
+    @Override
     public <Theirs> Collection convert(Theirs object, Kind<? super Theirs> kind) {
         if (object instanceof Collection<?> collection) return new ArrayList<>(collection);
         if (object instanceof Map<?, ?> map) return new ArrayList<>(map.values());

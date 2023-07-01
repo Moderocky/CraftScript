@@ -38,6 +38,11 @@ public class MapKind extends Kind<Map> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "properties", "size"};
+    }
+
+    @Override
     public String toString(Map map) {
         final Iterator iterator = map.entrySet().iterator();
         if (!iterator.hasNext()) return "[]";

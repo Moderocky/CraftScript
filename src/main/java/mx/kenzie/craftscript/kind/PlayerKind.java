@@ -52,6 +52,11 @@ public class PlayerKind extends CommandSenderKind {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "name", "uuid", "online", "location", "game_mode", "health", "killer", "last_damage", "yaw", "pitch", "x", "y", "z", "compass_target", "can_fly", "bed_location", "arrows_in_body", "client_brand", "view_distance", "has_cooldown", "name", "type", "has_permission", "send_message", "is_op"};
+    }
+
+    @Override
     public Object setProperty(CommandSender thing, String property, Object value) {
         if (thing instanceof Player player) return this.setProperty(player, property, value);
         return super.setProperty(thing, property, value);
@@ -86,6 +91,11 @@ public class PlayerKind extends CommandSenderKind {
         if (object instanceof String string) return Bukkit.getPlayer(string);
         else if (object instanceof UUID uuid) return Bukkit.getPlayer(uuid);
         return (Player) super.convert(object, kind);
+    }
+
+    @Override
+    public Kind<?> superKind() {
+        return COMMAND_SENDER;
     }
 
 }

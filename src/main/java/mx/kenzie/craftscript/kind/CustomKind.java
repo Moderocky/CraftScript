@@ -33,6 +33,11 @@ public class CustomKind extends Kind<StructObject> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "properties"};
+    }
+
+    @Override
     public String toString(StructObject unknownObject) {
         return unknownObject.toString();
     }

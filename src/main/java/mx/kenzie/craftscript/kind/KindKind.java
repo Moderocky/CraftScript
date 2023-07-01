@@ -35,6 +35,11 @@ public class KindKind extends Kind<Class> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "name", "path", "is_array", "is_enum"};
+    }
+
+    @Override
     public String toString(Class string) {
         if (string == Kind.class || string == Class.class) return "#class";
         return Kind.of(string).toString();

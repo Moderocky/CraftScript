@@ -59,6 +59,11 @@ public class LocationKind extends Kind<Location> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "length", "x", "y", "z", "yaw", "pitch", "clone", "chunk", "block", "to_vector"};
+    }
+
+    @Override
     public String toString(Location location) {
         return location.getX() + " " + location.getY() + " " + location.getZ();
     }

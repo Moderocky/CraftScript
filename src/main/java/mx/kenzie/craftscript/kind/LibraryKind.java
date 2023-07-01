@@ -19,4 +19,9 @@ public class LibraryKind extends Kind<LibraryObject> {
         };
     }
 
+    @Override
+    public String[] getProperties() {
+        return new String[]{"type", "properties"};
+    }
+
 }

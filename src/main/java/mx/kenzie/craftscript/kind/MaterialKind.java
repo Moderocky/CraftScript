@@ -54,6 +54,11 @@ public class MaterialKind extends EnumKind<Material> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"is_occluding", "is_air", "is_empty", "is_block", "is_burnable", "is_collidable", "is_fuel", "is_flammable", "is_interactive", "is_edible", "is_item", "is_record", "is_solid", "equipment_slot", "max_stack_size", "max_durability", "block_data", "blast_resistance", "hardness", "slipperiness", "rarity", "category", "gravity", "key", "id"};
+    }
+
+    @Override
     public <Theirs> Enum<Material> convert(Theirs object, Kind<? super Theirs> kind) {
         if (object instanceof Material material) return material;
         if (object instanceof String string) return Material.matchMaterial(string, false);

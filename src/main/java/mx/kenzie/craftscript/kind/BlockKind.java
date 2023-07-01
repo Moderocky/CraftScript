@@ -38,6 +38,11 @@ public class BlockKind extends Kind<Block> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "material", "is_empty", "is_powered", "is_passable", "x", "y", "z", "state", "data"};
+    }
+
+    @Override
     public String toString(Block block) {
         return block.getBlockData().getAsString(true);
     }

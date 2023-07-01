@@ -39,6 +39,11 @@ public class BlockDataKind extends Kind<BlockData> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "material", "is_occluding", "piston_reaction", "placement_material", "requires_tool", "light_emission", "clone"};
+    }
+
+    @Override
     public String toString(BlockData data) {
         return data.getAsString(true);
     }

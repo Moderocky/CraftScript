@@ -30,6 +30,11 @@ public class VectorKind extends Kind<Vector> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "length", "x", "y", "z", "clone", "is_zero", "is_normalized"};
+    }
+
+    @Override
     public Object setProperty(Vector thing, String property, Object value) {
         if (thing == null) return null;
         return switch (property) {

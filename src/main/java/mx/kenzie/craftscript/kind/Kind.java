@@ -104,4 +104,8 @@ public abstract class Kind<Type> {
         return Objects.hash(type);
     }
 
+    public Kind<?> superKind() {
+        return this;
+    }
+
 }

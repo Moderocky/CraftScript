@@ -41,6 +41,11 @@ public class StringKind extends Kind<String> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"type", "length", "is_empty", "is_blank", "lowercase", "uppercase"};
+    }
+
+    @Override
     public <Theirs> String convert(Theirs object, Kind<? super Theirs> kind) {
         if (object != null) return kind.toString(object);
         return null;

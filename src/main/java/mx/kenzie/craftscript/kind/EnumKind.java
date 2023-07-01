@@ -26,6 +26,11 @@ public class EnumKind<Type extends Enum<Type>> extends Kind<Enum<Type>> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"name", "index", "type"};
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <Theirs> Enum<Type> convert(Theirs object, Kind<? super Theirs> kind) {
         if (object instanceof String string) return Enum.valueOf((Class<Type>) type, string);

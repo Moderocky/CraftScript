@@ -50,6 +50,11 @@ public class CommandSenderKind extends Kind<CommandSender> {
     }
 
     @Override
+    public String[] getProperties() {
+        return new String[]{"name", "type", "has_permission", "send_message", "is_op"};
+    }
+
+    @Override
     public String toString(CommandSender sender) {
         if (sender instanceof Player player) return player.getName();
         else return "Console";
