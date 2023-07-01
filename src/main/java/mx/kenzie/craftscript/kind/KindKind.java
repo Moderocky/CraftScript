@@ -40,7 +40,7 @@ public class KindKind extends Kind<Class> {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "name", "path", "is_array", "is_enum"};
+        return new String[]{"type", "name", "path", "properties", "is_array", "is_enum"};
     }
 
     @Override
