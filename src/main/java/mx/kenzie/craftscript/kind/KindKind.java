@@ -1,5 +1,8 @@
 package mx.kenzie.craftscript.kind;
 
+import java.util.HashSet;
+import java.util.List;
+
 public class KindKind extends Kind<Class> {
 
     public static final KindKind KIND = new KindKind();
@@ -15,6 +18,7 @@ public class KindKind extends Kind<Class> {
             case "type" -> this;
             case "name" -> thing.getSimpleName();
             case "path" -> thing.getName();
+            case "properties" -> new HashSet<>(List.of(Kind.asKind(thing).getProperties()));
             case "is_array" -> thing.isArray();
             case "is_enum" -> thing.isEnum();
             default -> null;

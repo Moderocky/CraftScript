@@ -17,4 +17,9 @@ public class UnknownKind extends Kind<Object> {
         };
     }
 
+    @Override
+    public String[] getProperties() {
+        return new String[]{"type", "type_name"};
+    }
+
 }

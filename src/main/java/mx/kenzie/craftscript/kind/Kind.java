@@ -18,7 +18,12 @@ public abstract class Kind<Type> {
 
     public static Kind<?> asKind(Object thing) {
         if (thing instanceof Kind<?> kind) return kind;
-        if (thing instanceof Class<?> kind) return new UnknownKind(kind);
+        if (thing instanceof Class<?> kind) {
+            final Context context = Context.getLocalContext();
+            if (context != null) for (final Kind<?> found : context.getKinds())
+                if (found.type.isAssignableFrom(kind)) return found;
+            return new UnknownKind(kind);
+        }
         if (thing == null) return new NullKind();
         return null;
     }
@@ -41,7 +46,13 @@ public abstract class Kind<Type> {
         return kind.toString(object);
     }
 
-    public abstract Object getProperty(Type thing, String property);
+    public Object getProperty(Type thing, String property) {
+        if (thing == null) return null;
+        return switch (property) {
+            case "type" -> this;
+            default -> null;
+        };
+    }
 
     public Object setProperty(Type thing, String property, Object value) {
         if (thing == null) return null;
