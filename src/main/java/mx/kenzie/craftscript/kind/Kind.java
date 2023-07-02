@@ -55,12 +55,7 @@ public abstract class Kind<Type> {
     }
 
     public Object setProperty(Type thing, String property, Object value) {
-        if (thing == null) return null;
-        return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> Objects.equals(thing, value);
-            default -> null;
-        };
+        return null;
     }
 
     public boolean checkProperty(Type thing, String property, Object value) {

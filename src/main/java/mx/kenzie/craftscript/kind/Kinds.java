@@ -9,6 +9,7 @@ public interface Kinds {
         StringKind.STRING,
         PlayerKind.PLAYER,
         CommandSenderKind.COMMAND_SENDER,
+        BlockEntityKind.BLOCK_ENTITY,
         BlockKind.BLOCK,
         BlockDataKind.BLOCK_DATA,
         MaterialKind.MATERIAL,

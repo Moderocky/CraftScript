@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.kind;
 
 
 import mx.kenzie.craftscript.script.Context;
+import mx.kenzie.craftscript.script.core.InternalStatement;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -22,6 +23,7 @@ public class LocationKind extends Kind<Location> {
         return switch (property) {
             case "type" -> this;
             case "length" -> thing.length();
+            case "length_squared" -> thing.lengthSquared();
             case "x" -> thing.getX();
             case "y" -> thing.getY();
             case "z" -> thing.getZ();
@@ -30,20 +32,13 @@ public class LocationKind extends Kind<Location> {
             case "clone" -> thing.clone();
             case "chunk" -> thing.getChunk();
             case "block" -> thing.getBlock();
+            case "is_loaded" -> thing.isChunkLoaded();
+            case "is_generated" -> thing.isGenerated();
             case "to_vector" -> thing.toVector();
-            default -> null;
-        };
-    }
-
-    @Override
-    public Object setProperty(Location thing, String property, Object value) {
-        if (thing == null) return null;
-        return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
-            case "length" -> thing.length() == ((Number) value).doubleValue();
-            case "distance" -> thing.distance(((Location) value));
-            case "distance_squared" -> thing.distanceSquared(((Location) value));
+            case "direction" -> thing.getDirection();
+            case "distance" -> new InternalStatement(arguments -> thing.distance(this.convert(arguments.get(0))));
+            case "distance_squared" ->
+                new InternalStatement(arguments -> thing.distanceSquared(this.convert(arguments.get(0))));
             default -> null;
         };
     }
@@ -60,7 +55,7 @@ public class LocationKind extends Kind<Location> {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "length", "x", "y", "z", "yaw", "pitch", "clone", "chunk", "block", "to_vector"};
+        return new String[]{"type", "length", "length_squared", "x", "y", "z", "yaw", "pitch", "clone", "chunk", "block", "is_loaded", "is_generated", "to_vector", "direction", "distance", "distance_squared"};
     }
 
     @Override

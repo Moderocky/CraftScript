@@ -1,7 +1,5 @@
 package mx.kenzie.craftscript.kind;
 
-import java.util.Objects;
-
 public class NumberKind extends Kind<Number> {
 
     public static final NumberKind NUMBER = new NumberKind();
@@ -17,8 +15,23 @@ public class NumberKind extends Kind<Number> {
 
     @Override
     public Object getProperty(Number thing, String property) {
-        if (Objects.equals(property, "type")) return this;
-        return null;
+        if (thing == null) return null;
+        return switch (property) {
+            case "type" -> this;
+            case "integer" -> thing.intValue();
+            case "decimal" -> thing.doubleValue();
+            case "abs" -> Math.abs(thing.doubleValue());
+            case "sqrt" -> Math.sqrt(thing.doubleValue());
+            case "floor" -> Math.floor(thing.doubleValue());
+            case "ceil" -> Math.ceil(thing.doubleValue());
+            case "round" -> Math.round(thing.doubleValue());
+            default -> null;
+        };
+    }
+
+    @Override
+    public String[] getProperties() {
+        return new String[]{"type", "integer", "decimal", "abs", "sqrt", "floor", "ceil", "round"};
     }
 
     @Override

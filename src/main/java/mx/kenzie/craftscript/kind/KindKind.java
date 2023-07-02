@@ -1,5 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
+import mx.kenzie.craftscript.script.core.InternalStatement;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,6 +15,11 @@ public class KindKind extends Kind<Class> {
         super(Class.class);
     }
 
+    private static List<Object> list(Object[] objects) {
+        if (objects == null || objects.length == 0) return new ArrayList<>();
+        return new ArrayList<>(Arrays.asList(objects));
+    }
+
     @Override
     public Object getProperty(Class thing, String property) {
         if (thing == null) return null;
@@ -24,31 +31,14 @@ public class KindKind extends Kind<Class> {
             case "is_array" -> thing.isArray();
             case "is_flag" -> thing.isEnum();
             case "values" -> list(thing.getEnumConstants());
-            default -> null;
-        };
-    }
-
-    private static List<Object> list(Object[] objects) {
-        if (objects == null || objects.length == 0) return new ArrayList<>();
-        return new ArrayList<>(Arrays.asList(objects));
-    }
-
-    @Override
-    public Object setProperty(Class thing, String property, Object value) {
-        if (thing == null) return null;
-        return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
-            case "name" -> thing.getSimpleName().equals(value + "");
-            case "path" -> thing.getName().equals(value + "");
-            case "is_instance" -> thing.isInstance(value);
+            case "is_instance" -> new InternalStatement(arguments -> thing.isInstance(arguments.get(0)));
             default -> null;
         };
     }
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "name", "path", "properties", "is_array", "is_enum"};
+        return new String[]{"type", "name", "path", "properties", "is_array", "is_flag", "values", "is_instance"};
     }
 
     @Override

@@ -25,11 +25,7 @@ public class CustomKind extends Kind<StructObject> {
     @Override
     public Object setProperty(StructObject thing, String property, Object value) {
         if (thing == null) return null;
-        return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
-            default -> thing.replace(property, value);
-        };
+        return thing.replace(property, value);
     }
 
     @Override
@@ -40,6 +36,11 @@ public class CustomKind extends Kind<StructObject> {
     @Override
     public String toString(StructObject unknownObject) {
         return unknownObject.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "#structure";
     }
 
 }

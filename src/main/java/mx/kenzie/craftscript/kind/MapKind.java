@@ -21,7 +21,8 @@ public class MapKind extends Kind<Map> {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this;
-            case "properties" -> new ArrayList<>(thing.keySet());
+            case "keys" -> new ArrayList<>(thing.keySet());
+            case "values" -> new ArrayList<>(thing.values());
             case "size" -> thing.size();
             default -> thing.get(property);
         };
@@ -30,16 +31,12 @@ public class MapKind extends Kind<Map> {
     @Override
     public Object setProperty(Map thing, String property, Object value) {
         if (thing == null) return null;
-        return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
-            default -> thing.put(property, value);
-        };
+        return thing.put(property, value);
     }
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "properties", "size"};
+        return new String[]{"type", "size", "keys", "values"};
     }
 
     @Override

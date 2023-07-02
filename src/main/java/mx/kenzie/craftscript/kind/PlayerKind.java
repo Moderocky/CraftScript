@@ -81,7 +81,6 @@ public class PlayerKind extends CommandSenderKind {
                 thing.setRotation(thing.getLocation().getYaw(), (Float) value);
                 yield value;
             }
-            case "has_cooldown" -> thing.hasCooldown((Material) value);
             default -> super.setProperty(thing, property, value);
         };
     }

@@ -1,9 +1,12 @@
 package mx.kenzie.craftscript.kind;
 
+import mx.kenzie.craftscript.script.core.InternalStatement;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import java.util.List;
+
+import static mx.kenzie.craftscript.kind.NumberKind.NUMBER;
 
 public class VectorKind extends Kind<Vector> {
 
@@ -19,30 +22,34 @@ public class VectorKind extends Kind<Vector> {
         return switch (property) {
             case "type" -> this;
             case "length" -> thing.length();
+            case "length_squared" -> thing.lengthSquared();
             case "x" -> thing.getX();
             case "y" -> thing.getY();
             case "z" -> thing.getZ();
             case "clone" -> thing.clone();
             case "is_zero" -> thing.isZero();
             case "is_normalized" -> thing.isNormalized();
+            case "distance" -> new InternalStatement(arguments -> thing.distance(this.convert(arguments.get(0))));
+            case "distance_squared" ->
+                new InternalStatement(arguments -> thing.distanceSquared(this.convert(arguments.get(0))));
+            case "angle" -> new InternalStatement(arguments -> thing.angle(this.convert(arguments.get(0))));
             default -> null;
         };
     }
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "length", "x", "y", "z", "clone", "is_zero", "is_normalized"};
+        return new String[]{"type", "length", "length_squared", "x", "y", "z", "clone", "is_zero", "is_normalized", "distance", "distance_squared", "angle"};
     }
 
     @Override
     public Object setProperty(Vector thing, String property, Object value) {
         if (thing == null) return null;
         return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
-            case "length" -> thing.length() == ((Number) value).doubleValue();
-            case "distance" -> thing.distance(((Vector) value));
-            case "distance_squared" -> thing.distanceSquared(((Vector) value));
+            case "x" -> thing.setX(NUMBER.convert(value).doubleValue());
+            case "y" -> thing.setY(NUMBER.convert(value).doubleValue());
+            case "z" -> thing.setZ(NUMBER.convert(value).doubleValue());
+            case "length" -> thing.normalize().multiply(NUMBER.convert(value).doubleValue());
             default -> null;
         };
     }

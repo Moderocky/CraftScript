@@ -48,4 +48,9 @@ public class BlockDataKind extends Kind<BlockData> {
         return data.getAsString(true);
     }
 
+    @Override
+    public String toString() {
+        return "#blockstate";
+    }
+
 }

@@ -39,17 +39,6 @@ public class CommandSenderKind extends Kind<CommandSender> {
     }
 
     @Override
-    public Object setProperty(CommandSender thing, String property, Object value) {
-        if (thing == null) return null;
-        return switch (property) {
-            case "type" -> this.equals(Kind.asKind(value));
-            case "equals" -> thing.equals(value);
-            case "has_permission" -> thing.hasPermission((String) value);
-            default -> null;
-        };
-    }
-
-    @Override
     public String[] getProperties() {
         return new String[]{"name", "type", "has_permission", "send_message", "is_op"};
     }

@@ -79,4 +79,9 @@ public class MaterialKind extends EnumKind<Material> {
         return super.toString(materialEnum);
     }
 
+    @Override
+    public String toString() {
+        return "#material";
+    }
+
 }

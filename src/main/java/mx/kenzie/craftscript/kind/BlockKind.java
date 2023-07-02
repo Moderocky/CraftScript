@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.kind;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 
 public class BlockKind extends Kind<Block> {
@@ -24,8 +25,9 @@ public class BlockKind extends Kind<Block> {
             case "x" -> thing.getX();
             case "y" -> thing.getY();
             case "z" -> thing.getZ();
-            case "state" -> thing.getState();
-            case "data" -> thing.getBlockData();
+            case "entity" -> thing.getState() instanceof TileState tile ? tile : null;
+            case "state" -> thing.getBlockData();
+            case "location" -> thing.getLocation();
             default -> BlockDataKind.BLOCK_DATA.getProperty(thing.getBlockData(), property);
         };
     }
@@ -39,7 +41,7 @@ public class BlockKind extends Kind<Block> {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "material", "is_empty", "is_powered", "is_passable", "x", "y", "z", "state", "data"};
+        return new String[]{"type", "material", "is_empty", "is_powered", "is_passable", "x", "y", "z", "entity", "state", "location"};
     }
 
     @Override
