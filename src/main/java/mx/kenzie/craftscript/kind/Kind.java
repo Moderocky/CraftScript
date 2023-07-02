@@ -68,7 +68,7 @@ public abstract class Kind<Type> {
     }
 
     public String[] getProperties() {
-        return new String[0];
+        return new String[]{"type"};
     }
 
     public final Type convert(Object object) {

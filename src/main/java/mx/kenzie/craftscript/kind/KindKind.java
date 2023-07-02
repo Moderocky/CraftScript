@@ -1,5 +1,7 @@
 package mx.kenzie.craftscript.kind;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -20,9 +22,15 @@ public class KindKind extends Kind<Class> {
             case "path" -> thing.getName();
             case "properties" -> new HashSet<>(List.of(Kind.asKind(thing).getProperties()));
             case "is_array" -> thing.isArray();
-            case "is_enum" -> thing.isEnum();
+            case "is_flag" -> thing.isEnum();
+            case "values" -> list(thing.getEnumConstants());
             default -> null;
         };
+    }
+
+    private static List<Object> list(Object[] objects) {
+        if (objects == null || objects.length == 0) return new ArrayList<>();
+        return new ArrayList<>(Arrays.asList(objects));
     }
 
     @Override
@@ -45,7 +53,7 @@ public class KindKind extends Kind<Class> {
 
     @Override
     public String toString(Class string) {
-        if (string == Kind.class || string == Class.class) return "#class";
+        if (string == Kind.class || string == Class.class) return this.toString();
         return Kind.of(string).toString();
     }
 
@@ -54,6 +62,11 @@ public class KindKind extends Kind<Class> {
         if (object instanceof Kind<?> type) return this.toString(type.getType());
         if (object instanceof Class type) return this.toString(type);
         return super.toStringTry(object);
+    }
+
+    @Override
+    public String toString() {
+        return "#kind";
     }
 
 }

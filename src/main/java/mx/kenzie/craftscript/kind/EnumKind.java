@@ -42,4 +42,9 @@ public class EnumKind<Type extends Enum<Type>> extends Kind<Enum<Type>> {
         return typeEnum.name().toLowerCase();
     }
 
+    @Override
+    public String toString() {
+        return "#flag";
+    }
+
 }

@@ -24,4 +24,9 @@ public class LibraryKind extends Kind<LibraryObject> {
         return new String[]{"type", "properties"};
     }
 
+    @Override
+    public String toString() {
+        return "#library";
+    }
+
 }
