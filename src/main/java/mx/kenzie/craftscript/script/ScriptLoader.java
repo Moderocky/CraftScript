@@ -32,7 +32,6 @@ public interface ScriptLoader extends ScriptParser {
         CommentParser::new,
         InterpolationParser::new,
         ResourceParser::new,
-        KindParser::new,
         CloseParser::new,
         IntegerParser::new,
         DoubleParser::new,
@@ -53,6 +52,7 @@ public interface ScriptLoader extends ScriptParser {
         BinaryParser::compareALT,
         SetterParser::new,
         GetterParser::new,
+        KindParser::new,
         VariableParser::new
     );
 

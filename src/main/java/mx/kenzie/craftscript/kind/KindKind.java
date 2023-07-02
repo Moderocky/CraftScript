@@ -1,18 +1,20 @@
 package mx.kenzie.craftscript.kind;
 
+import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.script.core.InternalStatement;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-public class KindKind extends Kind<Class> {
+public class KindKind extends Kind<Kind> {
 
     public static final KindKind KIND = new KindKind();
 
     public KindKind() {
-        super(Class.class);
+        super(Kind.class);
     }
 
     private static List<Object> list(Object[] objects) {
@@ -21,36 +23,44 @@ public class KindKind extends Kind<Class> {
     }
 
     @Override
-    public Object getProperty(Class thing, String property) {
+    public Object getProperty(Kind thing, String property) {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this;
-            case "name" -> thing.getSimpleName();
-            case "path" -> thing.getName();
+            case "name" -> thing.type.getSimpleName();
+            case "path" -> thing.type.getName();
             case "properties" -> new HashSet<>(List.of(Kind.asKind(thing).getProperties()));
-            case "is_array" -> thing.isArray();
-            case "is_flag" -> thing.isEnum();
-            case "values" -> list(thing.getEnumConstants());
-            case "is_instance" -> new InternalStatement(arguments -> thing.isInstance(arguments.get(0)));
+            case "is_array" -> thing.type.isArray();
+            case "is_flag" -> thing.type.isEnum();
+            case "values" -> list(thing.type.getEnumConstants());
+            case "is_instance" -> new InternalStatement(arguments -> thing.type.isInstance(arguments.get(0)));
+            case "convert" -> new InternalStatement(arguments -> {
+                if (arguments.size() > 1) {
+                    final List<Wrapper<?>> result = new ArrayList<>(arguments.size());
+                    for (final Object argument : arguments) result.add(new Wrapper<>(thing.convert(argument), thing));
+                    return result;
+                } else if (arguments.size() == 1) return new Wrapper<>(thing.convert(arguments.get(0)), thing);
+                else throw new ScriptError("Convert function expects at least one argument.");
+            });
             default -> null;
         };
     }
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "name", "path", "properties", "is_array", "is_flag", "values", "is_instance"};
+        return new String[]{"type", "name", "path", "properties", "is_array", "is_flag", "values", "is_instance", "convert"};
     }
 
     @Override
-    public String toString(Class string) {
-        if (string == Kind.class || string == Class.class) return this.toString();
-        return Kind.of(string).toString();
+    public String toString(Kind string) {
+        if (string.type == Kind.class) return this.toString();
+        return string.toString();
     }
 
     @Override
     public String toStringTry(Object object) {
-        if (object instanceof Kind<?> type) return this.toString(type.getType());
-        if (object instanceof Class type) return this.toString(type);
+        if (object instanceof Kind<?> type) return this.toString(type);
+        if (object instanceof Class) return this.toString();
         return super.toStringTry(object);
     }
 

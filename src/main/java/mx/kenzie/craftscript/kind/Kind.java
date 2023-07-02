@@ -24,12 +24,12 @@ public abstract class Kind<Type> {
                 if (found.type.isAssignableFrom(kind)) return found;
             return new UnknownKind(kind);
         }
-        if (thing == null) return new NullKind();
+        if (thing == null) return NullKind.NULL;
         return null;
     }
 
     public static Kind<?> of(Object thing) {
-        if (thing == null) return new NullKind();
+        if (thing == null) return NullKind.NULL;
         if (thing instanceof Wrapper<?> wrapper) return wrapper.getKind();
         if (thing instanceof StructObject object) return object.getKind();
         if (thing instanceof Kind<?>) return new KindKind();

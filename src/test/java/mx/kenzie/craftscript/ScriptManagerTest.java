@@ -35,6 +35,28 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void kindConvertTest() {
+        assert this.test("""
+            word = "10"
+            number = run #number[convert] word
+            assert number[type] == #number
+            assert number > 9
+            assert number == 10
+            assert number < 11
+            /print {number}
+            """, "10.0");
+        assert this.test("""
+            word = "10"
+            number = run #integer[convert] word
+            assert number[type] == #integer
+            assert number > 9
+            assert number == 10
+            assert number < 11
+            /print {number}
+            """, "10");
+    }
+
+    @Test
     public void reflectionInterpolateTest() {
         assert this.test("""
             import [reflection]
