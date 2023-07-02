@@ -440,7 +440,7 @@ public class ScriptManagerTest {
     public void setterTrick() {
         assert this.test("""
             var = "hello"
-            /print char at 1 is {var[char_at=1]}
+            /print char at 1 is {run var[char_at] 1}
             """, "char at 1 is e");
     }
 
@@ -448,9 +448,9 @@ public class ScriptManagerTest {
     public void ifCheck() {
         assert this.test("""
             var = "hello"
-            /print char at 1 is {var[char_at=1]}
+            /print char at 1 is {run var[char_at] 1}
             if var {
-                /print char at 2 is {var[char_at=2]}
+                /print char at 2 is {run var[char_at] 2}
             }
             """, "char at 2 is l");
     }
@@ -470,7 +470,7 @@ public class ScriptManagerTest {
     public void ifSetterTest() {
         assert this.test("""
             var = "hello"
-            if var[length=5] {
+            if var[length] == 5 {
                 var = "{var} there"
             }
             /print {var}
@@ -519,7 +519,7 @@ public class ScriptManagerTest {
     public void ifKindTest() {
         assert this.test("""
             var = "no"
-            if var[type=#string] {
+            if var[type] == #string {
                 var = "yes"
             }
             /print {var}
@@ -550,9 +550,9 @@ public class ScriptManagerTest {
     @Test
     public void equality() {
         assert this.test("""
-            if "baefell"[equals="baefell"] {
-               if "baefell"[equals="baefell"] {
-                 if "baefell"[equals="baefell"] {
+            if "baefell" == "baefell" {
+               if "baefell"[lowercase] == "baefell" {
+                 if "baefell"[uppercase] == "BAEFELL" {
                    /print hi im baefell
                  }
                }
