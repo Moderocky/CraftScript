@@ -69,8 +69,10 @@ public abstract class Kind<Type> {
     public final Type convert(Object object) {
         final Wrapper<Object> wrapper = Wrapper.of(object);
         final Kind<Object> theirs = wrapper.getKind();
-        if (type.isInstance(object)) return type.cast(object);
-        else return this.convert(wrapper.getValue(), theirs);
+        final Type result;
+        if (type.isInstance(object)) result = type.cast(object);
+        else result = this.convert(wrapper.getValue(), theirs);
+        return result;
     }
 
     public <Theirs> Type convert(Theirs object, Kind<? super Theirs> kind) {
