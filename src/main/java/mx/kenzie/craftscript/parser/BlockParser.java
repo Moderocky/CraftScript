@@ -9,9 +9,13 @@ import java.util.List;
 
 public class BlockParser extends BasicParser {
 
+    private boolean single;
+
     @Override
     public boolean matches() {
-        return input.equals("{");
+        if (input.equals("{")) return true;
+        if (!(input.startsWith("{") && input.endsWith("}"))) return false;
+        return single = input.substring(1, input.length() - 1).isBlank();
     }
 
     @Override
@@ -19,6 +23,7 @@ public class BlockParser extends BasicParser {
         final List<Statement<?>> either = new ArrayList<>(), or = new ArrayList<>();
         boolean choice = false;
         List<Statement<?>> list = either;
+        if (single) return new BlockStatement(new NullStatement());
         do {
             try {
                 final Statement<?> statement = parent.parseLine();
@@ -37,6 +42,12 @@ public class BlockParser extends BasicParser {
         } while (true);
         if (choice) return new ChoiceBlockStatement(either.toArray(new Statement[0]), or.toArray(new Statement[0]));
         return new BlockStatement(either.toArray(new Statement[0]));
+    }
+
+    @Override
+    public void close() throws ScriptError {
+        this.single = false;
+        super.close();
     }
 
 }

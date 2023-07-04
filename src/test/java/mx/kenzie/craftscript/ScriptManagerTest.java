@@ -35,6 +35,20 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void singleLineBlockTest() {
+        assert this.test("""
+            if true {}
+            if false {  }
+            if true {             }
+            """);
+        assert this.test("""
+            if true {word = "10"}
+            if true { word = "5" }
+            /print {word}
+            """, "5");
+    }
+
+    @Test
     public void kindConvertTest() {
         assert this.test("""
             word = "10"
