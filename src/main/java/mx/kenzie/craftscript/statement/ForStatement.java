@@ -8,7 +8,8 @@ import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 import java.lang.reflect.Array;
-import java.util.Collection;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 public record ForStatement(VariableAssignmentStatement assignment, Statement<?> then) implements Statement<Boolean> {
 
@@ -16,12 +17,10 @@ public record ForStatement(VariableAssignmentStatement assignment, Statement<?> 
     public Boolean execute(Context context) throws ScriptError {
         final Statement<?> fetch = assignment.statement();
         final Object values = Wrapper.unwrap(fetch.execute(context));
-        if (values instanceof Collection<?> collection) for (final Object value : collection) {
-            this.trip(context, value);
-        }
-        else if (values instanceof Object[] objects) for (final Object value : objects) {
-            this.trip(context, value);
-        }
+        if (values instanceof Iterable<?> iterable) for (final Object value : iterable) this.trip(context, value);
+        else if (values instanceof Iterator<?> iterator) while (iterator.hasNext()) this.trip(context, iterator.next());
+        else if (values instanceof Stream<?> stream) stream.forEach(object -> this.tripAsync(context, object));
+        else if (values instanceof Object[] objects) for (final Object value : objects) this.trip(context, value);
         else if (values == null) return false;
         else if (values.getClass().isArray()) {
             final int length = Array.getLength(values);
@@ -33,6 +32,16 @@ public record ForStatement(VariableAssignmentStatement assignment, Statement<?> 
     private void trip(Context context, Object value) {
         context.variables().put(assignment.name(), Wrapper.of(value));
         this.then.execute(context);
+    }
+
+    private void tripAsync(Context context, Object value) {
+        final Context old = Context.getLocalContext();
+        try {
+            Context.setLocalContext(context);
+            this.trip(context, value);
+        } finally {
+            Context.setLocalContext(old);
+        }
     }
 
     @Override
