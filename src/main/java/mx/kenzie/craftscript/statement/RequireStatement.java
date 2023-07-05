@@ -53,14 +53,17 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
     public Component prettyPrint(ColorProfile profile) {
         final TextComponent.Builder builder = Component.text();
         builder.append(Component.text("require ", profile.dark()));
+        printNames(builder, names, profile);
+        return builder.build()
+            .hoverEvent(Component.text("Requires these variables are present.", profile.light()));
+    }
+    static void printNames(TextComponent.Builder builder, String[] names, ColorProfile profile) {
         builder.append(Component.text('[', profile.pop()));
         for (int i = 0; i < names.length; i++) {
             if (i > 0) builder.append(Component.text(", ", profile.pop()));
             builder.append(Component.text(names[i], profile.highlight()));
         }
         builder.append(Component.text(']', profile.pop()));
-        return builder.build()
-            .hoverEvent(Component.text("Requires these variables are present.", profile.light()));
     }
 
 }

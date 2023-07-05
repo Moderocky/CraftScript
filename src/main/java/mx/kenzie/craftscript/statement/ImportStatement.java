@@ -45,12 +45,7 @@ public record ImportStatement(String... names) implements Statement<Boolean> {
     public Component prettyPrint(ColorProfile profile) {
         final TextComponent.Builder builder = Component.text();
         builder.append(Component.text("import ", profile.dark()));
-        builder.append(Component.text('[', profile.pop()));
-        for (int i = 0; i < names.length; i++) {
-            if (i > 0) builder.append(Component.text(", ", profile.pop()));
-            builder.append(Component.text(names[i], profile.highlight()));
-        }
-        builder.append(Component.text(']', profile.pop()));
+        RequireStatement.printNames(builder, names, profile);
         return builder.build().hoverEvent(Component.text("Imports resources from an external program."));
     }
 
