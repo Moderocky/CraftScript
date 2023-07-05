@@ -116,4 +116,7 @@ public abstract class Kind<Type> {
         return this;
     }
 
+    public void setupDoBlock(Context context) {
+    }
+
 }

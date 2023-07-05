@@ -29,7 +29,7 @@ public class ListKind extends CollectionKind {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"index_of", "get", "set", "type", "size", "is_empty", "clone", "contains", "remove", "add", "retain"};
+        return new String[]{"index_of", "get", "set", "type", "size", "is_empty", "clone", "contains", "remove", "add", "retain", "clear"};
     }
 
     @Override

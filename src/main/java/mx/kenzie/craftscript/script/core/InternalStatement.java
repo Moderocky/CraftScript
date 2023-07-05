@@ -16,6 +16,13 @@ public record InternalStatement(BiFunction<Context, Arguments, Object> function)
         this((context, arguments) -> function.apply(arguments));
     }
 
+    public InternalStatement(Runnable runnable) {
+        this(((context, arguments) -> {
+            runnable.run();
+            return true;
+        }));
+    }
+
     static Arguments extractArguments(Context context) {
         final Arguments arguments;
         final Collection<?> parameters = context.variables().getParameters(), converted;

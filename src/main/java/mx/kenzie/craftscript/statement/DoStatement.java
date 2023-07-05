@@ -23,13 +23,14 @@ public record DoStatement(Statement<?> source, Statement<?> then) implements Sta
         }
     }
 
-    private <Type> Context prepare(Context context, Wrapper<Type> wrapper) {
-        final VariableContainer old = context.variables();
+    private <Type> Context prepare(Context parent, Wrapper<Type> wrapper) {
+        final VariableContainer old = parent.variables();
         final VariableContainer special = new PropertyVariableContainer<>(old, wrapper);
-        final Context child = new Context(context.source(), context.manager(), special, context.data().clone());
-        child.data().parentContext = context;
-        child.data().script = context.data().script;
-        return child;
+        final Context context = new Context(parent.source(), parent.manager(), special, parent.data().clone());
+        context.data().parentContext = parent;
+        context.data().script = parent.data().script;
+        wrapper.getKind().setupDoBlock(context);
+        return context;
     }
 
     @Override

@@ -35,6 +35,7 @@ public class CollectionKind extends Kind<Collection<?>> {
             case "remove" -> new InternalStatement(thing::removeAll);
             case "add" -> new InternalStatement(thing::addAll);
             case "retain" -> new InternalStatement(thing::retainAll);
+            case "clear" -> new InternalStatement(thing::clear);
             default -> null;
         };
     }
@@ -55,7 +56,7 @@ public class CollectionKind extends Kind<Collection<?>> {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "size", "is_empty", "clone", "contains", "remove", "add", "retain"};
+        return new String[]{"type", "size", "is_empty", "clone", "contains", "remove", "add", "retain", "clear"};
     }
 
     @Override
