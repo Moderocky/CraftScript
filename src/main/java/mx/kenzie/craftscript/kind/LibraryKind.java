@@ -2,12 +2,21 @@ package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.variable.LibraryObject;
 
+import java.util.Set;
+
 public class LibraryKind extends Kind<LibraryObject> {
 
     public static final LibraryKind LIBRARY = new LibraryKind();
 
     public LibraryKind() {
+        this(null);
+    }
+
+    private final LibraryObject library;
+
+    public LibraryKind(LibraryObject library) {
         super(LibraryObject.class);
+        this.library = library;
     }
 
     @Override
@@ -21,7 +30,12 @@ public class LibraryKind extends Kind<LibraryObject> {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "properties"};
+        if (library != null) {
+            final Set<String> set = library.keySet();
+            set.add("type");
+            set.add("properties");
+            return set.toArray(new String[0]);
+        } else return new String[]{"type", "properties"};
     }
 
     @Override

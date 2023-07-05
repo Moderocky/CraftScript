@@ -19,6 +19,7 @@ public class DoBlockParser implements ScriptParser {
     @Override
     public Statement<?> parseLine() throws IOException {
         do {
+            this.dirty = false;
             this.parent.incrementLine();
             final String line = this.readLine();
             if (line == null) throw new ScriptError("Reached end of script when expecting line.");
@@ -50,6 +51,7 @@ public class DoBlockParser implements ScriptParser {
             if (parser.matches()) return parser.parse();
             assert !parser.canUse();
         }
+        if (dirty) return null;
         try (Parser parser = new LocalFunctionParser()) {
             parser.insert(line, this);
             if (parser.matches()) return parser.parse();
@@ -81,5 +83,11 @@ public class DoBlockParser implements ScriptParser {
     public boolean checkEmpty(String line) {
         return parent.checkEmpty(line);
     }
+
+    public void flagDirty() {
+        this.dirty = true;
+    }
+
+    private boolean dirty;
 
 }

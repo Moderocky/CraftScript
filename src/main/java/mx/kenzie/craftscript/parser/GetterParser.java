@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.parser;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.GetterStatement;
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.variable.VariableContainer;
 
 public class GetterParser extends BasicParser {
 
@@ -20,6 +21,7 @@ public class GetterParser extends BasicParser {
         if (label.isEmpty()) return false;
         if (property.isEmpty()) return false;
         if (property.contains("=")) return false;
+        if (!VariableContainer.VAR_NAME.matcher(property).matches()) return false;
         this.assignment = parent.parse(label);
         return assignment != null;
     }

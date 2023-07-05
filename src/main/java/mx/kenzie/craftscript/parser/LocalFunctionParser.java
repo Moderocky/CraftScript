@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.parser;
 
+import mx.kenzie.craftscript.script.DoBlockParser;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.RunStatement;
 import mx.kenzie.craftscript.statement.Statement;
@@ -24,6 +25,7 @@ public class LocalFunctionParser extends BasicParser {
                 after = input.substring(space + 1).trim();
             }
             start = space + 1;
+            ((DoBlockParser) parent).flagDirty();
             this.runnable = parent.parse(before);
             if (!(runnable instanceof VariableStatement)) continue;
             if (after == null) return true;

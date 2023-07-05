@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.script.core;
 
+import mx.kenzie.craftscript.kind.LibraryKind;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.variable.LibraryObject;
@@ -9,7 +10,7 @@ public record LibraryStatement(LibraryObject value) implements NativeStatement<O
 
     @Override
     public Object execute(Context context) throws ScriptError {
-        return new Wrapper<>(value, LibraryObject.LIBRARY);
+        return new Wrapper<>(value, new LibraryKind(value));
     }
 
 }

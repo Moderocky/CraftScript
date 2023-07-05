@@ -55,6 +55,20 @@ public class ScriptManagerTest {
             }
             /print {result}
             """, "true");
+        assert this.test("""
+            import [math]
+            do math {
+                number = 25
+                assert number == 25
+                number = sqrt number
+                assert number == 5
+                number = abs number
+                assert number == 5
+                number = max [1, number]
+                number = round number
+            }
+            /print {number}
+            """, "5");
     }
 
     @Test
