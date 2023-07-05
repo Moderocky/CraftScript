@@ -35,6 +35,29 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void doBlockTest() {
+        assert this.test("""
+            var = "blob"
+            do "hello" {
+                var = char_at 1
+            }
+            /print {var}
+            """, "e");
+        assert this.test("""
+            result = do "hello" {
+                matches "there"
+            }
+            /print {result}
+            """, "false");
+        assert this.test("""
+            result = do "hello" {
+                matches "hello"
+            }
+            /print {result}
+            """, "true");
+    }
+
+    @Test
     public void singleLineBlockTest() {
         assert this.test("""
             if true {}

@@ -30,6 +30,7 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
     @SuppressWarnings("unchecked")
     public Object execute(Context context) throws ScriptError {
         final Object result = Wrapper.unwrap(statement.execute(context));
+        if (result == null) throw new ScriptError("Tried to run '" + statement.stringify() + "' but it was null.");
         VariableContainer variables = new VariableContainer();
         if (data != null) {
             final Object found = Wrapper.unwrap(data.execute(context));

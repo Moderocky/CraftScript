@@ -35,6 +35,11 @@ public class SimpleScriptLoader implements ScriptLoader {
     }
 
     @Override
+    public void incrementLine() {
+        ++this.line;
+    }
+
+    @Override
     public AbstractScript parse(InputStream stream) throws IOException {
         return new AnonymousScript(this.parseStatements(stream));
     }
@@ -83,6 +88,7 @@ public class SimpleScriptLoader implements ScriptLoader {
         } while (true);
     }
 
+    @Override
     public boolean checkEmpty(String line) {
         try (final Parser parser = comment) {
             parser.insert(line.trim(), this);
@@ -111,6 +117,7 @@ public class SimpleScriptLoader implements ScriptLoader {
         return replace;
     }
 
+    @Override
     public Iterator<Parser> parsers() {
         return new Iterator<>() {
             int index;
@@ -126,6 +133,11 @@ public class SimpleScriptLoader implements ScriptLoader {
                 return SimpleScriptLoader.this.getParser(supplier);
             }
         };
+    }
+
+    @Override
+    public String readLine() throws IOException {
+        return reader.readLine();
     }
 
     @Override

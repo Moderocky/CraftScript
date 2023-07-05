@@ -8,9 +8,9 @@ import java.util.regex.Pattern;
 
 public class VariableContainer implements Map<String, Object> {
 
-    public static final Pattern VAR_NAME = Pattern.compile("[a-zA-Z_\\-.][a-zA-Z0-9 _\\-.]*");
+    public static final Pattern VAR_NAME = Pattern.compile("^[a-zA-Z_\\-.][a-zA-Z0-9_\\-.]*$");
     protected final Map<String, Object> container;
-    private final Collection<Object> parameters;
+    protected final Collection<Object> parameters;
 
     protected VariableContainer(Map<String, Object> container, Collection<Object> parameters) {
         this.container = container;
