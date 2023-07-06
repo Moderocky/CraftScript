@@ -29,6 +29,15 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
         return required;
     }
 
+    static void printNames(TextComponent.Builder builder, String[] names, ColorProfile profile) {
+        builder.append(Component.text('[', profile.pop()));
+        for (int i = 0; i < names.length; i++) {
+            if (i > 0) builder.append(Component.text(", ", profile.pop()));
+            builder.append(Component.text(names[i], profile.highlight()));
+        }
+        builder.append(Component.text(']', profile.pop()));
+    }
+
     @Override
     public Boolean execute(Context context) throws ScriptError {
         return require(context, names).length == names.length;
@@ -56,14 +65,6 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
         printNames(builder, names, profile);
         return builder.build()
             .hoverEvent(Component.text("Requires these variables are present.", profile.light()));
-    }
-    static void printNames(TextComponent.Builder builder, String[] names, ColorProfile profile) {
-        builder.append(Component.text('[', profile.pop()));
-        for (int i = 0; i < names.length; i++) {
-            if (i > 0) builder.append(Component.text(", ", profile.pop()));
-            builder.append(Component.text(names[i], profile.highlight()));
-        }
-        builder.append(Component.text(']', profile.pop()));
     }
 
 }

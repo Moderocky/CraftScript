@@ -26,9 +26,8 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
         }
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public Object execute(Context context) throws ScriptError {
+    static Object execute(Context context, Statement<?> statement, Statement<?> data) {
         final Object result = Wrapper.unwrap(statement.execute(context));
         if (result == null) throw new ScriptError("Tried to run '" + statement.stringify() + "' but it was null.");
         VariableContainer variables = new VariableContainer();
@@ -52,20 +51,30 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
             runnable.run();
             return null;
         } else throw new ScriptError("Unable to run object '" + result + "'.");
+
+    }
+
+    static void debug(PrintStream stream, Class<?> thing, Statement<?> statement, Statement<?> data) {
+        stream.print(thing.getSimpleName());
+        stream.println('[');
+        stream.print("statement=");
+        statement.debug(stream);
+        if (data != null) {
+            stream.print(", ");
+            stream.print("data=");
+            data.debug(stream);
+        }
+        stream.print(']');
+    }
+
+    @Override
+    public Object execute(Context context) throws ScriptError {
+        return execute(context, statement, data);
     }
 
     @Override
     public void debug(PrintStream stream) {
-        stream.print(this.getClass().getSimpleName());
-        stream.println('[');
-        stream.print("statement=");
-        this.statement.debug(stream);
-        if (data != null) {
-            stream.print(", ");
-            stream.print("data=");
-            this.data.debug(stream);
-        }
-        stream.print(']');
+        debug(stream, this.getClass(), statement, data);
     }
 
     @Override

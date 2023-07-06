@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.variable;
 
+import mx.kenzie.craftscript.script.ScriptError;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -16,6 +17,12 @@ public class PropertyVariableContainer<Type> extends VariableContainer {
         this.wrapper = wrapper;
         this.properties = new HashSet<>(List.of(wrapper.kind.getProperties()));
         this.overrides = new HashMap<>();
+    }
+
+    public Object getProperty(String key) {
+        if (properties.contains(key)) return wrapper.kind.getProperty(wrapper.thing, key);
+        else if (overrides.containsKey(key)) return overrides.get(key).get();
+        else throw new ScriptError("No local keyword '" + key + "' is available here.");
     }
 
     @Override

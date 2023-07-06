@@ -2,7 +2,8 @@ package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.DoBlockParser;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.statement.RunStatement;
+import mx.kenzie.craftscript.statement.LocalFunctionStatement;
+import mx.kenzie.craftscript.statement.LocalKeywordStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.statement.VariableStatement;
 
@@ -27,7 +28,8 @@ public class LocalFunctionParser extends BasicParser {
             start = space + 1;
             ((DoBlockParser) parent).flagDirty();
             this.runnable = parent.parse(before);
-            if (!(runnable instanceof VariableStatement)) continue;
+            if (!(runnable instanceof VariableStatement variable)) continue;
+            this.runnable = new LocalKeywordStatement(variable.name());
             if (after == null) return true;
             if (after.isEmpty()) continue;
             this.variables = parent.parse(after);
@@ -39,7 +41,7 @@ public class LocalFunctionParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
-        return new RunStatement(runnable, variables);
+        return new LocalFunctionStatement(runnable, variables);
     }
 
     @Override
