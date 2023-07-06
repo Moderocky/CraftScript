@@ -2,7 +2,7 @@ package mx.kenzie.craftscript.kind;
 
 
 import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.script.core.InternalStatement;
+import mx.kenzie.craftscript.script.core.CheckedFunction;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -36,9 +36,8 @@ public class LocationKind extends Kind<Location> {
             case "is_generated" -> thing.isGenerated();
             case "to_vector" -> thing.toVector();
             case "direction" -> thing.getDirection();
-            case "distance" -> new InternalStatement(arguments -> thing.distance(this.convert(arguments.get(0))));
-            case "distance_squared" ->
-                new InternalStatement(arguments -> thing.distanceSquared(this.convert(arguments.get(0))));
+            case "distance" -> CheckedFunction.ofNoContext(this).runs(thing::distance);
+            case "distance_squared" -> CheckedFunction.ofNoContext(this).runs(thing::distanceSquared);
             default -> null;
         };
     }

@@ -1,10 +1,14 @@
 package mx.kenzie.craftscript.kind;
 
+import mx.kenzie.craftscript.script.core.CheckedFunction;
 import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+
+import static mx.kenzie.craftscript.kind.Kinds.ANY;
+import static mx.kenzie.craftscript.kind.Kinds.STRING;
 
 public class MapKind extends Kind<Map> {
 
@@ -24,6 +28,11 @@ public class MapKind extends Kind<Map> {
             case "keys" -> new ArrayList<>(thing.keySet());
             case "values" -> new ArrayList<>(thing.values());
             case "size" -> thing.size();
+            case "is_empty" -> thing.isEmpty();
+            case "clear" -> CheckedFunction.ofVoid().runs(thing::clear);
+            case "contains_key" -> CheckedFunction.ofNoContext(STRING).runs(thing::containsKey);
+            case "contains_value" -> CheckedFunction.ofNoContext(ANY).runs(thing::containsValue);
+            case "set" -> CheckedFunction.ofNoContext(STRING, ANY).runs(thing::put);
             default -> thing.get(property);
         };
     }

@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.kind;
 import mx.kenzie.centurion.Arguments;
 import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
+import mx.kenzie.craftscript.script.core.CheckedFunction;
 import mx.kenzie.craftscript.script.core.InternalStatement;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -10,27 +11,28 @@ import org.bukkit.entity.Player;
 
 import java.util.Objects;
 
-public class CommandSenderKind extends Kind<CommandSender> {
+import static mx.kenzie.craftscript.kind.Kinds.STRING;
 
-    public static final CommandSenderKind COMMAND_SENDER = new CommandSenderKind();
+public class CommandSenderKind<Type extends CommandSender> extends Kind<Type> {
 
-    public CommandSenderKind() {
-        super(CommandSender.class);
-    }
+    public static final CommandSenderKind<CommandSender> COMMAND_SENDER = new CommandSenderKind<>();
 
     @SuppressWarnings("unchecked")
-    protected CommandSenderKind(Class<? extends CommandSender> type) {
-        super((Class<CommandSender>) type);
+    public CommandSenderKind() {
+        this((Class<Type>) CommandSender.class);
+    }
+
+    protected CommandSenderKind(Class<Type> type) {
+        super(type);
     }
 
     @Override
-    public Object getProperty(CommandSender thing, String property) {
+    public Object getProperty(Type thing, String property) {
         if (thing == null) return null;
         return switch (property) {
             case "name" -> thing.getName();
             case "type" -> this;
-            case "has_permission" ->
-                new InternalStatement(arguments -> thing.hasPermission(Objects.toString(arguments.get(0))));
+            case "has_permission" -> CheckedFunction.ofNoContext(STRING).runs(thing::hasPermission);
             case "send_message" ->
                 new InternalStatement((context, arguments) -> this.sendMessage(thing, context, arguments));
             case "is_op" -> thing.isOp();
@@ -44,7 +46,7 @@ public class CommandSenderKind extends Kind<CommandSender> {
     }
 
     @Override
-    public String toString(CommandSender sender) {
+    public String toString(Type sender) {
         if (sender instanceof Player player) return player.getName();
         else return "Console";
     }
@@ -52,7 +54,8 @@ public class CommandSenderKind extends Kind<CommandSender> {
     public Object sendMessage(CommandSender target, Context context, Arguments arguments) {
         final AbstractScript script = context.data().script;
         final Component component = Component.text(Objects.toString(arguments.get(0)))
-            .hoverEvent(Component.text("Sent by " + this.toString(context.source()) + " (from " + script.name() + ")"));
+            .hoverEvent(
+                Component.text("Sent by " + this.toString((Type) context.source()) + " (from " + script.name() + ")"));
         target.sendMessage(component);
         return true;
     }

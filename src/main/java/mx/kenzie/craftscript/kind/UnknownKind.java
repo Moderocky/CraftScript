@@ -2,6 +2,8 @@ package mx.kenzie.craftscript.kind;
 
 public class UnknownKind extends Kind<Object> {
 
+    public static final UnknownKind ANY = new UnknownKind(Object.class);
+
     @SuppressWarnings("unchecked")
     public UnknownKind(Class<?> type) {
         super((Class<Object>) type);
@@ -15,6 +17,12 @@ public class UnknownKind extends Kind<Object> {
             case "type_name" -> type.getSimpleName();
             default -> null;
         };
+    }
+
+    @Override
+    public <Theirs> Object convert(Theirs object, Kind<? super Theirs> kind) {
+        if (type == Object.class) return object;
+        return super.convert(object, kind);
     }
 
     @Override

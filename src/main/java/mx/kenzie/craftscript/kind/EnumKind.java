@@ -2,16 +2,16 @@ package mx.kenzie.craftscript.kind;
 
 public class EnumKind<Type extends Enum<Type>> extends Kind<Type> {
 
-    public static final EnumKind<?> ENUM = new EnumKind<>();
+    public static final EnumKind<?> ENUM = new EnumKind<>(Enum.class, null);
 
     @SuppressWarnings("unchecked")
-    public EnumKind(Class<? extends Enum<Type>> type) {
+    protected EnumKind(Class<? extends Enum<Type>> type) {
         super((Class<Type>) type);
     }
 
     @SuppressWarnings("unchecked")
-    public EnumKind() {
-        super((Class<Type>) Enum.class);
+    private EnumKind(Object object, Void unused) {
+        this((Class<Type>) object);
     }
 
     @Override

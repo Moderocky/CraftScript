@@ -2,28 +2,24 @@ package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.script.core.InternalStatement;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
-public class CollectionKind extends Kind<Collection<?>> {
+public class CollectionKind<Type extends Collection<?>> extends Kind<Type> {
 
-    public static final CollectionKind COLLECTION = new CollectionKind();
+    public static final CollectionKind<Collection<?>> COLLECTION = new CollectionKind<>(Collection.class, null);
 
     @SuppressWarnings("unchecked")
-    public CollectionKind() {
-        this((Class<Collection<?>>) (Object) Collection.class);
+    private CollectionKind(Object object, Void unused) {
+        this((Class<Type>) object);
     }
 
-    @SuppressWarnings("unchecked")
-    protected CollectionKind(Class<? extends Collection<?>> type) {
-        super((Class<Collection<?>>) type);
+    protected CollectionKind(Class<Type> type) {
+        super(type);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object getProperty(Collection<?> collection, String property) {
+    public Object getProperty(Type collection, String property) {
         if (collection == null) return null;
         final Collection<Object> thing = (Collection<Object>) collection;
         return switch (property) {
@@ -41,7 +37,7 @@ public class CollectionKind extends Kind<Collection<?>> {
     }
 
     @Override
-    public String toString(Collection<?> collection) {
+    public String toString(Type collection) {
         final Iterator<?> iterator = collection.iterator();
         final StringBuilder builder = new StringBuilder();
         builder.append('[');
@@ -60,9 +56,11 @@ public class CollectionKind extends Kind<Collection<?>> {
     }
 
     @Override
-    public <Theirs> Collection<?> convert(Theirs object, Kind<? super Theirs> kind) {
-        if (object instanceof Collection<?> collection) return new ArrayList<>(collection);
-        if (object instanceof Map<?, ?> map) return new ArrayList<>(map.values());
+    @SuppressWarnings("unchecked")
+    public <Theirs> Type convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object instanceof Collection<?> collection) return (Type) collection;
+        if (object instanceof Map<?, ?> map) return (Type) new ArrayList<>(map.values());
+        if (object instanceof Object[] objects) return (Type) new ArrayList<>(Arrays.asList(objects));
         return super.convert(object, kind);
     }
 

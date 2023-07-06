@@ -1,20 +1,22 @@
 package mx.kenzie.craftscript.kind;
 
-public class NumberKind extends Kind<Number> {
+import mx.kenzie.craftscript.script.ScriptError;
 
-    public static final NumberKind NUMBER = new NumberKind();
+public class NumberKind<Type extends Number> extends Kind<Type> {
 
-    public NumberKind() {
-        super(Number.class);
-    }
+    public static final NumberKind<Number> NUMBER = new NumberKind<>();
 
     @SuppressWarnings("unchecked")
-    protected NumberKind(Class<? extends Number> type) {
-        super((Class<Number>) type);
+    public NumberKind() {
+        this((Class<Type>) Number.class);
+    }
+
+    protected NumberKind(Class<Type> type) {
+        super(type);
     }
 
     @Override
-    public Object getProperty(Number thing, String property) {
+    public Object getProperty(Type thing, String property) {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this;
@@ -35,10 +37,19 @@ public class NumberKind extends Kind<Number> {
     }
 
     @Override
-    public <Theirs> Number convert(Theirs object, Kind<? super Theirs> kind) {
-        if (object == null) return 0;
-        else if (object instanceof String string) return Double.valueOf(string);
-        else return super.convert(object, kind).intValue();
+    public <Theirs> Type convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object instanceof Number number) return (Type) number;
+        if (object == null) return (Type) (Double) 0.0;
+        else if (object instanceof String string) return this.valueOf(string);
+        else return super.convert(object, kind);
+    }
+
+    private Type valueOf(String string) {
+        try {
+            return (Type) Double.valueOf(string);
+        } catch (NumberFormatException ex) {
+            throw new ScriptError("Cannot convert '" + string + "' to a number.");
+        }
     }
 
 }

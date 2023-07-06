@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.kind;
 
-import mx.kenzie.craftscript.script.core.InternalStatement;
+import mx.kenzie.craftscript.script.core.CheckedFunction;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -29,10 +29,9 @@ public class VectorKind extends Kind<Vector> {
             case "clone" -> thing.clone();
             case "is_zero" -> thing.isZero();
             case "is_normalized" -> thing.isNormalized();
-            case "distance" -> new InternalStatement(arguments -> thing.distance(this.convert(arguments.get(0))));
-            case "distance_squared" ->
-                new InternalStatement(arguments -> thing.distanceSquared(this.convert(arguments.get(0))));
-            case "angle" -> new InternalStatement(arguments -> thing.angle(this.convert(arguments.get(0))));
+            case "distance" -> CheckedFunction.ofNoContext(this).notNull().runs(thing::distance);
+            case "distance_squared" -> CheckedFunction.ofNoContext(this).notNull().runs(thing::distanceSquared);
+            case "angle" -> CheckedFunction.ofNoContext(this).notNull().runs(thing::angle);
             default -> null;
         };
     }

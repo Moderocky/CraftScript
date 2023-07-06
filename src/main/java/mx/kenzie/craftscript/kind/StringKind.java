@@ -1,9 +1,8 @@
 package mx.kenzie.craftscript.kind;
 
-import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.core.InternalStatement;
+import mx.kenzie.craftscript.script.core.CheckedFunction;
 
-import static mx.kenzie.craftscript.kind.IntegerKind.INTEGER;
+import static mx.kenzie.craftscript.kind.Kinds.INTEGER;
 
 public class StringKind extends Kind<String> {
 
@@ -23,20 +22,15 @@ public class StringKind extends Kind<String> {
             case "is_blank" -> thing.isBlank();
             case "lowercase" -> thing.toLowerCase();
             case "uppercase" -> thing.toUpperCase();
-            case "char_at" ->
-                new InternalStatement(arguments -> thing.charAt((int) INTEGER.convert(arguments.get(0))) + "");
-            case "substring" -> new InternalStatement(arguments -> {
-                if (arguments.size() == 1) return thing.substring((int) INTEGER.convert(arguments.get(0)));
-                else if (arguments.size() == 2) return thing.substring((int) INTEGER.convert(arguments.get(0)),
-                    (int) INTEGER.convert(arguments.get(1)));
-                else throw new ScriptError("Substring function takes 1 or 2 integers.");
-            });
-            case "index_of" -> new InternalStatement(arguments -> thing.indexOf(STRING.convert(arguments.get(0))));
-            case "starts_with" ->
-                new InternalStatement(arguments -> thing.startsWith(STRING.convert(arguments.get(0))));
-            case "ends_with" -> new InternalStatement(arguments -> thing.endsWith(STRING.convert(arguments.get(0))));
-            case "contains" -> new InternalStatement(arguments -> thing.contains(STRING.convert(arguments.get(0))));
-            case "matches" -> new InternalStatement(arguments -> thing.matches(STRING.convert(arguments.get(0))));
+            case "char_at" -> CheckedFunction.ofNoContext(INTEGER).runs(index -> thing.charAt(index) + "");
+            case "substring" -> CheckedFunction.ofNoContext(INTEGER, INTEGER)
+                .defaultValues(0, thing.length())
+                .runs(thing::substring);
+            case "index_of" -> CheckedFunction.ofNoContext(STRING).runs(thing::indexOf);
+            case "starts_with" -> CheckedFunction.ofNoContext(STRING).runs(thing::startsWith);
+            case "ends_with" -> CheckedFunction.ofNoContext(STRING).runs(thing::endsWith);
+            case "contains" -> CheckedFunction.ofNoContext(STRING).runs(thing::contains);
+            case "matches" -> CheckedFunction.ofNoContext(STRING).runs(thing::matches);
             default -> null;
         };
     }

@@ -15,6 +15,7 @@ public class ListParser extends BasicParser {
     public boolean matches() {
         if (!input.startsWith("[")) return false;
         if (!input.endsWith("]")) return false;
+        if (input.length() == 2 || input.substring(1, input.length() - 1).isBlank()) return true;
         int begin = 1;
         do {
             int comma, start = begin;
