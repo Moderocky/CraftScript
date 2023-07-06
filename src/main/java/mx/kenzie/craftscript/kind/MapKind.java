@@ -45,7 +45,7 @@ public class MapKind extends Kind<Map> {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "size", "keys", "values"};
+        return new String[]{"type", "keys", "values", "size", "is_empty", "clear", "contains_key", "contains_value", "set"};
     }
 
     @Override
