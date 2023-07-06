@@ -11,6 +11,14 @@ import java.io.PrintStream;
 
 public record GetterStatement(Statement<?> source, String property) implements Statement<Object> {
 
+    static void debug(PrintStream stream, Statement<?> source, String property) {
+        stream.print("property=");
+        stream.print(property);
+        stream.print(", ");
+        stream.print("source=");
+        source.debug(stream);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Object execute(Context context) throws ScriptError {
@@ -23,11 +31,7 @@ public record GetterStatement(Statement<?> source, String property) implements S
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());
         stream.print('[');
-        stream.print("property=");
-        stream.print(property);
-        stream.print(", ");
-        stream.print("source=");
-        this.source.debug(stream);
+        GetterStatement.debug(stream, source, property);
         stream.print(']');
     }
 
