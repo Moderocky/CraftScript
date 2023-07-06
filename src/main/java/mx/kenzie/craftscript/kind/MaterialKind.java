@@ -16,11 +16,6 @@ public class MaterialKind extends EnumKind<Material> {
     }
 
     @Override
-    public Object getProperty(Enum<Material> thing, String property) {
-        if (thing instanceof Material material) return this.getProperty(material, property);
-        return super.getProperty(thing, property);
-    }
-
     public Object getProperty(Material thing, String property) {
         if (thing == null) return null;
         return switch (property) {
@@ -59,7 +54,7 @@ public class MaterialKind extends EnumKind<Material> {
     }
 
     @Override
-    public <Theirs> Enum<Material> convert(Theirs object, Kind<? super Theirs> kind) {
+    public <Theirs> Material convert(Theirs object, Kind<? super Theirs> kind) {
         if (object instanceof Material material) return material;
         if (object instanceof String string) return Material.matchMaterial(string, false);
         if (object instanceof NamespacedKey key) return Material.matchMaterial(key.getKey(), false);
@@ -69,14 +64,9 @@ public class MaterialKind extends EnumKind<Material> {
         return super.convert(object, kind);
     }
 
+    @Override
     public String toString(Material data) {
         return data.getKey().toString();
-    }
-
-    @Override
-    public String toString(Enum<Material> materialEnum) {
-        if (materialEnum instanceof Material material) return this.toString(material);
-        return super.toString(materialEnum);
     }
 
     @Override

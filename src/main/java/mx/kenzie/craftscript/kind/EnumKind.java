@@ -1,21 +1,21 @@
 package mx.kenzie.craftscript.kind;
 
-public class EnumKind<Type extends Enum<Type>> extends Kind<Enum<Type>> {
+public class EnumKind<Type extends Enum<Type>> extends Kind<Type> {
 
     public static final EnumKind<?> ENUM = new EnumKind<>();
 
     @SuppressWarnings("unchecked")
     public EnumKind(Class<? extends Enum<Type>> type) {
-        super((Class<Enum<Type>>) type);
+        super((Class<Type>) type);
     }
 
     @SuppressWarnings("unchecked")
     public EnumKind() {
-        super((Class<Enum<Type>>) (Object) Enum.class);
+        super((Class<Type>) Enum.class);
     }
 
     @Override
-    public Object getProperty(Enum<Type> thing, String property) {
+    public Object getProperty(Type thing, String property) {
         if (thing == null) return null;
         return switch (property) {
             case "name" -> thing.name();
@@ -31,14 +31,13 @@ public class EnumKind<Type extends Enum<Type>> extends Kind<Enum<Type>> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <Theirs> Enum<Type> convert(Theirs object, Kind<? super Theirs> kind) {
-        if (object instanceof String string) return Enum.valueOf((Class<Type>) type, string);
+    public <Theirs> Type convert(Theirs object, Kind<? super Theirs> kind) {
+        if (object instanceof String string) return Enum.valueOf(type, string);
         return super.convert(object, kind);
     }
 
     @Override
-    public String toString(Enum<Type> typeEnum) {
+    public String toString(Type typeEnum) {
         return typeEnum.name().toLowerCase();
     }
 
