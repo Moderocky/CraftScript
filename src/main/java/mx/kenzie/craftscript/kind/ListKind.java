@@ -22,17 +22,19 @@ public class ListKind extends CollectionKind<List<?>> {
     public Object getProperty(List<?> collection, String property) {
         final List<Object> thing = (List<Object>) collection;
         return switch (property) {
-            case "index_of" -> CheckedFunction.of(ANY).runs((context, object) -> thing.indexOf(object));
-            case "get" -> CheckedFunction.ofNoContext(INTEGER).notNull().runs(thing::get);
-            case "set" -> CheckedFunction.ofNoContext(INTEGER, ANY).notNull().runs(thing::set);
-            case "slice" -> CheckedFunction.ofNoContext(INTEGER, INTEGER).notNull().runs(thing::subList);
+            case "clone" -> new ArrayList<>(thing);
+            case "index_of" -> CheckedFunction.of(ANY).runs(thing::indexOf);
+            case "last_index_of" -> CheckedFunction.of(ANY).runs(thing::lastIndexOf);
+            case "get" -> CheckedFunction.of(INTEGER).notNull().runs(thing::get);
+            case "set" -> CheckedFunction.of(INTEGER, ANY).notNull().runs(thing::set);
+            case "slice" -> CheckedFunction.of(INTEGER, INTEGER).notNull().runs(thing::subList);
             default -> super.getProperty(collection, property);
         };
     }
 
     @Override
     public String[] getProperties() {
-        return new String[]{"index_of", "get", "set", "type", "size", "is_empty", "clone", "contains", "remove", "add", "retain", "clear", "slice"};
+        return new String[]{"clone", "index_of", "last_index_of", "get", "set", "slice", "type", "size", "is_empty", "clone", "contains", "remove", "add", "retain", "clear", "as_set", "as_list"};
     }
 
     @Override

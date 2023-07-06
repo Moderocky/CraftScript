@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class LazyInterpolatingMap extends AbstractMap<String, Object> {
+public class LazyInterpolatingMap extends AbstractMap<String, Object> implements Container {
 
     private final Map<String, Statement<?>> map = new LinkedHashMap<>();
     private final Context context;

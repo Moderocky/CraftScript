@@ -2,12 +2,13 @@ package mx.kenzie.craftscript.variable;
 
 import mx.kenzie.craftscript.kind.LibraryKind;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Container;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class LibraryObject extends StructObject implements Map<String, Object> {
+public abstract class LibraryObject extends StructObject implements Map<String, Object>, Container {
 
     public static final LibraryKind LIBRARY = new LibraryKind();
 

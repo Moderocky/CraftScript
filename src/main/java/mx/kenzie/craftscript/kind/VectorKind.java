@@ -29,9 +29,9 @@ public class VectorKind extends Kind<Vector> {
             case "clone" -> thing.clone();
             case "is_zero" -> thing.isZero();
             case "is_normalized" -> thing.isNormalized();
-            case "distance" -> CheckedFunction.ofNoContext(this).notNull().runs(thing::distance);
-            case "distance_squared" -> CheckedFunction.ofNoContext(this).notNull().runs(thing::distanceSquared);
-            case "angle" -> CheckedFunction.ofNoContext(this).notNull().runs(thing::angle);
+            case "distance" -> CheckedFunction.of(this).notNull().runs(thing::distance);
+            case "distance_squared" -> CheckedFunction.of(this).notNull().runs(thing::distanceSquared);
+            case "angle" -> CheckedFunction.of(this).notNull().runs(thing::angle);
             default -> null;
         };
     }

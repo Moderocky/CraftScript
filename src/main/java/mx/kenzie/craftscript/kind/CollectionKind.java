@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.kind;
 
+import mx.kenzie.craftscript.script.core.CheckedFunction;
 import mx.kenzie.craftscript.script.core.InternalStatement;
 
 import java.util.*;
@@ -32,6 +33,8 @@ public class CollectionKind<Type extends Collection<?>> extends Kind<Type> {
             case "add" -> new InternalStatement(thing::addAll);
             case "retain" -> new InternalStatement(thing::retainAll);
             case "clear" -> new InternalStatement(thing::clear);
+            case "as_set" -> CheckedFunction.of().runs(() -> new HashSet<>(thing));
+            case "as_list" -> CheckedFunction.of().runs(() -> new ArrayList<>(thing));
             default -> null;
         };
     }
@@ -52,7 +55,7 @@ public class CollectionKind<Type extends Collection<?>> extends Kind<Type> {
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "size", "is_empty", "clone", "contains", "remove", "add", "retain", "clear"};
+        return new String[]{"type", "size", "is_empty", "clone", "contains", "remove", "add", "retain", "clear", "as_set", "as_list"};
     }
 
     @Override

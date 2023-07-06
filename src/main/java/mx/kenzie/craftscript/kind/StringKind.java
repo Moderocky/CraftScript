@@ -22,15 +22,15 @@ public class StringKind extends Kind<String> {
             case "is_blank" -> thing.isBlank();
             case "lowercase" -> thing.toLowerCase();
             case "uppercase" -> thing.toUpperCase();
-            case "char_at" -> CheckedFunction.ofNoContext(INTEGER).runs(index -> thing.charAt(index) + "");
-            case "substring" -> CheckedFunction.ofNoContext(INTEGER, INTEGER)
+            case "char_at" -> CheckedFunction.of(INTEGER).runs(index -> thing.charAt(index) + "");
+            case "substring" -> CheckedFunction.of(INTEGER, INTEGER)
                 .defaultValues(0, thing.length())
                 .runs(thing::substring);
-            case "index_of" -> CheckedFunction.ofNoContext(STRING).runs(thing::indexOf);
-            case "starts_with" -> CheckedFunction.ofNoContext(STRING).runs(thing::startsWith);
-            case "ends_with" -> CheckedFunction.ofNoContext(STRING).runs(thing::endsWith);
-            case "contains" -> CheckedFunction.ofNoContext(STRING).runs(thing::contains);
-            case "matches" -> CheckedFunction.ofNoContext(STRING).runs(thing::matches);
+            case "index_of" -> CheckedFunction.of(STRING).runs(thing::indexOf);
+            case "starts_with" -> CheckedFunction.of(STRING).runs(thing::startsWith);
+            case "ends_with" -> CheckedFunction.of(STRING).runs(thing::endsWith);
+            case "contains" -> CheckedFunction.of(STRING).runs(thing::contains);
+            case "matches" -> CheckedFunction.of(STRING).runs(thing::matches);
             default -> null;
         };
     }

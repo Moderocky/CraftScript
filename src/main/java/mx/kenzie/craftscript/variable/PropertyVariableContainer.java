@@ -1,12 +1,13 @@
 package mx.kenzie.craftscript.variable;
 
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Container;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
 
-public class PropertyVariableContainer<Type> extends VariableContainer {
+public class PropertyVariableContainer<Type> extends VariableContainer implements Container {
 
     private final Set<String> properties;
     private final Wrapper<Type> wrapper;

@@ -36,8 +36,8 @@ public class LocationKind extends Kind<Location> {
             case "is_generated" -> thing.isGenerated();
             case "to_vector" -> thing.toVector();
             case "direction" -> thing.getDirection();
-            case "distance" -> CheckedFunction.ofNoContext(this).runs(thing::distance);
-            case "distance_squared" -> CheckedFunction.ofNoContext(this).runs(thing::distanceSquared);
+            case "distance" -> CheckedFunction.of(this).runs(thing::distance);
+            case "distance_squared" -> CheckedFunction.of(this).runs(thing::distanceSquared);
             default -> null;
         };
     }

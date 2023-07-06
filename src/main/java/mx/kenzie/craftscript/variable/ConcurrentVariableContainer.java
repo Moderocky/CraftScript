@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.variable;
 
+import mx.kenzie.craftscript.utility.Container;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ConcurrentVariableContainer extends VariableContainer {
+public class ConcurrentVariableContainer extends VariableContainer implements Container {
 
     public ConcurrentVariableContainer() {
         this(new ArrayList<>(4));

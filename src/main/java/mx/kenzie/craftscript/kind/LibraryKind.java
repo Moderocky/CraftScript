@@ -29,7 +29,7 @@ public class LibraryKind extends Kind<LibraryObject> {
 
     @Override
     public String[] getProperties() {
-        return getSpecialProperties(library);
+        return getSpecialProperties(library, "type", "properties");
     }
 
     @Override

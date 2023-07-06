@@ -1,6 +1,8 @@
 package mx.kenzie.craftscript.variable;
 
-public class VariableFinder extends VariableContainer {
+import mx.kenzie.craftscript.utility.Container;
+
+public class VariableFinder extends VariableContainer implements Container {
 
     protected final VariableContainer container;
 

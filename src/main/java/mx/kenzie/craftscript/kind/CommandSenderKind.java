@@ -32,7 +32,7 @@ public class CommandSenderKind<Type extends CommandSender> extends Kind<Type> {
         return switch (property) {
             case "name" -> thing.getName();
             case "type" -> this;
-            case "has_permission" -> CheckedFunction.ofNoContext(STRING).runs(thing::hasPermission);
+            case "has_permission" -> CheckedFunction.of(STRING).runs(thing::hasPermission);
             case "send_message" ->
                 new InternalStatement((context, arguments) -> this.sendMessage(thing, context, arguments));
             case "is_op" -> thing.isOp();

@@ -2,13 +2,15 @@ package mx.kenzie.craftscript.variable;
 
 import mx.kenzie.craftscript.kind.CustomKind;
 import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.utility.Container;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-public class StructObject extends VariableContainer {
+public class StructObject extends VariableContainer implements Container {
 
     public static final Pattern TYPE_NAME = Pattern.compile("#[a-zA-Z_\\-.][a-zA-Z0-9_\\-.]*");
     private static final CustomKind KIND = new CustomKind();
@@ -17,6 +19,15 @@ public class StructObject extends VariableContainer {
 
     public StructObject() {
         super(new HashMap<>(), Collections.emptyList());
+    }
+
+    public StructObject(Map<String, Object> object) {
+        super(new HashMap<>(object), Collections.emptyList());
+    }
+
+    public StructObject(StructObject object) {
+        super(new HashMap<>(object.container), Collections.emptyList());
+        this.frozen = object.frozen;
     }
 
     public void freeze() {

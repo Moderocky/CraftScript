@@ -1,12 +1,13 @@
 package mx.kenzie.craftscript.variable;
 
+import mx.kenzie.craftscript.utility.Container;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class VariableContainer implements Map<String, Object> {
+public class VariableContainer implements Map<String, Object>, Container {
 
     public static final Pattern VAR_NAME = Pattern.compile("^[a-zA-Z_\\-.][a-zA-Z0-9_\\-.]*$");
     protected final Map<String, Object> container;

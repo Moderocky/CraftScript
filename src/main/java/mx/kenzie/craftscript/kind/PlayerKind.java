@@ -38,7 +38,7 @@ public class PlayerKind extends CommandSenderKind<Player> {
             case "arrows_in_body" -> thing.getArrowsInBody();
             case "client_brand" -> thing.getClientBrandName();
             case "view_distance" -> thing.getClientViewDistance();
-            case "has_cooldown" -> CheckedFunction.ofNoContext(Kinds.MATERIAL).runs(thing::hasCooldown);
+            case "has_cooldown" -> CheckedFunction.of(Kinds.MATERIAL).runs(thing::hasCooldown);
             default -> super.getProperty(thing, property);
         };
     }

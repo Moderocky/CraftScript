@@ -1,11 +1,13 @@
 package mx.kenzie.craftscript.kind;
 
+import mx.kenzie.craftscript.utility.Container;
 import org.bukkit.block.TileState;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface Kinds {
 
@@ -22,13 +24,15 @@ public interface Kinds {
     ExecutableKind EXECUTABLE = ExecutableKind.EXECUTABLE;
     EventKind EVENT = EventKind.EVENT;
     CustomKind STRUCTURE = CustomKind.STRUCTURE;
-    MapKind MAP = MapKind.MAP;
+    ContainerKind<Container> CONTAINER = ContainerKind.CONTAINER;
+    MapKind<Object, Object, Map<Object, Object>> MAP = MapKind.MAP;
     ListKind LIST = ListKind.LIST;
+    SetKind SET = SetKind.SET;
     CollectionKind<Collection<?>> COLLECTION = CollectionKind.COLLECTION;
     NullKind NULL = NullKind.NULL;
     LibraryKind LIBRARY = LibraryKind.LIBRARY;
     IntegerKind INTEGER = IntegerKind.INTEGER;
-    NumberKind NUMBER = NumberKind.NUMBER;
+    NumberKind<Number> NUMBER = NumberKind.NUMBER;
     EnumKind<?> ENUM = EnumKind.ENUM;
     KindKind KIND = KindKind.KIND;
 
@@ -41,7 +45,7 @@ public interface Kinds {
     UnknownKind ANY = UnknownKind.ANY;
 
 
-    List<Kind<?>> kinds = new ArrayList<>(List.<Kind<?>>of(
+    List<Kind<?>> kinds = new ArrayList<>(List.of(
         STRING,
         PLAYER,
         COMMAND_SENDER,
@@ -54,12 +58,14 @@ public interface Kinds {
         STATEMENT,
         EXECUTABLE,
         EVENT,
+        LIBRARY,
         STRUCTURE,
+        CONTAINER,
         MAP,
         LIST,
+        SET,
         COLLECTION,
         NULL,
-        LIBRARY,
         INTEGER,
         NUMBER,
         ENUM,

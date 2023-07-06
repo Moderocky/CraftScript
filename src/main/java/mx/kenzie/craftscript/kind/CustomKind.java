@@ -1,13 +1,15 @@
 package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.variable.StructObject;
+import mx.kenzie.craftscript.variable.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CustomKind extends Kind<StructObject> {
+public class CustomKind extends ContainerKind<StructObject> {
 
     public static final CustomKind STRUCTURE = new CustomKind();
     protected final StructObject object;
@@ -22,13 +24,12 @@ public class CustomKind extends Kind<StructObject> {
     }
 
     @NotNull
-    static String[] getSpecialProperties(Map<String, Object> object) {
+    static String[] getSpecialProperties(Map<String, Object> object, String... ours) {
         if (object != null) {
             final Set<String> set = object.keySet();
-            set.add("type");
-            set.add("properties");
+            set.addAll(List.of(ours));
             return set.toArray(new String[0]);
-        } else return new String[]{"type", "properties"};
+        } else return ours;
     }
 
     @Override
@@ -37,6 +38,7 @@ public class CustomKind extends Kind<StructObject> {
         return switch (property) {
             case "type" -> this;
             case "properties" -> new ArrayList<>(thing.keySet());
+            case "clone" -> new Wrapper<>(new StructObject(thing), this);
             default -> thing.get(property);
         };
     }
@@ -49,7 +51,7 @@ public class CustomKind extends Kind<StructObject> {
 
     @Override
     public String[] getProperties() {
-        return getSpecialProperties(object);
+        return getSpecialProperties(object, "type", "properties", "clone");
     }
 
     @Override

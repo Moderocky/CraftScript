@@ -22,6 +22,14 @@ public class CheckedFunction<Lambda extends CheckedFunction.PrettyLambda> implem
         return new CheckedFunction<>();
     }
 
+    public static CheckedFunction<NullaryNoContextLambda> of() {
+        return nullary().confirm();
+    }
+
+    public static CheckedFunction<NullaryNoContextVoidLambda> ofVoid() {
+        return nullary().confirm();
+    }
+
     public static <Arg1> CheckedFunction<UnaryLambda<Arg1>> unary() {
         return new CheckedFunction<>();
     }
@@ -38,7 +46,7 @@ public class CheckedFunction<Lambda extends CheckedFunction.PrettyLambda> implem
         return new CheckedFunction<>();
     }
 
-    public static <Arg1> CheckedFunction<NoContextUnaryLambda<Arg1>> ofNoContext(Kind<Arg1> arg1) {
+    public static <Arg1> CheckedFunction<NoContextUnaryLambda<Arg1>> of(Kind<Arg1> arg1) {
         return unary().requires(arg1).confirm();
     }
 
@@ -46,23 +54,19 @@ public class CheckedFunction<Lambda extends CheckedFunction.PrettyLambda> implem
         return unary().requires(arg1).confirm();
     }
 
-    public static CheckedFunction<NullaryVoidLambda> ofVoid() {
-        return nullary().confirm();
-    }
-
-    public static <Arg1> CheckedFunction<UnaryLambda<Arg1>> of(Kind<Arg1> arg1) {
+    public static <Arg1> CheckedFunction<UnaryLambda<Arg1>> contextualised(Kind<Arg1> arg1) {
         return unary().requires(arg1).confirm();
     }
 
-    public static <Arg1> CheckedFunction<UnaryLambda<Arg1>> of(Class<Arg1> arg1) {
+    public static <Arg1> CheckedFunction<UnaryLambda<Arg1>> contextualised(Class<Arg1> arg1) {
         return unary().requires(arg1).confirm();
     }
 
-    public static <Arg1, Arg2> CheckedFunction<BinaryLambda<Arg1, Arg2>> of(Kind<Arg1> arg1, Kind<Arg2> arg2) {
+    public static <Arg1, Arg2> CheckedFunction<BinaryLambda<Arg1, Arg2>> contextualised(Kind<Arg1> arg1, Kind<Arg2> arg2) {
         return binary().requires(arg1, arg2).confirm();
     }
 
-    public static <Arg1, Arg2> CheckedFunction<NoContextBinaryLambda<Arg1, Arg2>> ofNoContext(Kind<Arg1> arg1, Kind<Arg2> arg2) {
+    public static <Arg1, Arg2> CheckedFunction<NoContextBinaryLambda<Arg1, Arg2>> of(Kind<Arg1> arg1, Kind<Arg2> arg2) {
         return binary().requires(arg1, arg2).confirm();
     }
 
@@ -70,15 +74,15 @@ public class CheckedFunction<Lambda extends CheckedFunction.PrettyLambda> implem
         return binary().requires(arg1, arg2).confirm();
     }
 
-    public static <Arg1, Arg2> CheckedFunction<BinaryLambda<Arg1, Arg2>> of(Class<Arg1> arg1, Class<Arg2> arg2) {
+    public static <Arg1, Arg2> CheckedFunction<BinaryLambda<Arg1, Arg2>> contextualised(Class<Arg1> arg1, Class<Arg2> arg2) {
         return binary().requires(arg1, arg2).confirm();
     }
 
-    public static <Arg1, Arg2, Arg3> CheckedFunction<TernaryLambda<Arg1, Arg2, Arg3>> of(Kind<Arg1> arg1, Kind<Arg2> arg2, Kind<Arg3> arg3) {
+    public static <Arg1, Arg2, Arg3> CheckedFunction<TernaryLambda<Arg1, Arg2, Arg3>> contextualised(Kind<Arg1> arg1, Kind<Arg2> arg2, Kind<Arg3> arg3) {
         return ternary().requires(arg1, arg2, arg3).confirm();
     }
 
-    public static <Arg1, Arg2, Arg3> CheckedFunction<TernaryLambda<Arg1, Arg2, Arg3>> of(Class<Arg1> arg1, Class<Arg2> arg2, Class<Arg3> arg3) {
+    public static <Arg1, Arg2, Arg3> CheckedFunction<TernaryLambda<Arg1, Arg2, Arg3>> contextualised(Class<Arg1> arg1, Class<Arg2> arg2, Class<Arg3> arg3) {
         return ternary().requires(arg1, arg2, arg3).confirm();
     }
 
@@ -238,7 +242,19 @@ public class CheckedFunction<Lambda extends CheckedFunction.PrettyLambda> implem
     }
 
     @FunctionalInterface
-    public interface NullaryVoidLambda extends PrettyLambda {
+    public interface NullaryNoContextLambda extends PrettyLambda {
+
+        Object execute();
+
+        @Override
+        default Object run(Context context, Arguments arguments) {
+            return this.execute();
+        }
+
+    }
+
+    @FunctionalInterface
+    public interface NullaryNoContextVoidLambda extends PrettyLambda {
 
         void execute();
 

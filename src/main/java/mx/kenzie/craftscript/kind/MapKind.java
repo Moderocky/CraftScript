@@ -3,54 +3,62 @@ package mx.kenzie.craftscript.kind;
 import mx.kenzie.craftscript.script.core.CheckedFunction;
 import mx.kenzie.craftscript.variable.Wrapper;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
-import static mx.kenzie.craftscript.kind.Kinds.ANY;
-import static mx.kenzie.craftscript.kind.Kinds.STRING;
+public class MapKind<Key, Value, Type extends Map<Key, Value>> extends Kind<Type> {
 
-public class MapKind extends Kind<Map> {
-
-    public static final MapKind MAP = new MapKind();
-
+    public static final MapKind<Object, Object, Map<Object, Object>> MAP = new MapKind<Object, Object, Map<Object, Object>>(
+        Map.class, UnknownKind.ANY, UnknownKind.ANY);
+    protected final Kind<Key> keyKind;
+    protected final Kind<Value> valueKind;
     private volatile int step;
 
-    public MapKind() {
-        super(Map.class);
+    @SuppressWarnings("unchecked")
+    private MapKind(Object object, Object keyKind, Object valueKind) {
+        this((Class<Type>) object, (Kind<Key>) keyKind, (Kind<Value>) valueKind);
+    }
+
+    protected MapKind(Class<Type> type, Kind<Key> keyKind, Kind<Value> valueKind) {
+        super(type);
+        this.keyKind = keyKind;
+        this.valueKind = valueKind;
     }
 
     @Override
-    public Object getProperty(Map thing, String property) {
+    public Object getProperty(Type thing, String property) {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this;
-            case "keys" -> new ArrayList<>(thing.keySet());
-            case "values" -> new ArrayList<>(thing.values());
+            case "keys" -> new LinkedHashSet<>(thing.keySet());
+            case "values" -> new LinkedHashSet<>(thing.values());
             case "size" -> thing.size();
             case "is_empty" -> thing.isEmpty();
             case "clear" -> CheckedFunction.ofVoid().runs(thing::clear);
-            case "contains_key" -> CheckedFunction.ofNoContext(STRING).runs(thing::containsKey);
-            case "contains_value" -> CheckedFunction.ofNoContext(ANY).runs(thing::containsValue);
-            case "set" -> CheckedFunction.ofNoContext(STRING, ANY).runs(thing::put);
-            default -> thing.get(property);
+            case "contains_key" -> CheckedFunction.of(keyKind).runs(thing::containsKey);
+            case "contains_value" -> CheckedFunction.of(valueKind).runs(thing::containsValue);
+            case "set" -> CheckedFunction.of(keyKind, valueKind).runs(thing::put);
+            case "clone" -> new Wrapper<>(new LinkedHashMap<>(thing), MAP);
+            default -> thing.get(keyKind.convert(property));
         };
     }
 
     @Override
-    public Object setProperty(Map thing, String property, Object value) {
+    public Object setProperty(Type thing, String property, Object value) {
         if (thing == null) return null;
-        return thing.put(property, value);
+        return thing.put(keyKind.convert(property), valueKind.convert(value));
     }
 
     @Override
     public String[] getProperties() {
-        return new String[]{"type", "keys", "values", "size", "is_empty", "clear", "contains_key", "contains_value", "set"};
+        return new String[]{"type", "keys", "values", "size", "is_empty", "clear", "contains_key", "contains_value", "set", "clone"};
     }
 
     @Override
-    public String toString(Map map) {
-        final Iterator iterator = map.entrySet().iterator();
+    public String toString(Type map) {
+        final Iterator<Map.Entry<Key, Value>> iterator = map.entrySet().iterator();
         if (!iterator.hasNext()) return "[]";
         final StringBuilder builder = new StringBuilder();
         builder.append('[');
@@ -59,9 +67,9 @@ public class MapKind extends Kind<Map> {
         }
         try {
             while (iterator.hasNext()) {
-                final Map.Entry e = (Map.Entry) iterator.next();
-                final Object key = e.getKey(), value = e.getValue();
-                if (step < 8) {
+                final Map.Entry<Key, Value> entry = iterator.next();
+                final Object key = entry.getKey(), value = entry.getValue();
+                if (step < 6) {
                     builder.append(Wrapper.unwrap(key) == map ? "<this>" : key);
                     builder.append('=');
                     builder.append(Wrapper.unwrap(value) == map ? "<this>" : value);
