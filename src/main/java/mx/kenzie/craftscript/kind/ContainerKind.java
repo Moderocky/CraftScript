@@ -12,6 +12,7 @@ public class ContainerKind<Type extends Container> extends MapKind<String, Objec
 
     public static final ContainerKind<Container> CONTAINER = new ContainerKind<>(Container.class);
 
+    @SuppressWarnings("unchecked")
     protected ContainerKind(Class<? super Type> type) {
         super((Class<Type>) type, StringKind.STRING, UnknownKind.ANY);
     }

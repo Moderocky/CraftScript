@@ -11,6 +11,7 @@ import java.util.Iterator;
 public class DoBlockParser implements ScriptParser {
 
     protected final ScriptParser parent;
+    private boolean dirty;
 
     public DoBlockParser(ScriptParser parent) {
         this.parent = parent;
@@ -87,7 +88,5 @@ public class DoBlockParser implements ScriptParser {
     public void flagDirty() {
         this.dirty = true;
     }
-
-    private boolean dirty;
 
 }

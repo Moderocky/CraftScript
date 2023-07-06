@@ -55,7 +55,7 @@ public class CommandSenderKind<Type extends CommandSender> extends Kind<Type> {
         final AbstractScript script = context.data().script;
         final Component component = Component.text(Objects.toString(arguments.get(0)))
             .hoverEvent(
-                Component.text("Sent by " + this.toString((Type) context.source()) + " (from " + script.name() + ")"));
+                Component.text("Sent by " + this.toStringTry(context.source()) + " (from " + script.name() + ")"));
         target.sendMessage(component);
         return true;
     }

@@ -18,9 +18,4 @@ public class ScriptParser extends BasicParser {
         return new ScriptStatement(input);
     }
 
-    @Override
-    public void close() throws ScriptError {
-        super.close();
-    }
-
 }

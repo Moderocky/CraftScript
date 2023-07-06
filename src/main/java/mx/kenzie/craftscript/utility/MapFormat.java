@@ -48,7 +48,6 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.ParsePosition;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -204,56 +203,34 @@ public class MapFormat extends Format {
     public String processPattern(String newPattern) throws IllegalArgumentException {
         int idx = 0;
         int offnum = -1;
-        StringBuffer outpat = new StringBuffer();
+        StringBuilder outpat = new StringBuilder();
         offsets = new int[BUFSIZE];
         arguments = new String[BUFSIZE];
         maxOffset = -1;
-
         //skipped = new RangeList();
         // What was this for??
         //process(newPattern, "\"", "\""); // NOI18N
         while (true) {
             int ridx = -1;
             int lidx = newPattern.indexOf(ldel, idx);
-
-            /*
-            Range ran = skipped.getRangeContainingOffset(lidx);
-            if (ran != null) {
-                outpat.append(newPattern.substring(idx, ran.getEnd()));
-                idx = ran.getEnd(); continue;
-            }
-             */
             if (lidx >= 0) {
                 ridx = newPattern.indexOf(rdel, lidx + ldel.length());
-            } else {
-                break;
-            }
-
+            } else break;
             if (++offnum >= BUFSIZE) {
-                throw new IllegalArgumentException(
-                    "TooManyArguments"
-                );
+                throw new IllegalArgumentException("TooManyArguments");
             }
-
             if (ridx < 0) {
                 if (exactmatch) {
-                    throw new IllegalArgumentException(
-                        "UnmatchedBraces"
-                    );
-                } else {
-                    break;
-                }
+                    throw new IllegalArgumentException("UnmatchedBraces");
+                } else break;
             }
-
             outpat.append(newPattern, idx, lidx);
             offsets[offnum] = outpat.length();
             arguments[offnum] = newPattern.substring(lidx + ldel.length(), ridx);
             idx = ridx + rdel.length();
             maxOffset++;
         }
-
         outpat.append(newPattern.substring(idx));
-
         return outpat.toString();
     }
 
@@ -286,7 +263,7 @@ public class MapFormat extends Format {
 
             String key = arguments[i];
             String obj;
-            if (key.length() > 0) {
+            if (!key.isEmpty()) {
                 obj = formatObject(processKey(key));
             } else {
                 // else just copy the left and right braces
@@ -344,14 +321,13 @@ public class MapFormat extends Format {
      * @return New format.
      */
     public String parse(String source) {
-        StringBuffer sbuf = new StringBuffer(source);
-        Iterator key_it = argmap.keySet().iterator();
+        StringBuilder sbuf = new StringBuilder(source);
 
         //skipped = new RangeList();
         // What was this for??
         //process(source, "\"", "\""); // NOI18N
-        while (key_it.hasNext()) {
-            String it_key = (String) key_it.next();
+        for (Object object : argmap.keySet()) {
+            String it_key = (String) object;
             String it_obj = formatObject(argmap.get(it_key));
             int it_idx = -1;
 

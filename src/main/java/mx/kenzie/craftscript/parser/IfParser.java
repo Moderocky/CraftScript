@@ -32,7 +32,7 @@ public class IfParser extends BasicParser {
             this.then = parent.parse(after);
             if (then == null) continue;
             return true;
-        } while (start < input.length() && start > 2);
+        } while (start < input.length());
         return false;
     }
 

@@ -7,7 +7,7 @@ import mx.kenzie.craftscript.utility.Executable;
 
 import java.util.Objects;
 
-public class ExecutableKind extends Kind<Executable> {
+public class ExecutableKind extends Kind<Executable> { // todo do this one properly
 
     public static final ExecutableKind EXECUTABLE = new ExecutableKind();
 

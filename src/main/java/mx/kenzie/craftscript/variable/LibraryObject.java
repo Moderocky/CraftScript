@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.variable;
 
+import mx.kenzie.craftscript.kind.Kinds;
 import mx.kenzie.craftscript.kind.LibraryKind;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.Container;
@@ -31,7 +32,7 @@ public abstract class LibraryObject extends StructObject implements Map<String, 
 
     @Override
     public boolean containsKey(Object key) {
-        return keys.contains(key);
+        return keys.contains(Kinds.STRING.convert(key));
     }
 
     @Override

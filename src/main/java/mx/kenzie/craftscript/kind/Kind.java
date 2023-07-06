@@ -86,7 +86,7 @@ public abstract class Kind<Type> {
 
     public String toStringTry(Object object) {
         object = Wrapper.unwrap(object);
-        if (this.getType().isInstance(object)) return this.toString((Type) object);
+        if (this.getType().isInstance(object)) return this.toString(this.getType().cast(object));
         return Objects.toString(type);
     }
 
@@ -117,6 +117,7 @@ public abstract class Kind<Type> {
     }
 
     public void setupDoBlock(Context context) {
+        assert context != null;
     }
 
 }

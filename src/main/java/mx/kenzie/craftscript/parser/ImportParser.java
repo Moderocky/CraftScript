@@ -15,6 +15,7 @@ public class ImportParser extends BasicParser {
         if (input.length() < 7) return false;
         final int start = input.indexOf('['), end = input.lastIndexOf(']');
         if (start < 0 || end < 0) return false;
+        if (start > 7 && !input.substring(7, start).isBlank()) return false;
         final String string = input.substring(start + 1, end).trim();
         this.names = new String[0];
         if (string.isEmpty()) return true;
