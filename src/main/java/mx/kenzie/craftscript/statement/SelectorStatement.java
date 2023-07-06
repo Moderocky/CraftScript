@@ -34,14 +34,7 @@ public record SelectorStatement(String text, Universe<?> universe,
         stream.print('[');
         stream.print("text=");
         stream.print(text);
-        if (interpolations.length > 0) {
-            stream.print(", ");
-            stream.print("interpolations=[");
-            for (final InterpolationStatement interpolation : interpolations) {
-                interpolation.debug(stream);
-            }
-            stream.print(']');
-        }
+        CommandStatement.debugInterpolations(stream, interpolations);
         stream.print(']');
     }
 

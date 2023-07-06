@@ -27,14 +27,7 @@ public record StringStatement(String value, InterpolationStatement... interpolat
         stream.print('[');
         stream.print("value=");
         stream.print(value);
-        if (interpolations.length > 0) {
-            stream.print(", ");
-            stream.print("interpolations=[");
-            for (final InterpolationStatement interpolation : interpolations) {
-                interpolation.debug(stream);
-            }
-            stream.print(']');
-        }
+        CommandStatement.debugInterpolations(stream, interpolations);
         stream.print(']');
     }
 
@@ -54,17 +47,13 @@ public record StringStatement(String value, InterpolationStatement... interpolat
             builder.append(Component.text('"', profile.pop()));
             for (final Object object : list) {
                 if (object instanceof String string) builder.append(Component.text(string, profile.light()));
-                else if (object instanceof Statement<?> statement)
-                    builder.append(statement.prettyPrint(profile));
+                else if (object instanceof Statement<?> statement) builder.append(statement.prettyPrint(profile));
             }
             builder.append(Component.text('"', profile.pop()));
             return builder.build().hoverEvent(component);
         }
-        return Component.textOfChildren(
-            Component.text('"', profile.pop()),
-            Component.text(value, profile.light()),
-            Component.text('"', profile.pop())
-        ).hoverEvent(component);
+        return Component.textOfChildren(Component.text('"', profile.pop()), Component.text(value, profile.light()),
+            Component.text('"', profile.pop())).hoverEvent(component);
     }
 
 }

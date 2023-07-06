@@ -43,6 +43,17 @@ public record CommandStatement(String input, InterpolationStatement... interpola
         return list;
     }
 
+    static void debugInterpolations(PrintStream stream, InterpolationStatement... interpolations) {
+        if (interpolations.length > 0) {
+            stream.print(", ");
+            stream.print("interpolations=[");
+            for (final InterpolationStatement interpolation : interpolations) {
+                interpolation.debug(stream);
+            }
+            stream.print(']');
+        }
+    }
+
     @Override
     public Boolean execute(Context context) throws ScriptError {
         final String command;
@@ -59,14 +70,7 @@ public record CommandStatement(String input, InterpolationStatement... interpola
         stream.print('[');
         stream.print("input=");
         stream.print(input);
-        if (interpolations.length > 0) {
-            stream.print(", ");
-            stream.print("interpolations=[");
-            for (final InterpolationStatement interpolation : interpolations) {
-                interpolation.debug(stream);
-            }
-            stream.print(']');
-        }
+        CommandStatement.debugInterpolations(stream, interpolations);
         stream.print(']');
     }
 
