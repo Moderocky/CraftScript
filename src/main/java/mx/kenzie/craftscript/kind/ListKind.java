@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static mx.kenzie.craftscript.kind.Kinds.ANY;
+import static mx.kenzie.craftscript.kind.Kinds.INTEGER;
+
 public class ListKind extends CollectionKind<List<?>> {
 
     public static final ListKind LIST = new ListKind();
@@ -19,13 +22,10 @@ public class ListKind extends CollectionKind<List<?>> {
     public Object getProperty(List<?> collection, String property) {
         final List<Object> thing = (List<Object>) collection;
         return switch (property) {
-            case "index_of" -> CheckedFunction.unary().runs((context, object) -> thing.indexOf(object));
-            case "get" -> CheckedFunction.of(Kinds.INTEGER).notNull()
-                .runs((context, index) -> thing.get(index));
-            case "set" -> CheckedFunction.of(Kinds.INTEGER, Kinds.ANY).notNull()
-                .runs((context, index, to) -> thing.set(index, to));
-            case "slice" -> CheckedFunction.of(Kinds.INTEGER, Kinds.INTEGER).notNull()
-                .runs((context, from, to) -> thing.subList(from, to));
+            case "index_of" -> CheckedFunction.of(ANY).runs((context, object) -> thing.indexOf(object));
+            case "get" -> CheckedFunction.ofNoContext(INTEGER).notNull().runs(thing::get);
+            case "set" -> CheckedFunction.ofNoContext(INTEGER, ANY).notNull().runs(thing::set);
+            case "slice" -> CheckedFunction.ofNoContext(INTEGER, INTEGER).notNull().runs(thing::subList);
             default -> super.getProperty(collection, property);
         };
     }
