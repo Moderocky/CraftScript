@@ -10,6 +10,17 @@ import java.io.PrintStream;
 
 public record BlockStatement(Statement<?>... statements) implements Statement<Object> {
 
+    static void prettyPrint(ColorProfile profile, TextComponent.Builder text, Statement<?>... block) {
+        text.append(Component.text('{', profile.pop()));
+        for (final Statement<?> statement : block) {
+            text.append(Component.text('\t'));
+            text.append(statement.prettyPrint(profile));
+            text.append(Component.newline());
+        }
+        text.append(Component.text('}', profile.pop()));
+
+    }
+
     @Override
     public Object execute(Context context) throws ScriptError {
         Object result = null;
@@ -43,13 +54,7 @@ public record BlockStatement(Statement<?>... statements) implements Statement<Ob
     @Override
     public Component prettyPrint(ColorProfile profile) {
         final TextComponent.Builder text = Component.text();
-        text.append(Component.text('{', profile.pop()));
-        for (final Statement<?> statement : statements) {
-            text.append(Component.text('\t'));
-            text.append(statement.prettyPrint(profile));
-            text.append(Component.newline());
-        }
-        text.append(Component.text('}', profile.pop()));
+        BlockStatement.prettyPrint(profile, text, statements);
         return text.build();
     }
 

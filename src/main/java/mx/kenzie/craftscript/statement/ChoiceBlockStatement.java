@@ -69,22 +69,10 @@ public record ChoiceBlockStatement(Statement<?>[] either, Statement<?>[] or) imp
     @Override
     public Component prettyPrint(ColorProfile profile) {
         final TextComponent.Builder text = Component.text();
-        text.append(Component.text('{', profile.pop()));
-        for (final Statement<?> statement : either) {
-            text.append(Component.text('\t'));
-            text.append(statement.prettyPrint(profile));
-            text.append(Component.newline());
-        }
-        text.append(Component.text('}', profile.pop()));
+        BlockStatement.prettyPrint(profile, text, either);
         text.append(Component.text(" else ", profile.dark())
             .hoverEvent(Component.text("Otherwise do...", profile.light())));
-        text.append(Component.text('{', profile.pop()));
-        for (final Statement<?> statement : or) {
-            text.append(Component.text('\t'));
-            text.append(statement.prettyPrint(profile));
-            text.append(Component.newline());
-        }
-        text.append(Component.text('}', profile.pop()));
+        BlockStatement.prettyPrint(profile, text, or);
         return text.build();
     }
 
