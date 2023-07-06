@@ -1,5 +1,7 @@
 package mx.kenzie.craftscript.utility;
 
+import mx.kenzie.centurion.Arguments;
+import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.RequireStatement;
@@ -18,8 +20,60 @@ public interface Bridge {
         throw new ScriptError("Unable to turn '" + object + "' into #" + type.getSimpleName() + ".");
     }
 
+    @SuppressWarnings("unchecked")
+    static <Type, Result extends Type> Result cast(Object object, Kind<Type> type) {
+        return (Result) type.convert(object);
+    }
+
     static void exists(Object object) {
         if (object == null) throw new ScriptError("Provided an empty value.");
+    }
+
+    static Arguments validate(Arguments arguments, Kind<?>... kinds) {
+        if (arguments.size() < kinds.length)
+            throw new ScriptError("Expected " + kinds.length + " arguments, found " + arguments.size());
+        final Object[] objects = new Object[kinds.length];
+        for (int i = 0; i < kinds.length; i++) {
+            try {
+                objects[i] = kinds[i].convert(arguments.get(i));
+            } catch (ScriptError error) {
+                throw new ScriptError("Error with argument " + (i + 1) + ":\n" + error.getMessage());
+            }
+        }
+        return Arguments.of(objects);
+    }
+
+    static void validate(Arguments arguments, Class<?>... types) {
+        if (arguments.size() < types.length)
+            throw new ScriptError("Expected " + types.length + " arguments, found " + arguments.size());
+        for (int i = 0; i < types.length; i++) {
+            final Object object = arguments.get(i);
+            if (object == null) continue;
+            if (!types[i].isInstance(object))
+                throw new ScriptError(
+                    "Argument " + (i + 1) + " expected a #" + Kind.asKind(types[i]) + " but got " + Kind.print(object));
+        }
+    }
+
+    static void notNull(Arguments arguments) {
+        int i = 0;
+        for (final Object argument : arguments) {
+            i++;
+            if (argument != null) continue;
+            throw new ScriptError("Argument " + i + " expected a value but was null.");
+        }
+    }
+
+    static Arguments defaultValues(Arguments arguments, Object... values) {
+        final Object[] objects = new Object[Math.max(arguments.size(), values.length)];
+        for (int i = 0; i < objects.length; i++) {
+            if (i < arguments.size()) {
+                final Object found = arguments.get(i);
+                if (found != null) objects[i] = found;
+                else if (i < values.length) objects[i] = values[i];
+            } else objects[i] = values[i];
+        }
+        return Arguments.of(objects);
     }
 
 }
