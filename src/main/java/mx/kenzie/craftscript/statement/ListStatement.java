@@ -12,16 +12,7 @@ import java.util.List;
 
 public record ListStatement(Statement<?>... statements) implements Statement<List<?>> {
 
-    @Override
-    public List<?> execute(Context context) throws ScriptError {
-        final List<Object> list = new ArrayList<>();
-        for (final Statement<?> statement : statements) list.add(statement.execute(context));
-        return list;
-    }
-
-    @Override
-    public void debug(PrintStream stream) {
-        stream.print(this.getClass().getSimpleName());
+    static void debug(PrintStream stream, Statement<?>... statements) {
         stream.println('[');
         boolean first = true;
         for (final Statement<?> statement : statements) {
@@ -30,10 +21,10 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
             statement.debug(stream);
         }
         stream.print(']');
+
     }
 
-    @Override
-    public void stringify(PrintStream stream) {
+    static void stringify(PrintStream stream, Statement<?>... statements) {
         stream.println('[');
         boolean first = true;
         for (final Statement<?> statement : statements) {
@@ -44,8 +35,7 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
         stream.print(']');
     }
 
-    @Override
-    public Component prettyPrint(ColorProfile profile) {
+    static Component prettyPrint(ColorProfile profile, Statement<?>... statements) {
         final TextComponent.Builder builder = Component.text();
         builder.append(Component.text('[', profile.pop()));
         for (int i = 0; i < statements.length; i++) {
@@ -54,7 +44,30 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
             builder.append(statement.prettyPrint(profile));
         }
         builder.append(Component.text(']', profile.pop()));
-        return builder.build().hoverEvent(Component.text("A list of objects.", profile.light()));
+        return builder.build();
+    }
+
+    @Override
+    public List<?> execute(Context context) throws ScriptError {
+        final List<Object> list = new ArrayList<>();
+        for (final Statement<?> statement : statements) list.add(statement.execute(context));
+        return list;
+    }
+
+    @Override
+    public void debug(PrintStream stream) {
+        stream.print(this.getClass().getSimpleName());
+        debug(stream, statements);
+    }
+
+    @Override
+    public void stringify(PrintStream stream) {
+        stringify(stream, statements);
+    }
+
+    @Override
+    public Component prettyPrint(ColorProfile profile) {
+        return prettyPrint(profile, statements).hoverEvent(Component.text("A list of objects.", profile.light()));
     }
 
 }
