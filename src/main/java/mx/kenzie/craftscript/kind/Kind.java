@@ -25,7 +25,7 @@ public abstract class Kind<Type> {
             return new UnknownKind(kind);
         }
         if (thing == null) return NullKind.NULL;
-        return null;
+        return UnknownKind.ANY;
     }
 
     public static Kind<?> of(Object thing) {

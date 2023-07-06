@@ -1,20 +1,23 @@
 package mx.kenzie.craftscript.kind;
 
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.script.core.CheckedFunction;
 import mx.kenzie.craftscript.script.core.InternalStatement;
 import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
-public class KindKind extends Kind<Kind> {
+import static mx.kenzie.craftscript.kind.Kinds.ANY;
+
+public class KindKind extends Kind<Kind<?>> {
 
     public static final KindKind KIND = new KindKind();
 
+    @SuppressWarnings("unchecked")
     public KindKind() {
-        super(Kind.class);
+        super((Class<Kind<?>>) (Object) Kind.class);
     }
 
     private static List<Object> list(Object[] objects) {
@@ -22,24 +25,28 @@ public class KindKind extends Kind<Kind> {
         return new ArrayList<>(Arrays.asList(objects));
     }
 
+    static <Type> Wrapper<Type> convertTo(Object object, Kind<Type> kind) {
+        return new Wrapper<>(kind.convert(object), kind);
+    }
+
     @Override
-    public Object getProperty(Kind thing, String property) {
+    public Object getProperty(Kind<?> thing, String property) {
         if (thing == null) return null;
         return switch (property) {
             case "type" -> this;
             case "name" -> thing.type.getSimpleName();
             case "path" -> thing.type.getName();
-            case "properties" -> new HashSet<>(List.of(Kind.asKind(thing).getProperties()));
+            case "properties" -> list(Kind.asKind(thing).getProperties());
             case "is_array" -> thing.type.isArray();
             case "is_flag" -> thing.type.isEnum();
             case "values" -> list(thing.type.getEnumConstants());
-            case "is_instance" -> new InternalStatement(arguments -> thing.type.isInstance(arguments.get(0)));
+            case "is_instance" -> CheckedFunction.of(ANY).runs(thing.type::isInstance);
             case "convert" -> new InternalStatement(arguments -> {
                 if (arguments.size() > 1) {
                     final List<Wrapper<?>> result = new ArrayList<>(arguments.size());
-                    for (final Object argument : arguments) result.add(new Wrapper<>(thing.convert(argument), thing));
+                    for (final Object argument : arguments) result.add(convertTo(argument, thing));
                     return result;
-                } else if (arguments.size() == 1) return new Wrapper<>(thing.convert(arguments.get(0)), thing);
+                } else if (arguments.size() == 1) return convertTo(arguments.get(0), thing);
                 else throw new ScriptError("Convert function expects at least one argument.");
             });
             default -> null;
@@ -52,7 +59,7 @@ public class KindKind extends Kind<Kind> {
     }
 
     @Override
-    public String toString(Kind string) {
+    public String toString(Kind<?> string) {
         if (string.type == Kind.class) return this.toString();
         return string.toString();
     }
