@@ -40,6 +40,13 @@ public class PropertyVariableContainer<Type> extends VariableContainer implement
         else return super.put(key, value);
     }
 
+    @Override
+    public boolean containsKey(Object key) {
+        if (properties.contains(key)) return true;
+        if (overrides.containsKey(key)) return true;
+        return super.containsKey(key);
+    }
+
     public void putOverride(String key, Supplier<Object> value) {
         this.overrides.put(key, value);
     }
