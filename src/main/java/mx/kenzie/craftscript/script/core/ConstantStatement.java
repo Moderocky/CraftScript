@@ -18,6 +18,11 @@ public record ConstantStatement(Object value) implements NativeStatement<Object>
     }
 
     @Override
+    public Class<?> returnType() {
+        return value == null ? Void.class : value.getClass();
+    }
+
+    @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());
         stream.print('[');

@@ -8,7 +8,7 @@ import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
 
-public record BlockStatement(Statement<?>... statements) implements Statement<Object> {
+public record BlockStatement(Statement<?>... statements) implements Statement<Object>, EvaluatedStatement<Object> {
 
     static void prettyPrint(ColorProfile profile, TextComponent.Builder text, Statement<?>... block) {
         text.append(Component.text('{', profile.pop()));
@@ -19,6 +19,28 @@ public record BlockStatement(Statement<?>... statements) implements Statement<Ob
         }
         text.append(Component.text('}', profile.pop()));
 
+    }
+
+    public static Class<?> getCommonGround(Class<?> first, Class<?> second) {
+        if (first.equals(second)) return first;
+        if (first.isAssignableFrom(second)) return first;
+        if (second.isAssignableFrom(first)) return second;
+        if (first == Void.class) return second;
+        if (second == Void.class) return first;
+        Class<?> test = first;
+        do {
+            if (test.isAssignableFrom(second)) return test;
+            test = test.getSuperclass();
+        } while (test != Object.class);
+        test = second;
+        do {
+            if (test.isAssignableFrom(first)) return test;
+            test = test.getSuperclass();
+        } while (test != Object.class);
+        for (final Class<?> face : first.getInterfaces()) {
+            if (face.isAssignableFrom(second)) return face;
+        }
+        return Object.class;
     }
 
     @Override
@@ -56,6 +78,19 @@ public record BlockStatement(Statement<?>... statements) implements Statement<Ob
         final TextComponent.Builder text = Component.text();
         BlockStatement.prettyPrint(profile, text, statements);
         return text.build();
+    }
+
+    @Override
+    public Class<?> returnType() {
+        if (statements.length == 0) return Void.class;
+        return statements[statements.length - 1].returnType();
+    }
+
+    @Override
+    public Class<?> evaluatedReturnType() {
+        if (statements.length == 0) return Void.class;
+        final Statement<?> statement = statements[statements.length - 1];
+        return statement instanceof EvaluatedStatement<?> evaluated ? evaluated.evaluatedReturnType() : Void.class;
     }
 
 }

@@ -20,4 +20,9 @@ public record EqualsStatement(Statement<?> antecedent, Statement<?> consequent) 
         return "==";
     }
 
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
+    }
+
 }

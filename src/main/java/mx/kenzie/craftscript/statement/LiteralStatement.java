@@ -35,4 +35,10 @@ public record LiteralStatement(Object value) implements Statement<Object> {
             .hoverEvent(Component.text("A literal value.", profile.light()));
     }
 
+    @Override
+    public Class<?> returnType() {
+        if (value == null) return Void.class;
+        return value.getClass();
+    }
+
 }

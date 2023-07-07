@@ -40,7 +40,8 @@ public class BlockParser extends BasicParser {
                 throw new ScriptError("Error reading line " + parent.getLine() + " in block.", ex);
             }
         } while (true);
-        if (choice) return new ChoiceBlockStatement(either.toArray(new Statement[0]), or.toArray(new Statement[0]));
+        if (choice) return new ChoiceBlockStatement(new BlockStatement(either.toArray(new Statement[0])),
+            new BlockStatement(or.toArray(new Statement[0])));
         return new BlockStatement(either.toArray(new Statement[0]));
     }
 

@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Bridge;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
@@ -68,6 +69,11 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return prettyPrint(profile, statements).hoverEvent(Component.text("A list of objects.", profile.light()));
+    }
+
+    @Override
+    public Class<? extends List<?>> returnType() {
+        return Bridge.cast(List.class);
     }
 
 }

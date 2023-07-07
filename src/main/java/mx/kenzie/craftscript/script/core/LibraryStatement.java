@@ -13,4 +13,9 @@ public record LibraryStatement(LibraryObject value) implements NativeStatement<O
         return new Wrapper<>(value, new LibraryKind(value));
     }
 
+    @Override
+    public Class<?> returnType() {
+        return LibraryObject.class;
+    }
+
 }

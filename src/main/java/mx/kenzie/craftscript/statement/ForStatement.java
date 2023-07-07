@@ -74,4 +74,9 @@ public record ForStatement(VariableAssignmentStatement assignment, Statement<?> 
         ).hoverEvent(Component.text("Runs a function for every element in a list."));
     }
 
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
+    }
+
 }

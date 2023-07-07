@@ -20,4 +20,10 @@ public record DivideStatement(Statement<?> antecedent, Statement<?> consequent) 
         return "/";
     }
 
+    @Override
+    public Class<? extends Number> returnType() {
+        if (antecedent.returnType() == Integer.class && consequent.returnType() == Integer.class) return Integer.class;
+        return Number.class;
+    }
+
 }

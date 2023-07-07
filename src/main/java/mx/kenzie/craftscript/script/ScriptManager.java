@@ -8,6 +8,7 @@ import mx.kenzie.craftscript.kind.EventKind;
 import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.listener.GameEventListener;
 import mx.kenzie.craftscript.utility.BackgroundTaskExecutor;
+import mx.kenzie.craftscript.utility.ScriptHelper;
 import mx.kenzie.craftscript.utility.TaskExecutor;
 import mx.kenzie.craftscript.variable.ConcurrentVariableContainer;
 import mx.kenzie.craftscript.variable.VariableContainer;
@@ -97,9 +98,12 @@ public class ScriptManager implements Closeable {
 
     public Script parseScript(String name, InputStream stream) {
         try {
+            ScriptHelper.init(this);
             return loader.parse(name, stream);
         } catch (IOException ex) {
             throw new ScriptError("Error loading script content.", ex);
+        } finally {
+            ScriptHelper.tearDown();
         }
     }
 

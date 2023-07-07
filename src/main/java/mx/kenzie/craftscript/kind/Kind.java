@@ -66,6 +66,10 @@ public abstract class Kind<Type> {
         return new String[]{"type"};
     }
 
+    public Class<?> getTypeHint(String property) {
+        return Object.class;
+    }
+
     public final Type convert(Object object) {
         final Wrapper<Object> wrapper = Wrapper.of(object);
         final Kind<Object> theirs = wrapper.getKind();

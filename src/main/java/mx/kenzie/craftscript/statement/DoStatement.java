@@ -63,4 +63,9 @@ public record DoStatement(Statement<?> source, Statement<?> then) implements Sta
         ).hoverEvent(Component.text("Creates a block of special actions for this object."));
     }
 
+    @Override
+    public Class<?> returnType() {
+        return then.returnType();
+    }
+
 }

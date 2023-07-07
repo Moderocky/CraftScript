@@ -3,11 +3,12 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.VariableHelper;
 import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record VariableStatement(String name) implements Statement<Object> {
+public record VariableStatement(String name) implements Statement<Object>, EvaluatedStatement<Object> {
 
     @Override
     public Object execute(Context context) throws ScriptError {
@@ -32,6 +33,18 @@ public record VariableStatement(String name) implements Statement<Object> {
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(name, profile.highlight())
             .hoverEvent(Component.text("The '" + name + " variable."));
+    }
+
+    @Override
+    public Class<?> returnType() {
+        return VariableHelper.instance().getReturnType(name);
+    }
+
+    @Override
+    public Class<?> evaluatedReturnType() {
+        final Statement<?> statement = VariableHelper.instance().getAssignment(name);
+        if (statement == null) return Object.class;
+        return statement instanceof EvaluatedStatement<?> evaluated ? evaluated.evaluatedReturnType() : statement.returnType();
     }
 
 }

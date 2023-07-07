@@ -49,4 +49,9 @@ public record ImportStatement(String... names) implements Statement<Boolean> {
         return builder.build().hoverEvent(Component.text("Imports resources from an external program."));
     }
 
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
+    }
+
 }

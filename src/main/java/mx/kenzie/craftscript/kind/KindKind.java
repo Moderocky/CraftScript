@@ -54,6 +54,16 @@ public class KindKind extends Kind<Kind<?>> {
     }
 
     @Override
+    public Class<?> getTypeHint(String property) {
+        return switch (property) {
+            case "convert" -> type;
+            case "is_instance", "is_flag", "is_array" -> Boolean.class;
+            case "values", "properties" -> List.class;
+            default -> super.getTypeHint(property);
+        };
+    }
+
+    @Override
     public String[] getProperties() {
         return new String[]{"type", "name", "path", "properties", "is_array", "is_flag", "values", "is_instance", "convert"};
     }

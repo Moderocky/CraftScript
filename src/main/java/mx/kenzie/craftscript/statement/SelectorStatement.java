@@ -3,12 +3,14 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.centurion.selector.Selector;
 import mx.kenzie.centurion.selector.Universe;
+import mx.kenzie.craftscript.parser.SelectorParser;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
 import mx.kenzie.craftscript.utility.MapFormat;
 import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -47,6 +49,12 @@ public record SelectorStatement(String text, Universe<?> universe,
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(text, profile.light())
             .hoverEvent(Component.text("Finds entities in the world.", profile.light()));
+    }
+
+    @Override
+    public Class<?> returnType() {
+        if (universe == SelectorParser.universe) return CommandSender.class;
+        return Object.class;
     }
 
 }

@@ -13,7 +13,7 @@ public record IfStatement(Statement<?> check, Statement<?> then) implements Stat
     public static boolean value(Object object) {
         final Object result = Wrapper.unwrap(object);
         if (result instanceof Boolean boo) return boo;
-        else if (result instanceof Number number) return number.intValue() != 0;
+        else if (result instanceof Number number) return number.intValue() > 0;
         else return result != null;
     }
 
@@ -53,6 +53,11 @@ public record IfStatement(Statement<?> check, Statement<?> then) implements Stat
             Component.space(),
             this.then.prettyPrint(profile)
         ).hoverEvent(Component.text("If the condition is true, runs the following statement."));
+    }
+
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
     }
 
 }

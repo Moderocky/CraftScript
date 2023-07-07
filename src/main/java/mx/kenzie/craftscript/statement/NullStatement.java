@@ -32,4 +32,9 @@ public record NullStatement() implements Statement<Void> {
             .hoverEvent(Component.text("An empty value.", profile.light()));
     }
 
+    @Override
+    public Class<? extends Void> returnType() {
+        return Void.class;
+    }
+
 }

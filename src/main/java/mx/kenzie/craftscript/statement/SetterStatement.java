@@ -53,4 +53,9 @@ public record SetterStatement(Statement<?> source, String property, Statement<?>
         ).hoverEvent(Component.text("Sets the '" + property + "' property of an object.", profile.light()));
     }
 
+    @Override
+    public Class<?> returnType() {
+        return Object.class;
+    }
+
 }

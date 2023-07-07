@@ -101,4 +101,10 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
         ).hoverEvent(Component.text("Run an executable task with inputs.", profile.light()));
     }
 
+    @Override
+    public Class<?> returnType() {
+        if (statement instanceof EvaluatedStatement<?> evaluated) return evaluated.evaluatedReturnType();
+        return statement.returnType();
+    }
+
 }

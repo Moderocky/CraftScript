@@ -7,10 +7,10 @@ import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record ElseStatement() implements Statement<Object> {
+public record ElseStatement() implements Statement<Void> {
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public Void execute(Context context) throws ScriptError {
         throw new ScriptError("Trailing 'else' statement.");
     }
 
@@ -33,6 +33,11 @@ public record ElseStatement() implements Statement<Object> {
             Component.text("else", profile.dark()),
             Component.text(" {", profile.pop())
         );
+    }
+
+    @Override
+    public Class<Void> returnType() {
+        return Void.class;
     }
 
 }

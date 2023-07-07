@@ -49,4 +49,9 @@ public record IfElseStatement(Statement<?> check,
         ).hoverEvent(Component.text("If the condition is true, do..."));
     }
 
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
+    }
+
 }

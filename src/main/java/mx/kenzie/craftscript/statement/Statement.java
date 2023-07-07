@@ -27,4 +27,10 @@ public interface Statement<Result> extends Executable<Result> {
         return Component.text(this.stringify(), profile.light());
     }
 
+    default boolean knowsReturnType() {
+        return this.returnType() != Object.class;
+    }
+
+    Class<? extends Result> returnType();
+
 }

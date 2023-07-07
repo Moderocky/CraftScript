@@ -1,12 +1,12 @@
 package mx.kenzie.craftscript.script;
 
 import mx.kenzie.craftscript.statement.Statement;
-import mx.kenzie.craftscript.utility.Executable;
+import mx.kenzie.craftscript.variable.LibraryObject;
 
 import java.util.Objects;
 
 public record LibraryScript(String name, Statement<?>... statements)
-    implements AbstractScript, Statement<Object>, Executable<Object> {
+    implements AbstractScript, Statement<Object> {
 
     public LibraryScript(String name, Statement<?>... statements) {
         if (name.endsWith(".script")) this.name = name;
@@ -29,6 +29,11 @@ public record LibraryScript(String name, Statement<?>... statements)
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public Class<? extends LibraryObject> returnType() {
+        return LibraryObject.class;
     }
 
 }

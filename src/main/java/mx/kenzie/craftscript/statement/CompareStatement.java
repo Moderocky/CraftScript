@@ -36,4 +36,14 @@ public record CompareStatement(Statement<?> antecedent, Statement<?> consequent,
         stream.print(']');
     }
 
+    @Override
+    public Class<?> returnType() {
+        return comparator.getReturnType(antecedent.returnType(), consequent.returnType());
+    }
+
+    @Override
+    public boolean knowsReturnType() {
+        return true;
+    }
+
 }

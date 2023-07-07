@@ -8,7 +8,7 @@ import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record ScriptStatement(String name) implements Statement<AbstractScript> {
+public record ScriptStatement(String name) implements Statement<AbstractScript>, EvaluatedStatement<AbstractScript> {
 
     @Override
     public AbstractScript execute(Context context) throws ScriptError {
@@ -35,6 +35,16 @@ public record ScriptStatement(String name) implements Statement<AbstractScript> 
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(name, profile.light())
             .hoverEvent(Component.text("An executable script.", profile.light()));
+    }
+
+    @Override
+    public Class<? extends AbstractScript> returnType() {
+        return AbstractScript.class;
+    }
+
+    @Override
+    public Class<?> evaluatedReturnType() {
+        return Object.class;
     }
 
 }

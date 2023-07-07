@@ -41,4 +41,10 @@ public record LocalFunctionStatement(Statement<?> statement, Statement<?> data) 
         ).hoverEvent(Component.text("Run an executable task with inputs.", profile.light()));
     }
 
+    @Override
+    public Class<?> returnType() {
+        if (statement instanceof EvaluatedStatement<?> evaluated) return evaluated.evaluatedReturnType();
+        return statement.returnType();
+    }
+
 }

@@ -31,4 +31,9 @@ public record CloseStatement() implements Statement<Void> {
         return Component.text('}', profile.pop());
     }
 
+    @Override
+    public Class<? extends Void> returnType() {
+        return Void.class;
+    }
+
 }

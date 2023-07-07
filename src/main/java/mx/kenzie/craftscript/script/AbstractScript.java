@@ -59,4 +59,11 @@ public interface AbstractScript extends Statement<Object> {
             .hoverEvent(Component.text("A runnable script object.", profile.light()));
     }
 
+    @Override
+    default Class<?> returnType() {
+        final Statement<?>[] statements = this.statements();
+        if (statements.length > 0) return statements[statements.length - 1].returnType();
+        return Void.class;
+    }
+
 }

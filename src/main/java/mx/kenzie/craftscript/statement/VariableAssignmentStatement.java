@@ -3,12 +3,17 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.VariableHelper;
 import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
 public record VariableAssignmentStatement(String name, Statement<?> statement) implements Statement<Object> {
+
+    public VariableAssignmentStatement {
+        VariableHelper.instance().assign(name, statement);
+    }
 
     @Override
     public Object execute(Context context) throws ScriptError {
@@ -43,6 +48,11 @@ public record VariableAssignmentStatement(String name, Statement<?> statement) i
             Component.text(" = ", profile.pop()),
             this.statement.prettyPrint(profile)
         ).hoverEvent(Component.text("Sets the variable '" + name + "' to a value."));
+    }
+
+    @Override
+    public Class<?> returnType() {
+        return statement.returnType();
     }
 
 }

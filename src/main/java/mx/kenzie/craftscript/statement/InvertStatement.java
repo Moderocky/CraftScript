@@ -38,4 +38,9 @@ public record InvertStatement(Statement<?> check) implements Statement<Boolean> 
         ).hoverEvent(Component.text("Reverses the (boolean) value of a statement."));
     }
 
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
+    }
+
 }

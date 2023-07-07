@@ -7,7 +7,7 @@ import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record FunctionStatement(Statement<?> executable) implements Statement<Object> {
+public record FunctionStatement(Statement<?> executable) implements Statement<Object>, EvaluatedStatement<Object> {
 
     @Override
     public Object execute(Context context) throws ScriptError {
@@ -36,6 +36,16 @@ public record FunctionStatement(Statement<?> executable) implements Statement<Ob
             Component.space(),
             this.executable.prettyPrint(profile)
         ).hoverEvent(Component.text("Creates an executable function object."));
+    }
+
+    @Override
+    public Class<?> returnType() {
+        return Statement.class;
+    }
+
+    @Override
+    public Class<?> evaluatedReturnType() {
+        return executable.returnType();
     }
 
 }

@@ -25,6 +25,7 @@ public class Wrapper<Type> {
         return (Wrapper<Type>) new Wrapper<>(thing);
     }
 
+    @SuppressWarnings("unchecked")
     public static <Type> Type unwrap(Object object) {
         if (object instanceof Wrapper<?> wrapper) return (Type) wrapper.getValue();
         return (Type) object;

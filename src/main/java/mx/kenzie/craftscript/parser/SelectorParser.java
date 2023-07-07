@@ -14,7 +14,7 @@ import java.util.List;
 
 public class SelectorParser extends BasicParser {
 
-    private static final Universe<?> universe = Universe.of(Finder.ALL_ENTITIES, Finder.ALL_PLAYERS, Finder.PLAYER,
+    public static final Universe<?> universe = Universe.of(Finder.ALL_ENTITIES, Finder.ALL_PLAYERS, Finder.PLAYER,
         Finder.RANDOM_PLAYER, Finder.SENDER, Criterion.ENTITY_DISTANCE, Criterion.ENTITY_TYPE, Criterion.LIMIT,
         Criterion.GAME_MODE, Criterion.LEVEL, Criterion.X_ROTATION, Criterion.Y_ROTATION);
     private int start;

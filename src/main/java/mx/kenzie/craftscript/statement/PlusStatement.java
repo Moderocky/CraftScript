@@ -22,4 +22,17 @@ public record PlusStatement(Statement<?> antecedent, Statement<?> consequent) im
         return "+";
     }
 
+    @Override
+    public Class<?> returnType() {
+        if (antecedent.returnType() == Integer.class && consequent.returnType() == Integer.class) return Integer.class;
+        if (Number.class.isAssignableFrom(antecedent.returnType()) && Number.class.isAssignableFrom(
+            consequent.returnType())) return Number.class;
+        return String.class;
+    }
+
+    @Override
+    public boolean knowsReturnType() {
+        return true;
+    }
+
 }

@@ -42,4 +42,9 @@ public record InterpolationStatement(String key, Statement<?> statement) impleme
         );
     }
 
+    @Override
+    public Class<?> returnType() {
+        return statement.returnType();
+    }
+
 }

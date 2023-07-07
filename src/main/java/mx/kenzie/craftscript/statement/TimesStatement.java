@@ -20,4 +20,9 @@ public record TimesStatement(Statement<?> antecedent, Statement<?> consequent) i
         return "*";
     }
 
+    @Override
+    public Class<? extends Number> returnType() {
+        return antecedent.returnType() == Integer.class && consequent.returnType() == Integer.class ? Integer.class : Number.class;
+    }
+
 }

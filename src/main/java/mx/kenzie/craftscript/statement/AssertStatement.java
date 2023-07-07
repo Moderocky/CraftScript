@@ -11,6 +11,16 @@ import java.io.PrintStream;
 public record AssertStatement(Statement<?> check) implements Statement<Boolean> {
 
     @Override
+    public Class<Boolean> returnType() {
+        return Boolean.class;
+    }
+
+    @Override
+    public boolean knowsReturnType() {
+        return true;
+    }
+
+    @Override
     public Boolean execute(Context context) throws ScriptError {
         final Object result = Wrapper.unwrap(this.check.execute(context));
         final boolean test = IfStatement.value(result);

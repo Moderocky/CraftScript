@@ -49,4 +49,9 @@ public record WhileStatement(Statement<?> check, Statement<?> then) implements S
         ).hoverEvent(Component.text("Runs a statement as long as the condition is true."));
     }
 
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
+    }
+
 }

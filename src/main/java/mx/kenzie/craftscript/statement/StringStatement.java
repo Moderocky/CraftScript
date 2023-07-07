@@ -11,10 +11,10 @@ import net.kyori.adventure.text.TextComponent;
 import java.io.PrintStream;
 import java.util.List;
 
-public record StringStatement(String value, InterpolationStatement... interpolations) implements Statement<Object> {
+public record StringStatement(String value, InterpolationStatement... interpolations) implements Statement<String> {
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public String execute(Context context) throws ScriptError {
         if (interpolations.length > 0) {
             final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
             return MapFormat.format(value, map);
@@ -54,6 +54,11 @@ public record StringStatement(String value, InterpolationStatement... interpolat
         }
         return Component.textOfChildren(Component.text('"', profile.pop()), Component.text(value, profile.light()),
             Component.text('"', profile.pop())).hoverEvent(component);
+    }
+
+    @Override
+    public Class<? extends String> returnType() {
+        return String.class;
     }
 
 }

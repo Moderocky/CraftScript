@@ -5,6 +5,7 @@ import mx.kenzie.craftscript.parser.Parser;
 import mx.kenzie.craftscript.statement.CloseStatement;
 import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.utility.VariableHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class SimpleScriptLoader implements ScriptLoader {
         this.line = 0;
         final List<Statement<?>> list = new ArrayList<>();
         try {
+            VariableHelper.init();
             this.reader = new BufferedReader(new InputStreamReader(stream));
             do {
                 this.line++;
@@ -69,6 +71,7 @@ public class SimpleScriptLoader implements ScriptLoader {
             } while (true);
         } finally {
             if (reader != null) reader.close();
+            VariableHelper.tearDown();
         }
         return list.toArray(new Statement[0]);
     }

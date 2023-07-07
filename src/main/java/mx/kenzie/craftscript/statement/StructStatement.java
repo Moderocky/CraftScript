@@ -42,4 +42,9 @@ public record StructStatement(BlockStatement block) implements Statement<StructO
         ).hoverEvent(Component.text("A custom object with a set of properties."));
     }
 
+    @Override
+    public Class<? extends StructObject> returnType() {
+        return StructObject.class;
+    }
+
 }

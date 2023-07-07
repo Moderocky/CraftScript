@@ -99,4 +99,14 @@ public record CommandStatement(String input, InterpolationStatement... interpola
         ).hoverEvent(Component.text("A runnable command.", profile.light()));
     }
 
+    @Override
+    public Class<? extends Boolean> returnType() {
+        return Boolean.class;
+    }
+
+    @Override
+    public boolean knowsReturnType() {
+        return true;
+    }
+
 }

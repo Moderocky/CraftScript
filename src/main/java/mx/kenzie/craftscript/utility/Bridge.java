@@ -75,4 +75,9 @@ public interface Bridge {
         return Arguments.of(objects);
     }
 
+    @SuppressWarnings("unchecked")
+    static <Type> Class<Type> cast(Object type) {
+        return (Class<Type>) type;
+    }
+
 }

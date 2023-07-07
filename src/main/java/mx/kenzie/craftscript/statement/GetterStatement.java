@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.kind.Kind;
+import mx.kenzie.craftscript.kind.Kinds;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.variable.Wrapper;
@@ -17,6 +18,13 @@ public record GetterStatement(Statement<?> source, String property) implements S
         stream.print(", ");
         stream.print("source=");
         source.debug(stream);
+    }
+
+    static Kind<?> lookForKind(Statement<?> statement) {
+        for (final Kind<?> kind : Kinds.kinds) {
+            if (kind.getType().isAssignableFrom(statement.returnType())) return kind;
+        }
+        return Kinds.ANY;
     }
 
     @Override
@@ -51,6 +59,12 @@ public record GetterStatement(Statement<?> source, String property) implements S
             Component.text(property, profile.highlight()),
             Component.text(']', profile.pop())
         ).hoverEvent(Component.text("Gets the '" + property + "' property of an object.", profile.light()));
+    }
+
+    @Override
+    public Class<?> returnType() {
+        final Kind<?> kind = lookForKind(source);
+        return kind.getTypeHint(property); // can we find some way to infer this ?
     }
 
 }

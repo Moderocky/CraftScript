@@ -38,4 +38,9 @@ public record LineStatement(Statement<?> statement, int line, String indent) imp
         ).hoverEvent(Component.text("Line " + line, profile.light()));
     }
 
+    @Override
+    public Class<?> returnType() {
+        return statement.returnType();
+    }
+
 }

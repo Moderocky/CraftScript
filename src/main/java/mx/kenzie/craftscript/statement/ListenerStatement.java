@@ -16,12 +16,12 @@ import java.io.PrintStream;
 import java.util.Map;
 
 public record ListenerStatement(Statement<?> key, Statement<?> details, Statement<?> task)
-    implements Statement<Object> {
+    implements Statement<EventListener> {
 
     public static final double DEFAULT_EVENT_RADIUS = 32, MAX_EVENT_RADIUS = 128;
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public EventListener execute(Context context) throws ScriptError {
         final Object a = key.execute(context);
         if (!(Wrapper.unwrap(a) instanceof NamespacedKey key))
             throw new ScriptError("Object '" + a + "' was not an event key.");
@@ -89,6 +89,11 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
             Component.space(),
             this.task.prettyPrint(profile)
         ).hoverEvent(hover);
+    }
+
+    @Override
+    public Class<? extends EventListener> returnType() {
+        return EventListener.class;
     }
 
 }
