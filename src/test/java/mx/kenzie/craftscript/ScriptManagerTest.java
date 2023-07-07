@@ -40,8 +40,12 @@ public class ScriptManagerTest {
             do "hello" {
                 require [type, length, is_empty, is_blank, lowercase, uppercase, char_at, substring, index_of, starts_with, ends_with, contains, matches]
                 assert length == 5
+                assert char_at 1 == "e"
+                assert substring 3 == "lo"
+                char = char_at 1
+                if char == "e" { /print ok }
             }
-            """);
+            """, "ok");
         assert this.test("""
             var = "blob"
             do "hello" {
@@ -419,11 +423,16 @@ public class ScriptManagerTest {
 
     @Test(expected = ScriptError.class)
     public void assertCheckFail() {
-        assert this.test("""
-            three = 1
-            three = three + 2
-            assert three == 2
-            """, null);
+        try {
+            printError = false;
+            assert this.test("""
+                three = 1
+                three = three + 2
+                assert three == 2
+                """, null);
+        } finally {
+            printError = true;
+        }
     }
 
     @Test
@@ -660,9 +669,14 @@ public class ScriptManagerTest {
 
     @Test(expected = ScriptError.class)
     public void requireVariablesFail() {
-        assert this.test("""
-            require[bee, spoon]
-            """, null);
+        try {
+            printError = false;
+            assert this.test("""
+                require[bee, spoon]
+                """, null);
+        } finally {
+            printError = true;
+        }
     }
 
     private boolean test(String source, String output) {
@@ -697,9 +711,12 @@ public class ScriptManagerTest {
         try {
             script.execute(context);
             if (output != null && !Objects.equals(sender.output, output)) {
-                script.debug(System.err);
+                if (printError) script.debug(System.err);
                 assert false : sender.output;
             }
+        } catch (ScriptError error) {
+            if (printError) script.debug(System.err);
+            throw error;
         } finally {
             Context.removeLocalContext();
             this.sender.output = null;
@@ -710,5 +727,7 @@ public class ScriptManagerTest {
     private InputStream getScript(String name) {
         return ScriptManagerTest.class.getClassLoader().getResourceAsStream(name);
     }
+
+    private static boolean printError = true;
 
 }

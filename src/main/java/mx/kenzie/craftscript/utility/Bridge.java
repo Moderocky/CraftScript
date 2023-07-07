@@ -30,10 +30,9 @@ public interface Bridge {
     }
 
     static Arguments validate(Arguments arguments, Kind<?>... kinds) {
-        if (arguments.size() < kinds.length)
-            throw new ScriptError("Expected " + kinds.length + " arguments, found " + arguments.size());
-        final Object[] objects = new Object[kinds.length];
-        for (int i = 0; i < kinds.length; i++) {
+        final int length = Math.min(arguments.size(), kinds.length);
+        final Object[] objects = arguments.toArray(new Object[Math.max(arguments.size(), kinds.length)]);
+        for (int i = 0; i < length; i++) {
             try {
                 objects[i] = kinds[i].convert(arguments.get(i));
             } catch (ScriptError error) {

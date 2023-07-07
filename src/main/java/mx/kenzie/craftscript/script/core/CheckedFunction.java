@@ -119,10 +119,10 @@ public class CheckedFunction<Lambda extends CheckedFunction.PrettyLambda> implem
     @Override
     public Object execute(Context context) throws ScriptError {
         Arguments arguments = InternalStatement.extractArguments(context);
-        if (kinds != null) arguments = Bridge.validate(arguments, kinds);
-        if (types != null) Bridge.validate(arguments, types);
         if (values != null) arguments = Bridge.defaultValues(arguments, values);
         if (notNull) Bridge.notNull(arguments);
+        if (kinds != null) arguments = Bridge.validate(arguments, kinds);
+        if (types != null) Bridge.validate(arguments, types);
         if (lambda == null) throw new ScriptError("This function has no behaviour.");
         try {
             return lambda.run(context, arguments);
