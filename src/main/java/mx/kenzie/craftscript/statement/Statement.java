@@ -19,6 +19,7 @@ public interface Statement<Result> extends Executable<Result> {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         try (PrintStream stream = new PrintStream(output)) {
             this.stringify(stream);
+            stream.flush();
         }
         return output.toString();
     }
