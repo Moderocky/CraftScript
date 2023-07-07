@@ -1,10 +1,12 @@
 package mx.kenzie.craftscript.parser;
 
+import mx.kenzie.craftscript.emitter.Event;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.ListenerStatement;
 import mx.kenzie.craftscript.statement.LiteralStatement;
 import mx.kenzie.craftscript.statement.MapStatement;
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.utility.VariableHelper;
 import org.bukkit.NamespacedKey;
 
 public class ListenerParser extends BasicParser {
@@ -51,16 +53,24 @@ public class ListenerParser extends BasicParser {
     }
 
     private boolean readTask(String string) {
-        if (this.readTaskSimple(string)) return true;
-        int space = string.indexOf(' ');
-        do {
-            if (space < 1) return false;
-            final String before = string.substring(0, space).trim(), after;
-            after = string.substring(space + 1).trim();
-            if (this.readQuery(before) && this.readTaskSimple(after)) return true;
-            space = string.indexOf(' ', space + 1);
-        } while (space > 0 && space < string.length());
-        return false;
+        final VariableHelper helper = VariableHelper.instance(), clone = helper.clone();
+        try {
+            clone.assign("event", Event.class);
+            VariableHelper.local.set(clone);
+            if (this.readTaskSimple(string)) return true;
+            int space = string.indexOf(' ');
+            do {
+                if (space < 1) return false;
+                final String before = string.substring(0, space).trim(), after;
+                after = string.substring(space + 1).trim();
+                if (this.readQuery(before) && this.readTaskSimple(after)) return true;
+                space = string.indexOf(' ', space + 1);
+            } while (space > 0 && space < string.length());
+            return false;
+        } finally {
+            VariableHelper.local.set(helper);
+            clone.purge();
+        }
     }
 
     private boolean readKeyOther(String string) {

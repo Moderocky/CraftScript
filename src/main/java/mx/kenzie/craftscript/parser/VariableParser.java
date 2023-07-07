@@ -22,7 +22,6 @@ public class VariableParser extends BasicParser {
     public Statement<?> parse() throws ScriptError {
         if (!VariableHelper.instance().isKnown(key))
             this.parent.warn("The variable '" + key + "' may not exist.");
-
         return new VariableStatement(key);
     }
 
