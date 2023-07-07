@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.script.core;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.command.ScriptArgument;
 import mx.kenzie.craftscript.utility.Executable;
+import mx.kenzie.craftscript.utility.PrettyPrinter;
 import mx.kenzie.craftscript.variable.LibraryObject;
 import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
@@ -22,7 +23,11 @@ public class DebugLibrary extends LibraryObject {
             Component.text("' line ", profile.dark()),
             Component.text(context.getLine(), profile.highlight())
         ));
-        sender.sendMessage(context.data().line.prettyPrint(profile));
+        try {
+            sender.sendMessage(context.data().line.prettyPrint(profile));
+        } finally {
+            PrettyPrinter.reset();
+        }
         return null;
     };
     private static final Executable<?> SCRIPT = context -> {
@@ -36,7 +41,11 @@ public class DebugLibrary extends LibraryObject {
             Component.text(context.data().script.name(), profile.highlight()),
             Component.text("'", profile.dark())
         ));
-        sender.sendMessage(context.data().script.prettyPrint(profile));
+        try {
+            sender.sendMessage(context.data().script.prettyPrint(profile));
+        } finally {
+            PrettyPrinter.reset();
+        }
         return null;
     };
     private static final Executable<?> VARIABLES = context -> {

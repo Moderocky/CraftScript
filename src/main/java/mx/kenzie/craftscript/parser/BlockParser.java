@@ -23,7 +23,7 @@ public class BlockParser extends BasicParser {
         final List<Statement<?>> either = new ArrayList<>(), or = new ArrayList<>();
         boolean choice = false;
         List<Statement<?>> list = either;
-        if (single) return new BlockStatement(new NullStatement());
+        if (single) return new BlockStatement();
         do {
             try {
                 final Statement<?> statement = parent.parseLine();
@@ -35,7 +35,7 @@ public class BlockParser extends BasicParser {
                     list = or;
                     continue;
                 }
-                list.add(new LineStatement(statement, parent.getLine(), "\t"));
+                list.add(new LineStatement(statement, parent.getLine()));
             } catch (IOException ex) {
                 throw new ScriptError("Error reading line " + parent.getLine() + " in block.", ex);
             }

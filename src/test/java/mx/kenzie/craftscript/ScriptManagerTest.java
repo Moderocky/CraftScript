@@ -35,6 +35,28 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void stringifyTest() {
+        final AbstractScript script = manager.parseScript("""
+            var = 1 + 2
+            var = 1 + var
+            if var > 1 {
+                if var > 2 {
+                    if var < 10 {}
+                }
+            }
+            """);
+        assert script.stringify().equals("""
+            var=1+2
+            var=1+var
+            if var>1 {
+              if var>2 {
+                if var<10 { }
+              }
+            }
+            """) : '"' + script.stringify() + '"';
+    }
+
+    @Test
     public void sumTest() {
         assert this.test("""
             var = 1 + 2

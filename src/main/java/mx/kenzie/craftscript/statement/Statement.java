@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.utility.Executable;
+import mx.kenzie.craftscript.utility.PrettyPrinter;
 import net.kyori.adventure.text.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -16,12 +17,16 @@ public interface Statement<Result> extends Executable<Result> {
     void stringify(PrintStream stream);
 
     default String stringify() {
-        final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try (PrintStream stream = new PrintStream(output)) {
-            this.stringify(stream);
-            stream.flush();
+        try {
+            final ByteArrayOutputStream output = new ByteArrayOutputStream();
+            try (PrintStream stream = new PrintStream(output)) {
+                this.stringify(stream);
+                stream.flush();
+            }
+            return output.toString();
+        } finally {
+            PrettyPrinter.reset();
         }
-        return output.toString();
     }
 
     default Component prettyPrint(ColorProfile profile) {

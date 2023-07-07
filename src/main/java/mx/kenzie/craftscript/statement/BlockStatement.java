@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.PrettyPrinter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
@@ -12,10 +13,16 @@ public record BlockStatement(Statement<?>... statements) implements Statement<Ob
 
     static void prettyPrint(ColorProfile profile, TextComponent.Builder text, Statement<?>... block) {
         text.append(Component.text('{', profile.pop()));
-        for (final Statement<?> statement : block) {
-            text.append(Component.text('\t'));
-            text.append(statement.prettyPrint(profile));
+        if (block.length < 1) text.append(Component.space());
+        else {
+            PrettyPrinter.incrementIndent();
             text.append(Component.newline());
+            for (final Statement<?> statement : block) {
+                text.append(statement.prettyPrint(profile));
+                text.append(Component.newline());
+            }
+            PrettyPrinter.decrementIndent();
+            text.append(Component.text(PrettyPrinter.getIndent(), profile.light()));
         }
         text.append(Component.text('}', profile.pop()));
 
@@ -64,11 +71,17 @@ public record BlockStatement(Statement<?>... statements) implements Statement<Ob
 
     @Override
     public void stringify(PrintStream stream) {
-        stream.println('{');
-        for (final Statement<?> statement : statements) {
-            stream.print('\t');
-            statement.stringify(stream);
+        stream.print('{');
+        if (statements.length < 1) stream.print(' ');
+        else {
+            PrettyPrinter.incrementIndent();
             stream.println();
+            for (final Statement<?> statement : statements) {
+                statement.stringify(stream);
+                stream.println();
+            }
+            PrettyPrinter.decrementIndent();
+            stream.print(PrettyPrinter.getIndent());
         }
         stream.print('}');
     }
