@@ -36,7 +36,12 @@ public interface Statement<Result> extends Executable<Result> {
     Class<? extends Result> returnType();
 
     default Component printReturnType(ColorProfile profile) {
-        return Component.text(KindStatement.lookForKind(this).toString(), profile.light());
+        final String string = KindStatement.lookForKind(this).toString();
+        if (string.startsWith("#")) return Component.textOfChildren(
+            Component.text('#', profile.pop()),
+            Component.text(string.substring(1), profile.highlight())
+        );
+        return Component.text(string, profile.highlight());
     }
 
 }

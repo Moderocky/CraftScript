@@ -30,4 +30,10 @@ public class UnknownKind extends Kind<Object> {
         return new String[]{"type", "type_name"};
     }
 
+    @Override
+    public String toString() {
+        if (type == Object.class) return "#any";
+        return super.toString();
+    }
+
 }
