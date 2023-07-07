@@ -69,7 +69,7 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return prettyPrint(profile, statements).hoverEvent(
-            Component.textOfChildren(Component.text("A list of objects.", profile.light()),
+            Component.textOfChildren(Component.text("A list of objects.", profile.light()), Component.newline(),
                 this.printReturnType(profile)));
     }
 

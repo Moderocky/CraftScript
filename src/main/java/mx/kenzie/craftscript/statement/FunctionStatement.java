@@ -36,7 +36,7 @@ public record FunctionStatement(Statement<?> executable) implements Statement<Ob
             Component.space(),
             this.executable.prettyPrint(profile)
         ).hoverEvent(Component.textOfChildren(Component.text("Creates an executable function object.", profile.light()),
-            this.printReturnType(profile)));
+            Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

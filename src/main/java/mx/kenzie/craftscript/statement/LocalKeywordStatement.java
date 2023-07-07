@@ -37,7 +37,7 @@ public record LocalKeywordStatement(String name) implements Statement<Object>, E
         return Component.text(name, profile.highlight())
             .hoverEvent(
                 Component.textOfChildren(Component.text("The '" + name + " local keyword property.", profile.light()),
-                    this.printReturnType(profile)));
+                    Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

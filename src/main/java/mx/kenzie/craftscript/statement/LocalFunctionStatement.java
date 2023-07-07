@@ -33,14 +33,15 @@ public record LocalFunctionStatement(Statement<?> statement, Statement<?> data) 
     public Component prettyPrint(ColorProfile profile) {
         if (data == null) return Component.textOfChildren(
             this.statement.prettyPrint(profile)
-        ).hoverEvent(Component.textOfChildren(Component.text("Run an executable task.", profile.light()),
-            this.printReturnType(profile)));
+        ).hoverEvent(
+            Component.textOfChildren(Component.text("Run an executable task.", profile.light()), Component.newline(),
+                this.printReturnType(profile)));
         else return Component.textOfChildren(
             this.statement.prettyPrint(profile),
             Component.space(),
             this.data.prettyPrint(profile)
         ).hoverEvent(Component.textOfChildren(Component.text("Run an executable task with inputs.", profile.light()),
-            this.printReturnType(profile)));
+            Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

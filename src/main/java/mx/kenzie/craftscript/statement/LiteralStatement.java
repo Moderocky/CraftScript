@@ -32,8 +32,9 @@ public record LiteralStatement(Object value) implements Statement<Object> {
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(Wrapper.of(value).toString(), profile.light())
-            .hoverEvent(Component.textOfChildren(Component.text("A literal value.", profile.light()),
-                this.printReturnType(profile)));
+            .hoverEvent(
+                Component.textOfChildren(Component.text("A literal value.", profile.light()), Component.newline(),
+                    this.printReturnType(profile)));
     }
 
     @Override

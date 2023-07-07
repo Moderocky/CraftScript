@@ -47,7 +47,7 @@ public record KindStatement(String name) implements Statement<Kind<?>> {
         return Component.textOfChildren(
             Component.text('#', profile.pop()),
             Component.text(name, profile.highlight())
-        ).hoverEvent(Component.textOfChildren(Component.text("An object type.", profile.light()),
+        ).hoverEvent(Component.textOfChildren(Component.text("An object type.", profile.light()), Component.newline(),
             this.printReturnType(profile)));
     }
 

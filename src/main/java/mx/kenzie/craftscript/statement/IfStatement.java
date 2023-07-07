@@ -53,7 +53,7 @@ public record IfStatement(Statement<?> check, Statement<?> then) implements Stat
             Component.space(),
             this.then.prettyPrint(profile)
         ).hoverEvent(Component.textOfChildren(Component.text("If the condition is true, runs the following statement."),
-            this.printReturnType(profile)));
+            Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

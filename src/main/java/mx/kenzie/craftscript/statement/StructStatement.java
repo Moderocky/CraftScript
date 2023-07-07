@@ -41,7 +41,7 @@ public record StructStatement(BlockStatement block) implements Statement<StructO
             this.block.prettyPrint(profile)
         ).hoverEvent(
             Component.textOfChildren(Component.text("A custom object with a set of properties.", profile.light()),
-                this.printReturnType(profile)));
+                Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

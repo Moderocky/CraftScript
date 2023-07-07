@@ -66,14 +66,10 @@ public record ForStatement(VariableAssignmentStatement assignment, Statement<?> 
 
     @Override
     public Component prettyPrint(ColorProfile profile) {
-        return Component.textOfChildren(
-            Component.text("for ", profile.dark()),
-            this.assignment.prettyPrint(profile),
-            Component.space(),
-            this.then.prettyPrint(profile)
-        ).hoverEvent(
+        return Component.textOfChildren(Component.text("for ", profile.dark()), this.assignment.prettyPrint(profile),
+            Component.space(), this.then.prettyPrint(profile)).hoverEvent(
             Component.textOfChildren(Component.text("Runs a function for every element in a list.", profile.light()),
-                this.printReturnType(profile)));
+                Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

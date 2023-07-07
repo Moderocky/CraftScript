@@ -53,7 +53,7 @@ public record AssertStatement(Statement<?> check) implements Statement<Boolean> 
             Component.text("assert ", profile.dark()),
             this.check.prettyPrint(profile)
         ).hoverEvent(Component.textOfChildren(Component.text("Make sure a statement is true.", profile.light()),
-            this.printReturnType(profile)));
+            Component.newline(), this.printReturnType(profile)));
     }
 
 }

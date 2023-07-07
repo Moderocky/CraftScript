@@ -48,7 +48,7 @@ public record VariableAssignmentStatement(String name, Statement<?> statement) i
             Component.text(" = ", profile.pop()),
             this.statement.prettyPrint(profile)
         ).hoverEvent(Component.textOfChildren(Component.text("Sets the variable '" + name + "' to a value."),
-            this.printReturnType(profile)));
+            Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

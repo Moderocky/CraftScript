@@ -48,6 +48,7 @@ public record WhileStatement(Statement<?> check, Statement<?> then) implements S
             this.then.prettyPrint(profile)
         ).hoverEvent(Component.textOfChildren(
             Component.text("Runs a statement as long as the condition is true.", profile.light()),
+            Component.newline(),
             this.printReturnType(profile)));
     }
 

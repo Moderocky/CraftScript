@@ -52,6 +52,7 @@ public record SetterStatement(Statement<?> source, String property, Statement<?>
             Component.text(']', profile.pop())
         ).hoverEvent(Component.textOfChildren(
             Component.text("Sets the '" + property + "' property of an object.", profile.light()),
+            Component.newline(),
             this.printReturnType(profile)));
     }
 

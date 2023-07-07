@@ -36,7 +36,7 @@ public record MapStatement(Statement<?>... statements) implements Statement<Cont
     public Component prettyPrint(ColorProfile profile) {
         return ListStatement.prettyPrint(profile, statements)
             .hoverEvent(Component.textOfChildren(Component.text("A key <-> value map of objects.", profile.light()),
-                this.printReturnType(profile)));
+                Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

@@ -46,8 +46,8 @@ public record IfElseStatement(Statement<?> check,
             this.check.prettyPrint(profile),
             Component.space(),
             this.choice.prettyPrint(profile)
-        ).hoverEvent(
-            Component.textOfChildren(Component.text("If the condition is true, do..."), this.printReturnType(profile)));
+        ).hoverEvent(Component.textOfChildren(Component.text("If the condition is true, do..."), Component.newline(),
+            this.printReturnType(profile)));
     }
 
     @Override

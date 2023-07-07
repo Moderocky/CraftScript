@@ -76,7 +76,8 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
     @Override
     public Component prettyPrint(ColorProfile profile) {
         final Component hover = Component.textOfChildren(
-            Component.text("Run code when an event occurs.", profile.light()), this.printReturnType(profile));
+            Component.text("Run code when an event occurs.", profile.light()), Component.newline(),
+            this.printReturnType(profile));
         if (details == null) return Component.textOfChildren(
             Component.text("on ", profile.dark()),
             this.key.prettyPrint(profile),

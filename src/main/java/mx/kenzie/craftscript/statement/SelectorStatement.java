@@ -49,7 +49,7 @@ public record SelectorStatement(String text, Universe<?> universe,
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(text, profile.light())
             .hoverEvent(Component.textOfChildren(Component.text("Finds entities in the world.", profile.light()),
-                this.printReturnType(profile)));
+                Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

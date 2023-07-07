@@ -32,8 +32,8 @@ public record LineStatement(Statement<?> statement, int line) implements Stateme
         return Component.textOfChildren(
             Component.text(PrettyPrinter.getIndent(), profile.light()),
             this.statement.prettyPrint(profile)
-        ).hoverEvent(
-            Component.textOfChildren(Component.text("Line " + line, profile.light()), this.printReturnType(profile)));
+        ).hoverEvent(Component.textOfChildren(Component.text("Line " + line, profile.light()), Component.newline(),
+            this.printReturnType(profile)));
     }
 
     @Override

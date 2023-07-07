@@ -66,7 +66,7 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
         return builder.build()
             .hoverEvent(
                 Component.textOfChildren(Component.text("Requires these variables are present.", profile.light()),
-                    this.printReturnType(profile)));
+                    Component.newline(), this.printReturnType(profile)));
     }
 
     @Override

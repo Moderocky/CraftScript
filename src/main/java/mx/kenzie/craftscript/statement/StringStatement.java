@@ -40,7 +40,8 @@ public record StringStatement(String value, InterpolationStatement... interpolat
 
     @Override
     public Component prettyPrint(ColorProfile profile) {
-        final Component component = Component.text("Text.", profile.light());
+        final Component component = Component.textOfChildren(Component.text("Text.", profile.light()),
+            Component.newline(), this.printReturnType(profile));
         if (interpolations.length > 0) {
             final List<Object> list = CommandStatement.interpolateForPrinting(value, interpolations);
             final TextComponent.Builder builder = Component.text();

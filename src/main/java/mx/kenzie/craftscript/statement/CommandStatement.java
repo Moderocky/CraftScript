@@ -92,14 +92,15 @@ public record CommandStatement(String input, InterpolationStatement... interpola
                     builder.append(statement.prettyPrint(profile));
             }
             return builder.build().hoverEvent(
-                Component.textOfChildren(Component.text("A runnable command.", profile.light()),
+                Component.textOfChildren(Component.text("A runnable command.", profile.light()), Component.newline(),
                     this.printReturnType(profile)));
         }
         return Component.textOfChildren(
             Component.text('/', profile.pop()),
             Component.text(input, profile.light())
-        ).hoverEvent(Component.textOfChildren(Component.text("A runnable command.", profile.light()),
-            this.printReturnType(profile)));
+        ).hoverEvent(
+            Component.textOfChildren(Component.text("A runnable command.", profile.light()), Component.newline(),
+                this.printReturnType(profile)));
     }
 
     @Override
