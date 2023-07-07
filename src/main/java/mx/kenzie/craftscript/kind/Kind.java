@@ -7,6 +7,7 @@ import mx.kenzie.craftscript.variable.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.Set;
 
 public abstract class Kind<Type> {
 
@@ -20,8 +21,12 @@ public abstract class Kind<Type> {
         if (thing instanceof Kind<?> kind) return kind;
         if (thing instanceof Class<?> kind) {
             final Context context = Context.getLocalContext();
-            if (context != null) for (final Kind<?> found : context.getKinds())
+            if (context != null) for (final Kind<?> found : context.getKinds()) {
                 if (found.type.isAssignableFrom(kind)) return found;
+            }
+            else for (final Kind<?> found : Kinds.kinds) {
+                if (found.getType().isInstance(thing)) return found;
+            }
             return new UnknownKind(kind);
         }
         if (thing == null) return NullKind.NULL;
@@ -35,8 +40,12 @@ public abstract class Kind<Type> {
         if (thing instanceof Kind<?>) return new KindKind();
         if (thing instanceof Class<?> kind) return new UnknownKind(kind);
         final Context context = Context.getLocalContext();
-        if (context != null)
-            for (final Kind<?> kind : context.getKinds()) if (kind.getType().isInstance(thing)) return kind;
+        if (context != null) for (final Kind<?> kind : context.getKinds()) {
+            if (kind.getType().isInstance(thing)) return kind;
+        }
+        else for (final Kind<?> kind : Kinds.kinds) {
+            if (kind.getType().isInstance(thing)) return kind;
+        }
         return new UnknownKind(thing.getClass());
     }
 
@@ -122,6 +131,10 @@ public abstract class Kind<Type> {
 
     public void setupDoBlock(Context context) {
         assert context != null;
+    }
+
+    public boolean hasProperty(String name) {
+        return Set.of(this.getProperties()).contains(name);
     }
 
 }

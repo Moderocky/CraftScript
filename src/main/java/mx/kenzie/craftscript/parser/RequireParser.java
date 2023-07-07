@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.parser;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.RequireStatement;
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.utility.VariableHelper;
 
 import static mx.kenzie.craftscript.variable.VariableContainer.VAR_NAME;
 
@@ -30,6 +31,7 @@ public class RequireParser extends BasicParser {
         for (final String name : names) {
             if (!VAR_NAME.matcher(name).matches())
                 throw new ScriptError("The name '" + name + "' is not a valid variable identifier.");
+            VariableHelper.instance().assignIfAbsent(name, Object.class);
         }
         return new RequireStatement(names);
     }

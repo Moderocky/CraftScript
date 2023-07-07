@@ -35,6 +35,14 @@ public class ScriptManagerTest {
     }
 
     @Test
+    public void sumTest() {
+        assert this.test("""
+            var = 1 + 2
+            var = 1 + var
+            """);
+    }
+
+    @Test
     public void doBlockTest() {
         assert this.test("""
             do "hello" {

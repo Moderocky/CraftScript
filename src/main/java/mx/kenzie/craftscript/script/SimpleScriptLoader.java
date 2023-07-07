@@ -6,6 +6,7 @@ import mx.kenzie.craftscript.statement.CloseStatement;
 import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.utility.VariableHelper;
+import mx.kenzie.craftscript.utility.Warning;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class SimpleScriptLoader implements ScriptLoader {
     protected Supplier<Parser>[] parsers;
     private int line;
     private BufferedReader reader;
+    private List<Warning> warnings;
 
     @SafeVarargs
     public SimpleScriptLoader(Supplier<Parser>... parsers) {
@@ -28,6 +30,7 @@ public class SimpleScriptLoader implements ScriptLoader {
     }
 
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     public final void addParsers(Supplier<Parser>... parsers) {
         final List<Supplier<Parser>> list = new ArrayList<>(this.parsers.length + parsers.length);
         list.addAll(List.of(this.parsers));
@@ -51,6 +54,7 @@ public class SimpleScriptLoader implements ScriptLoader {
     }
 
     private Statement<?>[] parseStatements(InputStream stream) throws IOException {
+        this.warnings = new LinkedList<>();
         this.line = 0;
         final List<Statement<?>> list = new ArrayList<>();
         try {
@@ -97,6 +101,17 @@ public class SimpleScriptLoader implements ScriptLoader {
             parser.insert(line.trim(), this);
             return (parser.matches() && parser.parse() == null);
         }
+    }
+
+    @Override
+    public void warn(String text) {
+        if (warnings == null) return;
+        this.warnings.add(new Warning(this.getLine(), text));
+    }
+
+    @Override
+    public Collection<Warning> warnings() {
+        return warnings;
     }
 
     @Override

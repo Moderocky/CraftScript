@@ -3,6 +3,8 @@ package mx.kenzie.craftscript.parser;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.ImportStatement;
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.utility.ScriptHelper;
+import mx.kenzie.craftscript.utility.VariableHelper;
 
 public class ImportParser extends BasicParser {
 
@@ -25,6 +27,10 @@ public class ImportParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
+        for (final String name : names) {
+            final Class<?> type = ScriptHelper.instance().getReturnType(name + ".script");
+            VariableHelper.instance().assign(name, type);
+        }
         return new ImportStatement(names);
     }
 

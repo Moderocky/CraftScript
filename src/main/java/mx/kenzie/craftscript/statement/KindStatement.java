@@ -12,6 +12,13 @@ import java.io.PrintStream;
 
 public record KindStatement(String name) implements Statement<Kind<?>> {
 
+    public static Kind<?> lookForKind(Statement<?> statement) {
+        for (final Kind<?> kind : Kinds.kinds) {
+            if (kind.getType().isAssignableFrom(statement.returnType())) return kind;
+        }
+        return Kinds.ANY;
+    }
+
     @Override
     public Kind<?> execute(Context context) throws ScriptError {
         for (final Kind<?> kind : context.getKinds()) {

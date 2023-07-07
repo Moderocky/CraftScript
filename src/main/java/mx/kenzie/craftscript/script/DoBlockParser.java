@@ -4,17 +4,25 @@ import mx.kenzie.craftscript.parser.LocalFunctionParser;
 import mx.kenzie.craftscript.parser.Parser;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.statement.VariableStatement;
+import mx.kenzie.craftscript.utility.Warning;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 
 public class DoBlockParser implements ScriptParser {
 
     protected final ScriptParser parent;
     private boolean dirty;
+    protected final Statement<?> source;
 
-    public DoBlockParser(ScriptParser parent) {
+    public DoBlockParser(Statement<?> source, ScriptParser parent) {
         this.parent = parent;
+        this.source= source;
+    }
+
+    public Statement<?> getSource() {
+        return source;
     }
 
     @Override
@@ -83,6 +91,16 @@ public class DoBlockParser implements ScriptParser {
     @Override
     public boolean checkEmpty(String line) {
         return parent.checkEmpty(line);
+    }
+
+    @Override
+    public void warn(String text) {
+        this.parent.warn(text);
+    }
+
+    @Override
+    public Collection<Warning> warnings() {
+        return parent.warnings();
     }
 
     public void flagDirty() {

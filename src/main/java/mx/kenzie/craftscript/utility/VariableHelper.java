@@ -22,7 +22,8 @@ public interface VariableHelper {
         }
 
         @Override
-        public void assign(String name, Statement<?> statement) {
+        public VariableHelper clone() {
+            return this;
         }
     };
 
@@ -44,13 +45,29 @@ public interface VariableHelper {
 
     @NotNull Class<?> getReturnType(String name);
 
-    void assign(String name, Statement<?> statement);
+    default void assign(String name, Statement<?> statement) {}
+
+    default void assign(String name, Class<?> type) {}
+
+    default void assignIfAbsent(String name, Class<?> type) {}
+
+    default VariableHelper clone() {
+        return this;
+    }
+
+    default void purge() {
+    }
+
+    default boolean isKnown(String name) {
+        return false;
+    }
 
 }
 
 class SimpleVariableHelper implements VariableHelper {
 
     protected final Map<String, Statement<?>> map = new HashMap<>();
+    protected final Map<String, Class<?>> types = new HashMap<>();
 
     @Override
     public Statement<?> getAssignment(String name) {
@@ -58,15 +75,42 @@ class SimpleVariableHelper implements VariableHelper {
     }
 
     @Override
+    public boolean isKnown(String name) {
+        return types.containsKey(name);
+    }
+
+    @Override
     public Class<?> getReturnType(String name) {
-        final Statement<?> statement = this.getAssignment(name);
-        if (statement == null) return Object.class;
-        return statement.returnType();
+        return types.getOrDefault(name, Object.class);
     }
 
     @Override
     public void assign(String name, Statement<?> statement) {
-        map.put(name, statement);
+        this.map.put(name, statement);
+        this.assign(name, statement.returnType());
+    }
+
+    @Override
+    public void assign(String name, Class<?> type) {
+        this.types.put(name, type);
+    }
+
+    @Override
+    public void assignIfAbsent(String name, Class<?> type) {
+        this.types.putIfAbsent(name, type);
+    }
+
+    @Override
+    public VariableHelper clone() {
+        final SimpleVariableHelper helper = new SimpleVariableHelper();
+        helper.map.putAll(this.map);
+        return helper;
+    }
+
+    @Override
+    public void purge() {
+        this.map.clear();
+        this.types.clear();
     }
 
 }
