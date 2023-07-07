@@ -50,7 +50,9 @@ public record SetterStatement(Statement<?> source, String property, Statement<?>
             Component.text('=', profile.pop()),
             this.value.prettyPrint(profile),
             Component.text(']', profile.pop())
-        ).hoverEvent(Component.text("Sets the '" + property + "' property of an object.", profile.light()));
+        ).hoverEvent(Component.textOfChildren(
+            Component.text("Sets the '" + property + "' property of an object.", profile.light()),
+            this.printReturnType(profile)));
     }
 
     @Override

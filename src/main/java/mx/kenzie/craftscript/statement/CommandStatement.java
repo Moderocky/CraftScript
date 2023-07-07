@@ -91,12 +91,15 @@ public record CommandStatement(String input, InterpolationStatement... interpola
                 else if (object instanceof Statement<?> statement)
                     builder.append(statement.prettyPrint(profile));
             }
-            return builder.build().hoverEvent(Component.text("A runnable command.", profile.light()));
+            return builder.build().hoverEvent(
+                Component.textOfChildren(Component.text("A runnable command.", profile.light()),
+                    this.printReturnType(profile)));
         }
         return Component.textOfChildren(
             Component.text('/', profile.pop()),
             Component.text(input, profile.light())
-        ).hoverEvent(Component.text("A runnable command.", profile.light()));
+        ).hoverEvent(Component.textOfChildren(Component.text("A runnable command.", profile.light()),
+            this.printReturnType(profile)));
     }
 
     @Override

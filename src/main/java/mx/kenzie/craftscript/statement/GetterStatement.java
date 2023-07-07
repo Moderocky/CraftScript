@@ -50,7 +50,9 @@ public record GetterStatement(Statement<?> source, String property) implements S
             Component.text('[', profile.pop()),
             Component.text(property, profile.highlight()),
             Component.text(']', profile.pop())
-        ).hoverEvent(Component.text("Gets the '" + property + "' property of an object.", profile.light()));
+        ).hoverEvent(Component.textOfChildren(
+            Component.text("Gets the '" + property + "' property of an object.", profile.light()),
+            this.printReturnType(profile)));
     }
 
     @Override

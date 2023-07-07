@@ -29,7 +29,8 @@ public record NullStatement() implements Statement<Void> {
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return Component.text("null", profile.dark())
-            .hoverEvent(Component.text("An empty value.", profile.light()));
+            .hoverEvent(Component.textOfChildren(Component.text("An empty value.", profile.light()),
+                this.printReturnType(profile)));
     }
 
     @Override

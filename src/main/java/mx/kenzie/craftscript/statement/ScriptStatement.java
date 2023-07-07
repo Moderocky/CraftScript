@@ -34,7 +34,8 @@ public record ScriptStatement(String name) implements Statement<AbstractScript>,
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(name, profile.light())
-            .hoverEvent(Component.text("An executable script.", profile.light()));
+            .hoverEvent(Component.textOfChildren(Component.text("An executable script.", profile.light()),
+                this.printReturnType(profile)));
     }
 
     @Override

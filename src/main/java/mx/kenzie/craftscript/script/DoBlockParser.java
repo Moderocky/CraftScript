@@ -13,12 +13,12 @@ import java.util.Iterator;
 public class DoBlockParser implements ScriptParser {
 
     protected final ScriptParser parent;
-    private boolean dirty;
     protected final Statement<?> source;
+    private boolean dirty;
 
     public DoBlockParser(Statement<?> source, ScriptParser parent) {
         this.parent = parent;
-        this.source= source;
+        this.source = source;
     }
 
     public Statement<?> getSource() {

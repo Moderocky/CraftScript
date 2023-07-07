@@ -24,6 +24,8 @@ public interface Statement<Result> extends Executable<Result> {
     }
 
     default Component prettyPrint(ColorProfile profile) {
+        if (this.knowsReturnType()) return Component.text(this.stringify(), profile.light())
+            .hoverEvent(this.printReturnType(profile));
         return Component.text(this.stringify(), profile.light());
     }
 
@@ -32,5 +34,9 @@ public interface Statement<Result> extends Executable<Result> {
     }
 
     Class<? extends Result> returnType();
+
+    default Component printReturnType(ColorProfile profile) {
+        return Component.text(KindStatement.lookForKind(this).toString(), profile.light());
+    }
 
 }

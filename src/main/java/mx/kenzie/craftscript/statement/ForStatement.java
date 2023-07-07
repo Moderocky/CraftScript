@@ -71,7 +71,9 @@ public record ForStatement(VariableAssignmentStatement assignment, Statement<?> 
             this.assignment.prettyPrint(profile),
             Component.space(),
             this.then.prettyPrint(profile)
-        ).hoverEvent(Component.text("Runs a function for every element in a list."));
+        ).hoverEvent(
+            Component.textOfChildren(Component.text("Runs a function for every element in a list.", profile.light()),
+                this.printReturnType(profile)));
     }
 
     @Override

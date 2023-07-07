@@ -56,7 +56,9 @@ public interface AbstractScript extends Statement<Object> {
             builder.append(statement.prettyPrint(profile));
         }
         return builder.build()
-            .hoverEvent(Component.text("A runnable script object.", profile.light()));
+            .hoverEvent(Component.textOfChildren(
+                Component.text("A runnable script object.", profile.light()), this.printReturnType(profile)
+            ));
     }
 
     @Override

@@ -21,7 +21,10 @@ public record AnonymousScript(
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return AbstractScript.super.prettyPrint(profile)
-            .hoverEvent(Component.text("An unnamed runnable script object.", profile.light()));
+            .hoverEvent(Component.textOfChildren(
+                Component.text("An unnamed runnable script object.", profile.light()),
+                this.printReturnType(profile)
+            ));
     }
 
 }

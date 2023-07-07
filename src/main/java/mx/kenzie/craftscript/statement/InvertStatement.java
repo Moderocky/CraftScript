@@ -35,7 +35,8 @@ public record InvertStatement(Statement<?> check) implements Statement<Boolean> 
         return Component.textOfChildren(
             Component.text('!', profile.pop()),
             this.check.prettyPrint(profile)
-        ).hoverEvent(Component.text("Reverses the (boolean) value of a statement."));
+        ).hoverEvent(Component.textOfChildren(Component.text("Reverses the (boolean) value of a statement."),
+            this.printReturnType(profile)));
     }
 
     @Override

@@ -35,7 +35,9 @@ public record LocalKeywordStatement(String name) implements Statement<Object>, E
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(name, profile.highlight())
-            .hoverEvent(Component.text("The '" + name + " local keyword property."));
+            .hoverEvent(
+                Component.textOfChildren(Component.text("The '" + name + " local keyword property.", profile.light()),
+                    this.printReturnType(profile)));
     }
 
     @Override

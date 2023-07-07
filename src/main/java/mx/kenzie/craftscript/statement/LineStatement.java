@@ -35,7 +35,8 @@ public record LineStatement(Statement<?> statement, int line, String indent) imp
         return Component.textOfChildren(
             Component.text(indent, profile.light()),
             this.statement.prettyPrint(profile)
-        ).hoverEvent(Component.text("Line " + line, profile.light()));
+        ).hoverEvent(
+            Component.textOfChildren(Component.text("Line " + line, profile.light()), this.printReturnType(profile)));
     }
 
     @Override

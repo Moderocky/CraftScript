@@ -60,7 +60,9 @@ public record DoStatement(Statement<?> source, Statement<?> then) implements Sta
             this.source.prettyPrint(profile),
             Component.space(),
             this.then.prettyPrint(profile)
-        ).hoverEvent(Component.text("Creates a block of special actions for this object."));
+        ).hoverEvent(Component.textOfChildren(
+            Component.text("Creates a block of special actions for this object.", profile.light()),
+            this.printReturnType(profile)));
     }
 
     @Override

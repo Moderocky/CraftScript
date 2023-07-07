@@ -39,7 +39,9 @@ public record StructStatement(BlockStatement block) implements Statement<StructO
         return Component.textOfChildren(
             Component.text("struct ", profile.dark()),
             this.block.prettyPrint(profile)
-        ).hoverEvent(Component.text("A custom object with a set of properties."));
+        ).hoverEvent(
+            Component.textOfChildren(Component.text("A custom object with a set of properties.", profile.light()),
+                this.printReturnType(profile)));
     }
 
     @Override

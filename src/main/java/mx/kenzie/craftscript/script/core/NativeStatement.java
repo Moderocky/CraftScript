@@ -24,7 +24,8 @@ public interface NativeStatement<Type> extends Statement<Type> {
     @Override
     default Component prettyPrint(ColorProfile profile) {
         return Statement.super.prettyPrint(profile)
-            .hoverEvent(Component.text("This comes from a system library.", profile.light()));
+            .hoverEvent(Component.textOfChildren(Component.text("This comes from a system library.", profile.light()),
+                this.printReturnType(profile)));
     }
 
     default Class<? extends Type> returnType() {
