@@ -37,6 +37,12 @@ public class ScriptManagerTest {
     @Test
     public void doBlockTest() {
         assert this.test("""
+            do "hello" {
+                require [type, length, is_empty, is_blank, lowercase, uppercase, char_at, substring, index_of, starts_with, ends_with, contains, matches]
+                assert length == 5
+            }
+            """);
+        assert this.test("""
             var = "blob"
             do "hello" {
                 var = char_at 1
