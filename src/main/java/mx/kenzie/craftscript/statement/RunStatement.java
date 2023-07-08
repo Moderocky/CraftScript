@@ -35,8 +35,6 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
             final Object found = Wrapper.unwrap(data.execute(context));
             if (found instanceof VariableContainer container) {
                 variables = container;
-//            if (found != null && found.getClass() == VariableContainer.class) {
-//                variables = (VariableContainer) found; // special reflective case!
             } else if (found instanceof Map<?, ?> map) {
                 variables.putAll((Map<String, Object>) map);
                 variables.getParameters().addAll(map.values());
@@ -46,12 +44,16 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
                 variables.getParameters().addAll(Arrays.asList(objects));
             } else variables.getParameters().add(found);
         }
+        return execute(context, result, variables);
+    }
+
+    static Object execute(Context context, Object result, VariableContainer variables) {
+        if (result == null) throw new ScriptError("Function was null.");
         if (result instanceof Executable<?> executable) return run(executable, context, variables);
         else if (result instanceof Runnable runnable) {
             runnable.run();
             return null;
         } else throw new ScriptError("Unable to run object '" + result + "'.");
-
     }
 
     static void debug(PrintStream stream, Class<?> thing, Statement<?> statement, Statement<?> data) {
