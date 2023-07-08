@@ -20,7 +20,6 @@ public class SimpleScriptLoader implements ScriptLoader {
     private final Map<Supplier<Parser>, Parser> cache = new HashMap<>();
     private final CommentParser comment = new CommentParser();
     protected Supplier<Parser>[] parsers;
-    private int line;
     private BufferedReader reader;
     private List<Warning> warnings;
 
@@ -40,7 +39,7 @@ public class SimpleScriptLoader implements ScriptLoader {
 
     @Override
     public void incrementLine() {
-        ++this.line;
+        throw new ScriptError("The root loader does not keep line references.");
     }
 
     @Override
@@ -54,45 +53,42 @@ public class SimpleScriptLoader implements ScriptLoader {
     }
 
     private Statement<?>[] parseStatements(InputStream stream) throws IOException {
+        final LocalScriptParser parser = new LocalScriptParser(this, reader);
         this.warnings = new LinkedList<>();
-        this.line = 0;
         final List<Statement<?>> list = new ArrayList<>();
-        try {
+        this.reader = new BufferedReader(new InputStreamReader(stream));
+        try (final BufferedReader ignored = this.reader) {
             VariableHelper.init();
-            this.reader = new BufferedReader(new InputStreamReader(stream));
             do {
-                this.line++;
-                final String line = reader.readLine();
+                parser.incrementLine();
+                final String line = this.readLine();
                 if (line == null) break;
                 if (line.isBlank()) continue;
-                if (this.checkEmpty(line)) continue;
-                final Statement<?> statement = this.parse(line.trim());
+                if (parser.checkEmpty(line)) continue;
+                final Statement<?> statement = parser.parse(line.trim());
                 if (statement == null)
-                    throw new ScriptError("Line " + this.line + ": '" + line + "' was not recognised.");
+                    throw new ScriptError("Line " + parser.getLine() + ": '" + line + "' was not recognised.");
                 if (statement instanceof CloseStatement)
-                    throw new ScriptError("Line " + this.line + ": '" + line + "' closed an un-opened block.");
-                list.add(new LineStatement(statement, this.line));
+                    throw new ScriptError("Line " + parser.getLine() + ": '" + line + "' closed an un-opened block.");
+                list.add(new LineStatement(statement, parser.getLine()));
             } while (true);
         } finally {
-            if (reader != null) reader.close();
             VariableHelper.tearDown();
+            this.reader = null;
         }
         return list.toArray(new Statement[0]);
     }
 
     @Override
     public Statement<?> parseLine() throws IOException {
-        do {
-            this.line++;
-            final String line = reader.readLine();
-            if (line == null) throw new ScriptError("Reached end of script when expecting line.");
-            if (line.isBlank()) continue;
-            if (this.checkEmpty(line)) continue;
-            final Statement<?> statement = this.parse(line.trim());
-            if (statement == null)
-                throw new ScriptError("Line " + this.line + ": '" + line + "' was not recognised.");
-            return statement;
-        } while (true);
+        final String line = this.readLine();
+        if (line == null) throw new ScriptError("No lines left in reader.");
+        if (line.isBlank()) return null;
+        if (this.checkEmpty(line)) return null;
+        final Statement<?> statement = this.parse(line.trim());
+        if (statement == null)
+            throw new ScriptError("Line '" + line + "' was not recognised.");
+        return statement;
     }
 
     @Override
@@ -112,6 +108,11 @@ public class SimpleScriptLoader implements ScriptLoader {
     @Override
     public Collection<Warning> warnings() {
         return warnings;
+    }
+
+    @Override
+    public void register(Supplier<Parser> parser) {
+        throw new ScriptError("The root loader cannot have a local parser registered to it.");
     }
 
     @Override
@@ -138,7 +139,7 @@ public class SimpleScriptLoader implements ScriptLoader {
     @Override
     public Iterator<Parser> parsers() {
         return new Iterator<>() {
-            int index;
+            private int index;
 
             @Override
             public boolean hasNext() {
@@ -160,7 +161,7 @@ public class SimpleScriptLoader implements ScriptLoader {
 
     @Override
     public int getLine() {
-        return line;
+        return -1;
     }
 
 }

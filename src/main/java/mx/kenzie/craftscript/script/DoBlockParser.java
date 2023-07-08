@@ -9,6 +9,7 @@ import mx.kenzie.craftscript.utility.Warning;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Supplier;
 
 public class DoBlockParser implements ScriptParser {
 
@@ -101,6 +102,11 @@ public class DoBlockParser implements ScriptParser {
     @Override
     public Collection<Warning> warnings() {
         return parent.warnings();
+    }
+
+    @Override
+    public void register(Supplier<Parser> parser) {
+        this.parent.register(parser);
     }
 
     public void flagDirty() {

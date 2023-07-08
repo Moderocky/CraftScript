@@ -7,6 +7,7 @@ import mx.kenzie.craftscript.utility.Warning;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Supplier;
 
 public interface ScriptParser {
 
@@ -27,5 +28,7 @@ public interface ScriptParser {
     void warn(String text);
 
     Collection<Warning> warnings();
+
+    void register(Supplier<Parser> parser);
 
 }

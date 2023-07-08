@@ -20,6 +20,7 @@ public interface ScriptLoader extends ScriptParser {
         ImportParser::new,
         ListenerParser::new,
         RunParser::new,
+        SyntaxParser::new,
         ElseParser::new,
         InvertParser::new,
         BooleanParser::new,
