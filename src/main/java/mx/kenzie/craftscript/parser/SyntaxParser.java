@@ -4,6 +4,7 @@ import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.statement.StringStatement;
 import mx.kenzie.craftscript.statement.SyntaxStatement;
+import mx.kenzie.craftscript.utility.VariableHelper;
 
 public class SyntaxParser extends BasicParser {
 
@@ -28,7 +29,17 @@ public class SyntaxParser extends BasicParser {
             if (!(parent.parse(before) instanceof StringStatement statement)) continue;
             this.pattern = statement;
             after = text.substring(start).trim();
-            this.function = parent.parse(after);
+            VariableHelper helper = VariableHelper.instance(), child = helper.clone();
+            try {
+                child.purge(); // outer variables aren't available in syntax
+                for (final LocalSyntaxParser.Element element : LocalSyntaxParser.tokenize(pattern.value())) {
+                    if (element instanceof LocalSyntaxParser.Input) child.assign(element.value(), Object.class);
+                }
+                VariableHelper.local.set(child);
+                this.function = parent.parse(after);
+            } finally {
+                VariableHelper.local.set(helper);
+            }
             if (function == null) continue;
             return true;
         } while (start < text.length());
