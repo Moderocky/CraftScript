@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.parser;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.FunctionStatement;
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.utility.VariableHelper;
 
 public class FunctionParser extends BasicParser {
 
@@ -14,7 +15,14 @@ public class FunctionParser extends BasicParser {
         if (input.length() < 10) return false;
         final String string = input.substring(9).trim();
         if (string.isEmpty()) return false;
-        this.block = parent.parse(string);
+        VariableHelper helper = VariableHelper.instance(), child = helper.clone();
+        try {
+            child.purge(); // outer variables aren't available in a function
+            VariableHelper.local.set(child);
+            this.block = parent.parse(string);
+        } finally {
+            VariableHelper.local.set(helper);
+        }
         return block != null;
     }
 
