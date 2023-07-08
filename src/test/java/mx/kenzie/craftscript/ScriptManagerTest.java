@@ -15,6 +15,7 @@ import java.util.Objects;
 public class ScriptManagerTest {
 
     static ScriptManager manager;
+    private static boolean printError = true;
     private final TestCommandSender sender = new TestCommandSender();
 
     @BeforeClass
@@ -32,6 +33,21 @@ public class ScriptManagerTest {
     public static void tearDown() {
         manager.close();
         manager = null;
+    }
+
+    @Test
+    public void localSyntaxTest() {
+        assert this.test("""
+            syntax "hello %player%" = /print hello, {player}
+            hello "bean"
+            """, "hello, bean");
+    }
+
+    @Test(expected = ScriptError.class)
+    public void localSyntaxTestFailure() {
+        assert this.test("""
+            hello "bean"
+            """, "hello, bean");
     }
 
     @Test
@@ -757,7 +773,5 @@ public class ScriptManagerTest {
     private InputStream getScript(String name) {
         return ScriptManagerTest.class.getClassLoader().getResourceAsStream(name);
     }
-
-    private static boolean printError = true;
 
 }
