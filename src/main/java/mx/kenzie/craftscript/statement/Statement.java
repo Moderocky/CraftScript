@@ -42,12 +42,14 @@ public interface Statement<Result> extends Executable<Result> {
     Class<? extends Result> returnType();
 
     default Component printReturnType(ColorProfile profile) {
-        final String string = KindStatement.lookForKind(this).toString();
-        if (string.startsWith("#")) return Component.textOfChildren(
-            Component.text('#', profile.pop()),
-            Component.text(string.substring(1), profile.highlight())
-        );
-        return Component.text(string, profile.highlight());
+        final Class<?> result = this.returnType();
+        final String name;
+        if (result == Object.class) name = "Any";
+        else name = result.getSimpleName()
+            .replaceAll("([A-Z]+)([A-Z][a-z])", "$1 $2")
+            .replaceAll("([a-z])([A-Z])", "$1 $2");
+        return Component.translatable("script.statement.outcome", "Outcome: %s",
+            Component.text(name, profile.highlight())).color(profile.light());
     }
 
 }

@@ -32,7 +32,7 @@ public record VariableStatement(String name) implements Statement<Object>, Evalu
     @Override
     public Component prettyPrint(ColorProfile profile) {
         return Component.text(name, profile.highlight())
-            .hoverEvent(Component.textOfChildren(Component.text("The '" + name + " variable.", profile.light()),
+            .hoverEvent(Component.textOfChildren(Component.text("The '" + name + "' variable.", profile.light()),
                 Component.newline(), this.printReturnType(profile)));
     }
 
