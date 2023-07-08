@@ -14,7 +14,7 @@ public class IfParser extends BasicParser {
     @Override
     public boolean matches() {
         if (!input.startsWith("if ")) return false;
-        return parse(3);
+        return this.parse(3);
     }
 
     protected boolean parse(int begin) {
