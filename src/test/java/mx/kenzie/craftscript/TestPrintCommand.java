@@ -9,7 +9,7 @@ import static mx.kenzie.centurion.Arguments.GREEDY_STRING;
 
 public class TestPrintCommand extends MinecraftCommand {
 
-    TestPrintCommand() {
+    public TestPrintCommand() {
         super("Test command.");
     }
 
