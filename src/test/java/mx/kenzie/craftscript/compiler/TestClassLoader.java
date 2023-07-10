@@ -12,9 +12,6 @@ public class TestClassLoader extends ClassLoader implements Loader {
         super(parent);
     }
 
-    TestClassLoader(Void unused) {
-    }
-
     public Class<?> loadClass(String name, byte[] bytecode) {
         return super.defineClass(name, bytecode, 0, bytecode.length);
     }
