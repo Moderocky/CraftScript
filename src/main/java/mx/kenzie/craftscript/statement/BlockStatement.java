@@ -9,7 +9,8 @@ import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
 
-public record BlockStatement(Statement<?>... statements) implements Statement<Object>, EvaluatedStatement<Object> {
+public record BlockStatement(
+    Statement<?>... statements) implements MultiStatement<Object>, Statement<Object>, EvaluatedStatement<Object> {
 
     static void prettyPrint(ColorProfile profile, TextComponent.Builder text, Statement<?>... block) {
         text.append(Component.text('{', profile.pop()));

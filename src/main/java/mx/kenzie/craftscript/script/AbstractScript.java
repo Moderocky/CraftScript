@@ -1,6 +1,7 @@
 package mx.kenzie.craftscript.script;
 
 import mx.kenzie.centurion.ColorProfile;
+import mx.kenzie.craftscript.statement.MultiStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -10,7 +11,7 @@ import java.io.PrintStream;
 /**
  * Represents a script or something pretending to be one, e.g. an {@link AnonymousScript}.
  */
-public interface AbstractScript extends Statement<Object> {
+public interface AbstractScript extends MultiStatement<Object>, Statement<Object> {
 
     String name();
 
