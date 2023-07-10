@@ -159,7 +159,7 @@ public abstract class CompilerTest {
     @Test
     public void equals() {
         assert this.test("""
-            if "baefell" == "baefell" null
+            if "baefell" == "baefell" /print hi im baefell
             """, "hi im baefell");
     }
 
