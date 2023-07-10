@@ -11,7 +11,7 @@ import net.kyori.adventure.text.TextComponent;
 import java.io.PrintStream;
 import java.util.List;
 
-public record StringStatement(String value, InterpolationStatement... interpolations) implements Statement<String> {
+public record StringStatement(String value, InterpolationStatement... interpolations) implements TextStatement {
 
     @Override
     public String execute(Context context) throws ScriptError {
@@ -55,11 +55,6 @@ public record StringStatement(String value, InterpolationStatement... interpolat
         }
         return Component.textOfChildren(Component.text('"', profile.pop()), Component.text(value, profile.light()),
             Component.text('"', profile.pop())).hoverEvent(component);
-    }
-
-    @Override
-    public Class<? extends String> returnType() {
-        return String.class;
     }
 
 }

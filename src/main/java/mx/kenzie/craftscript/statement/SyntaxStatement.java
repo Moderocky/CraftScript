@@ -7,7 +7,7 @@ import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record SyntaxStatement(StringStatement pattern, Statement<?> function) implements Statement<Void> {
+public record SyntaxStatement(TextStatement pattern, Statement<?> function) implements Statement<Void> {
 
     @Override
     public Class<Void> returnType() {

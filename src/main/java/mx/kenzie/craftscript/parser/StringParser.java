@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.parser;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.script.ScriptParser;
 import mx.kenzie.craftscript.statement.InterpolationStatement;
+import mx.kenzie.craftscript.statement.LiteralStringStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.statement.StringStatement;
 
@@ -57,6 +58,7 @@ public class StringParser extends BasicParser {
     @Override
     public Statement<?> parse() throws ScriptError {
         final InterpolationStatement[] statements = interpolations(input, parent);
+        if (statements.length == 0) return new LiteralStringStatement(input.substring(1, input.length() - 1));
         return new StringStatement(input.substring(1, input.length() - 1), statements);
     }
 

@@ -121,6 +121,10 @@ public interface ScriptBuilder {
         return new CommandStatement(command, interpolations);
     }
 
+    static LiteralStringStatement string(String value) {
+        return new LiteralStringStatement(value);
+    }
+
     static StringStatement string(String value, InterpolationStatement... interpolations) {
         return new StringStatement(value, interpolations);
     }

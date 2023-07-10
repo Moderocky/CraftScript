@@ -2,13 +2,13 @@ package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.Statement;
-import mx.kenzie.craftscript.statement.StringStatement;
 import mx.kenzie.craftscript.statement.SyntaxStatement;
+import mx.kenzie.craftscript.statement.TextStatement;
 import mx.kenzie.craftscript.utility.VariableHelper;
 
 public class SyntaxParser extends BasicParser {
 
-    protected StringStatement pattern;
+    protected TextStatement pattern;
     protected Statement<?> function;
 
     @Override
@@ -26,7 +26,7 @@ public class SyntaxParser extends BasicParser {
                 + ": Syntax statement expects a literal \"text\" pattern, found '" + before + "'");
             start = equals + 1;
             if (before.charAt(before.length() - 1) != '"') continue;
-            if (!(parent.parse(before) instanceof StringStatement statement)) continue;
+            if (!(parent.parse(before) instanceof TextStatement statement)) continue;
             this.pattern = statement;
             after = text.substring(start).trim();
             VariableHelper helper = VariableHelper.instance(), child = helper.clone();
@@ -49,7 +49,7 @@ public class SyntaxParser extends BasicParser {
     @Override
     public Statement<?> parse() throws ScriptError {
         if (this.pattern.value().isBlank()) throw new ScriptError("The syntax pattern must not be blank.");
-        final StringStatement pattern = this.pattern;
+        final TextStatement pattern = this.pattern;
         final Statement<?> function = this.function;
         this.parent.register(() -> new LocalSyntaxParser(pattern.value(), function));
         return new SyntaxStatement(pattern, function);
