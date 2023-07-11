@@ -15,6 +15,10 @@ public record ImportStatement(String... names) implements Statement<Boolean> {
 
     @Override
     public Boolean execute(Context context) throws ScriptError {
+        return execute(context, names);
+    }
+
+    public static Boolean execute(Context context, String... names) {
         final VariableContainer container = context.variables();
         final ScriptManager manager = context.manager();
         for (final String name : names) {

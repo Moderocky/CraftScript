@@ -43,6 +43,10 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
         return require(context, names).length == names.length;
     }
 
+    public static Boolean execute(Context context, String[] names) {
+        return require(context, names).length == names.length;
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());

@@ -27,6 +27,9 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         register(VariableStatement.class, ElementCompiler.VARIABLE);
         register(AssertStatement.class, ElementCompiler.ASSERT);
         register(BlockStatement.class, ElementCompiler.BLOCK);
+        register(CompareStatement.class, ElementCompiler.COMPARE);
+        register(ImportStatement.class, ElementCompiler.IMPORT);
+        register(RequireStatement.class, ElementCompiler.REQUIRE);
     }
 
     protected int methodCounter;
@@ -52,6 +55,14 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
 
     public Input<?> compileConstant(Object constant, PreMethod method, PreClass builder) {
         return this.compileInput(constant, builder);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Instruction.Input<Object> compileInputArray(Object[] objects, PreClass builder) {
+        final Input<Object>[] inputs = new Input[objects.length];
+        for (int i = 0; i < objects.length; i++) inputs[i] = this.compileInput(objects[i], builder);
+        return ARRAY.of(objects.getClass().getComponentType(), inputs);
     }
 
     @Override

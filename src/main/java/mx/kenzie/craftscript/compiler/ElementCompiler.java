@@ -20,6 +20,8 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<AssertStatement> ASSERT = new AssertCompiler();
     ElementCompiler<BlockStatement> BLOCK = new BlockCompiler();
     ElementCompiler<CompareStatement> COMPARE = new CompareCompiler();
+    ElementCompiler<ImportStatement> IMPORT = new ImportCompiler();
+    ElementCompiler<RequireStatement> REQUIRE = new RequireCompiler();
 
     Instruction.Input<?> compile(Type type, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler);
 
