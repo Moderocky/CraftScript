@@ -11,17 +11,17 @@ import java.io.PrintStream;
 
 public record StructStatement(BlockStatement block) implements Statement<StructObject> {
 
-    @Override
-    public StructObject execute(Context context) throws ScriptError {
-        return execute(context, block);
-    }
-
     public static StructObject execute(Context context, Executable<?> block) throws ScriptError {
         final StructObject object = new StructObject();
         final Context sub = new Context(context.source(), context.manager(), object, context.data());
         block.execute(sub);
         object.freeze();
         return object;
+    }
+
+    @Override
+    public StructObject execute(Context context) throws ScriptError {
+        return execute(context, block);
     }
 
     @Override

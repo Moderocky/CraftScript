@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.parser;
 
-import mx.kenzie.craftscript.statement.*;
+import mx.kenzie.craftscript.statement.CompareStatement;
 import mx.kenzie.craftscript.utility.Comparator;
 
 public class BinaryParser extends OperatorParser {

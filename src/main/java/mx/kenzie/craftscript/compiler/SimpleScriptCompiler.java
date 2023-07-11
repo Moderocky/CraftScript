@@ -52,6 +52,10 @@ public class SimpleScriptCompiler implements ScriptCompiler {
             case "^" -> "XOR";
             case "!=" -> "NE";
             case "?" -> "ALT";
+            case "+" -> "PLUS";
+            case "-" -> "MINUS";
+            case "*" -> "TIMES";
+            case "/" -> "DIVIDE";
             default -> throw new IllegalStateException("Unexpected value: " + comparator);
         };
         return FIELD.of(Comparator.class, field, Comparator.class).get();

@@ -55,20 +55,20 @@ public record CommandStatement(String input, InterpolationStatement... interpola
         }
     }
 
-    @Override
-    public Boolean execute(Context context) throws ScriptError {
+    public static Boolean execute(Context context, String input, String[] keys, Executable<?>[] values) {
         final String command;
-        if (interpolations.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
+        if (keys.length > 0) {
+            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
             command = MapFormat.format(input, map);
         } else command = input;
         return context.manager().runCommand(context, command);
     }
 
-    public static Boolean execute(Context context, String input, String[] keys, Executable<?>[] values) {
+    @Override
+    public Boolean execute(Context context) throws ScriptError {
         final String command;
-        if (keys.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
+        if (interpolations.length > 0) {
+            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
             command = MapFormat.format(input, map);
         } else command = input;
         return context.manager().runCommand(context, command);

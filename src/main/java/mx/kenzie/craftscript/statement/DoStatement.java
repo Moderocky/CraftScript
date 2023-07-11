@@ -13,11 +13,6 @@ import java.io.PrintStream;
 
 public record DoStatement(Statement<?> source, Statement<?> then) implements Statement<Object> {
 
-    @Override
-    public Object execute(Context context) throws ScriptError {
-        return execute(context, source.execute(context), then);
-    }
-
     public static Object execute(Context context, Object source, Executable<?> then) {
         final Context sub = prepare(context, Wrapper.of(source));
         try {
@@ -36,6 +31,11 @@ public record DoStatement(Statement<?> source, Statement<?> then) implements Sta
         context.data().script = parent.data().script;
         wrapper.getKind().setupDoBlock(context);
         return context;
+    }
+
+    @Override
+    public Object execute(Context context) throws ScriptError {
+        return execute(context, source.execute(context), then);
     }
 
     @Override

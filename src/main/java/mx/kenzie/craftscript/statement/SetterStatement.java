@@ -11,6 +11,12 @@ import java.io.PrintStream;
 
 public record SetterStatement(Statement<?> source, String property, Statement<?> value) implements Statement<Object> {
 
+    @SuppressWarnings("unchecked")
+    public static Object execute(Object value, String property, Object result) throws ScriptError {
+        final Kind<Object> kind = (Kind<Object>) Kind.of(value);
+        return kind.setProperty(Wrapper.unwrap(value), property, Wrapper.unwrap(result));
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Object execute(Context context) throws ScriptError {
@@ -18,12 +24,6 @@ public record SetterStatement(Statement<?> source, String property, Statement<?>
         final Object result = value.execute(context);
         final Kind<Object> kind = (Kind<Object>) Kind.of(object);
         return kind.setProperty(Wrapper.unwrap(object), property, Wrapper.unwrap(result));
-    }
-
-    @SuppressWarnings("unchecked")
-    public static Object execute(Object value, String property, Object result) throws ScriptError {
-        final Kind<Object> kind = (Kind<Object>) Kind.of(value);
-        return kind.setProperty(Wrapper.unwrap(value), property, Wrapper.unwrap(result));
     }
 
     @Override

@@ -21,10 +21,6 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
 
     public static final double DEFAULT_EVENT_RADIUS = 32, MAX_EVENT_RADIUS = 128;
 
-    @Override
-    public EventListener execute(Context context) throws ScriptError {
-        return execute(context, key.execute(context), details != null ? details.execute(context) : null, task);
-    }
     public static EventListener execute(Context context, Object token, Object inputs, Executable<?> task) {
         if (!(Wrapper.unwrap(token) instanceof NamespacedKey key))
             throw new ScriptError("Object '" + token + "' was not an event key.");
@@ -47,6 +43,11 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
         } else listener = new EntityEventListener(details, key, task, DEFAULT_EVENT_RADIUS, context.source());
         context.manager().registerListener(listener);
         return listener;
+    }
+
+    @Override
+    public EventListener execute(Context context) throws ScriptError {
+        return execute(context, key.execute(context), details != null ? details.execute(context) : null, task);
     }
 
     @Override

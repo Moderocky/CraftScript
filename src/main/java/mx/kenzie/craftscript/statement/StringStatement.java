@@ -14,19 +14,19 @@ import java.util.List;
 
 public record StringStatement(String value, InterpolationStatement... interpolations) implements TextStatement {
 
+    public static String execute(Context context, String input, String[] keys, Executable<?>[] values) {
+        if (keys.length > 0) {
+            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
+            return MapFormat.format(input, map);
+        } else return input;
+    }
+
     @Override
     public String execute(Context context) throws ScriptError {
         if (interpolations.length > 0) {
             final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
             return MapFormat.format(value, map);
         } else return value;
-    }
-
-    public static String execute(Context context, String input, String[] keys, Executable<?>[] values) {
-        if (keys.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
-            return MapFormat.format(input, map);
-        } else return input;
     }
 
     @Override

@@ -19,6 +19,17 @@ import java.util.List;
 public record SelectorStatement(String text, Universe<?> universe,
                                 InterpolationStatement... interpolations) implements Statement<Object> {
 
+    public static Object execute(Context context, String text, String[] keys, Executable<?>[] values) {
+        final String input;
+        if (keys.length > 0) {
+            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
+            input = MapFormat.format(text, map);
+        } else input = text;
+        final List<?> list = Selector.of(input, SelectorParser.universe).getAll(context.source());
+        if (list.size() == 1) return Wrapper.of(list.get(0));
+        return list;
+    }
+
     @Override
     public Object execute(Context context) throws ScriptError {
         final String input;
@@ -27,17 +38,6 @@ public record SelectorStatement(String text, Universe<?> universe,
             input = MapFormat.format(text, map);
         } else input = text;
         final List<?> list = Selector.of(input, universe).getAll(context.source());
-        if (list.size() == 1) return Wrapper.of(list.get(0));
-        return list;
-    }
-
-    public static Object execute(Context context, String text, String[] keys, Executable<?>[] values) {
-        final String input;
-        if (keys.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
-            input = MapFormat.format(text, map);
-        } else input = text;
-        final List<?> list = Selector.of(input, SelectorParser.universe).getAll(context.source());
         if (list.size() == 1) return Wrapper.of(list.get(0));
         return list;
     }

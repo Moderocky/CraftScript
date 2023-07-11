@@ -19,16 +19,16 @@ public record GetterStatement(Statement<?> source, String property) implements S
         source.debug(stream);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public Object execute(Context context) throws ScriptError {
-        final Object value = source.execute(context);
+    public static Object execute(Object value, String property) throws ScriptError {
         final Kind<Object> kind = (Kind<Object>) Kind.of(value);
         return Wrapper.of(kind.getProperty(Wrapper.unwrap(value), property));
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    public static Object execute(Object value, String property) throws ScriptError {
+    public Object execute(Context context) throws ScriptError {
+        final Object value = source.execute(context);
         final Kind<Object> kind = (Kind<Object>) Kind.of(value);
         return Wrapper.of(kind.getProperty(Wrapper.unwrap(value), property));
     }

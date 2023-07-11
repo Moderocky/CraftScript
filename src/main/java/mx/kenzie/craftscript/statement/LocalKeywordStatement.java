@@ -11,14 +11,14 @@ import java.io.PrintStream;
 
 public record LocalKeywordStatement(String name) implements Statement<Object>, EvaluatedStatement<Object> {
 
-    @Override
-    public Object execute(Context context) throws ScriptError {
+    public static Object execute(Context context, String name) {
         if (context.variables() instanceof PropertyVariableContainer<?> container)
             return container.getProperty(name);
         else return context.variables().get(name);
     }
 
-    public static Object execute(Context context, String name) {
+    @Override
+    public Object execute(Context context) throws ScriptError {
         if (context.variables() instanceof PropertyVariableContainer<?> container)
             return container.getProperty(name);
         else return context.variables().get(name);
