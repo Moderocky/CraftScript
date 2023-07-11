@@ -16,6 +16,7 @@ public interface ElementCompiler<Type extends Statement<?>> {
         compiler.compileConstant(statement.value(), method, builder);
     Inline<LiteralStringStatement> LITERAL_STRING = statement -> CONSTANT.of(statement.value());
     Inline<NullStatement> NULL = statement -> Instruction.NULL;
+    Inline<SyntaxStatement> SYNTAX = statement -> Instruction.NULL;
     ElementCompiler<VariableAssignmentStatement> VARIABLE_ASSIGNMENT = new VariableAssignmentCompiler();
     ElementCompiler<VariableStatement> VARIABLE = new VariableCompiler();
     ElementCompiler<AssertStatement> ASSERT = new AssertCompiler();
@@ -37,6 +38,11 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<InterpolationStatement> INTERPOLATION = new InterpolationCompiler();
     ElementCompiler<MapStatement> MAP = new MapCompiler();
     ElementCompiler<StructStatement> STRUCT = new StructCompiler();
+    ElementCompiler<KindStatement> KIND = new KindCompiler();
+    ElementCompiler<LocalFunctionStatement> LOCAL_FUNCTION = new LocalFunctionCompiler();
+    ElementCompiler<LocalKeywordStatement> LOCAL_KEYWORD = new LocalKeywordCompiler();
+    ElementCompiler<LocalSyntaxStatement> LOCAL_SYNTAX = new LocalSyntaxCompiler();
+    ElementCompiler<SelectorStatement> SELECTOR = new SelectorCompiler();
 
     Instruction.Input<?> compile(Type type, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler);
 

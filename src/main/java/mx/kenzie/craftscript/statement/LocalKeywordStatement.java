@@ -18,6 +18,12 @@ public record LocalKeywordStatement(String name) implements Statement<Object>, E
         else return context.variables().get(name);
     }
 
+    public static Object execute(Context context, String name) {
+        if (context.variables() instanceof PropertyVariableContainer<?> container)
+            return container.getProperty(name);
+        else return context.variables().get(name);
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());

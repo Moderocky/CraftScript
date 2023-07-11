@@ -6,6 +6,7 @@ import mx.kenzie.centurion.selector.Universe;
 import mx.kenzie.craftscript.parser.SelectorParser;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
 import mx.kenzie.craftscript.utility.MapFormat;
 import mx.kenzie.craftscript.variable.Wrapper;
@@ -26,6 +27,17 @@ public record SelectorStatement(String text, Universe<?> universe,
             input = MapFormat.format(text, map);
         } else input = text;
         final List<?> list = Selector.of(input, universe).getAll(context.source());
+        if (list.size() == 1) return Wrapper.of(list.get(0));
+        return list;
+    }
+
+    public static Object execute(Context context, String text, String[] keys, Executable<?>[] values) {
+        final String input;
+        if (keys.length > 0) {
+            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
+            input = MapFormat.format(text, map);
+        } else input = text;
+        final List<?> list = Selector.of(input, SelectorParser.universe).getAll(context.source());
         if (list.size() == 1) return Wrapper.of(list.get(0));
         return list;
     }

@@ -4,6 +4,7 @@ import mx.kenzie.craftscript.compiler.ElementCompiler;
 import mx.kenzie.craftscript.compiler.SubstantiveScriptCompiler;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.RunStatement;
+import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.foundation.PreClass;
 import mx.kenzie.foundation.PreMethod;
 import mx.kenzie.foundation.instruction.Instruction;
@@ -17,6 +18,10 @@ public class RunCompiler implements ElementCompiler<RunStatement> {
         final Input<?> function = compiler.compileStatement(statement.statement(), method, builder), data;
         if (statement.data() == null) data = Instruction.NULL;
         else data = compiler.compileStatement(statement.data(), method, builder);
+        return compile(function, data, builder);
+    }
+
+    public static Input<?> compile(Input<?> function, Input<?> data, PreClass builder) {
         return visitor -> {
             METHOD.of(RunStatement.class, Object.class, "execute", Context.class, Object.class, Object.class)
                 .getStatic(LOAD_VAR.object(1), function, data)

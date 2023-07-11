@@ -27,6 +27,13 @@ public record KindStatement(String name) implements Statement<Kind<?>> {
         throw new ScriptError("Unknown type #" + name + ".");
     }
 
+    public static Kind<?> execute(Context context, String name) {
+        for (final Kind<?> kind : context.getKinds()) {
+            if (kind.toString().equals('#' + name)) return kind;
+        }
+        throw new ScriptError("Unknown type #" + name + ".");
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());

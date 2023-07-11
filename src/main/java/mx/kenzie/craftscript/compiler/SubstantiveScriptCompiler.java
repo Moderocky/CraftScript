@@ -42,6 +42,12 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         register(InterpolationStatement.class, ElementCompiler.INTERPOLATION);
         register(MapStatement.class, ElementCompiler.MAP);
         register(StructStatement.class, ElementCompiler.STRUCT);
+        register(SyntaxStatement.class, ElementCompiler.SYNTAX);
+        register(KindStatement.class, ElementCompiler.KIND);
+        register(LocalFunctionStatement.class, ElementCompiler.LOCAL_FUNCTION);
+        register(LocalKeywordStatement.class, ElementCompiler.LOCAL_KEYWORD);
+        register(LocalSyntaxStatement.class, ElementCompiler.LOCAL_SYNTAX);
+        register(SelectorStatement.class, ElementCompiler.SELECTOR);
     }
 
     protected final Map<Class<?>, ElementCompiler<?>> compilers;

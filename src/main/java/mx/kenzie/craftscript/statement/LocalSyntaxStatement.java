@@ -42,6 +42,17 @@ public record LocalSyntaxStatement(String pattern, Statement<?> function,
         return RunStatement.execute(context, function, container);
     }
 
+    public static Object execute(Context context) {
+        final VariableContainer container = new VariableContainer();
+        for (final Map.Entry<String, Statement<?>> entry : data.entrySet()) {
+            final String key = entry.getKey();
+            final Object value = entry.getValue().execute(context);
+            container.put(key, value);
+            container.getParameters().add(value);
+        }
+        return RunStatement.execute(context, function, container);
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());
