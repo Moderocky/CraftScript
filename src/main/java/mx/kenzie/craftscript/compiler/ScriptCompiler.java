@@ -17,7 +17,7 @@ public interface ScriptCompiler {
 
     boolean compileLine(Statement<?> statement, PreMethod method, PreClass builder);
 
-    boolean compile(MultiStatement<Object> script, PreClass builder);
+    PreMethod compile(MultiStatement<Object> script, PreClass builder);
 
     byte[] compile(AbstractScript script);
 

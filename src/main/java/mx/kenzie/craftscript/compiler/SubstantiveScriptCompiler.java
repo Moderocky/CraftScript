@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.compiler;
 
+import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.*;
 import mx.kenzie.craftscript.utility.Comparator;
@@ -24,7 +25,11 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         register(LiteralStringStatement.class, ElementCompiler.LITERAL_STRING);
         register(VariableAssignmentStatement.class, ElementCompiler.VARIABLE_ASSIGNMENT);
         register(VariableStatement.class, ElementCompiler.VARIABLE);
+        register(AssertStatement.class, ElementCompiler.ASSERT);
+        register(BlockStatement.class, ElementCompiler.BLOCK);
     }
+
+    protected int methodCounter;
 
     protected final Map<Class<?>, ElementCompiler<?>> compilers;
 
@@ -71,8 +76,11 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
     }
 
     @Override
-    public boolean compile(MultiStatement<Object> script, PreClass builder) {
-        final PreMethod method = builder.add(new PreMethod(Type.of(Object.class), "execute", Context.class));
+    public PreMethod compile(MultiStatement<Object> script, PreClass builder) {
+        final String name;
+        if (script instanceof AbstractScript) name = "execute";
+        else name = "execute$" + ++methodCounter;
+        final PreMethod method = builder.add(new PreMethod(Type.of(Object.class), name, Context.class));
         method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         method.line(METHOD
             .of(builder, void.class, "prepare", Context.class)
@@ -84,7 +92,7 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
             assert ok;
         }
         method.line(RETURN.object(LOAD_VAR.object(2)));
-        return true;
+        return method;
     }
 
 }

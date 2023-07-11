@@ -118,7 +118,7 @@ public class SimpleScriptCompiler implements ScriptCompiler {
     }
 
     @Override
-    public boolean compile(MultiStatement<Object> script, PreClass builder) {
+    public PreMethod compile(MultiStatement<Object> script, PreClass builder) {
         final PreMethod method = builder.add(new PreMethod(Type.of(Object.class), "execute", Context.class));
         method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         method.line(METHOD
@@ -131,7 +131,7 @@ public class SimpleScriptCompiler implements ScriptCompiler {
             assert ok;
         }
         method.line(RETURN.object(LOAD_VAR.object(2)));
-        return true;
+        return method;
     }
 
     @Override
