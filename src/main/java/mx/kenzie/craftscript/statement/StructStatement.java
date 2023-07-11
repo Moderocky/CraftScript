@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.variable.StructObject;
 import net.kyori.adventure.text.Component;
 
@@ -12,9 +13,13 @@ public record StructStatement(BlockStatement block) implements Statement<StructO
 
     @Override
     public StructObject execute(Context context) throws ScriptError {
+        return execute(context, block);
+    }
+
+    public static StructObject execute(Context context, Executable<?> block) throws ScriptError {
         final StructObject object = new StructObject();
         final Context sub = new Context(context.source(), context.manager(), object, context.data());
-        this.block.execute(sub);
+        block.execute(sub);
         object.freeze();
         return object;
     }

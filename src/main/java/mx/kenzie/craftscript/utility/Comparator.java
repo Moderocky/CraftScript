@@ -123,6 +123,63 @@ public interface Comparator {
         }
 
 
+    }, PLUS = new SimpleComparator("+") {
+        @Override
+        public Object compare(Object a, Object b) {
+            if (a instanceof String string) return string + b;
+            if (b instanceof String string) return a + string;
+            if (!(a instanceof Number first)) return null;
+            if (!(b instanceof Number second)) return null;
+            if (first instanceof Integer && second instanceof Integer) return first.intValue() + second.intValue();
+            return first.doubleValue() + second.doubleValue();
+        }
+
+        @Override
+        public Class<?> getReturnType(Class<?> antecedent, Class<?> consequent) {
+            if (antecedent == Integer.class && consequent == Integer.class) return Integer.class;
+            if (Number.class.isAssignableFrom(antecedent) && Number.class.isAssignableFrom(consequent))
+                return Number.class;
+            return String.class;
+        }
+    }, MINUS = new SimpleComparator("-") {
+        @Override
+        public Object compare(Object a, Object b) {
+            if (!(a instanceof Number first) || !(b instanceof Number second)) return null;
+            if (first instanceof Integer && second instanceof Integer) return first.intValue() - second.intValue();
+            return first.doubleValue() - second.doubleValue();
+        }
+
+        @Override
+        public Class<?> getReturnType(Class<?> antecedent, Class<?> consequent) {
+            if (antecedent == Integer.class && consequent == Integer.class) return Integer.class;
+            return Number.class;
+        }
+    }, TIMES = new SimpleComparator("*") {
+        @Override
+        public Object compare(Object a, Object b) {
+            if (!(a instanceof Number first) || !(b instanceof Number second)) return null;
+            if (first instanceof Integer && second instanceof Integer) return first.intValue() * second.intValue();
+            return first.doubleValue() * second.doubleValue();
+        }
+
+        @Override
+        public Class<?> getReturnType(Class<?> antecedent, Class<?> consequent) {
+            if (antecedent == Integer.class && consequent == Integer.class) return Integer.class;
+            return Number.class;
+        }
+    }, DIVIDE = new SimpleComparator("/") {
+        @Override
+        public Object compare(Object a, Object b) {
+            if (!(a instanceof Number first) || !(b instanceof Number second)) return null;
+            if (first instanceof Integer && second instanceof Integer) return first.intValue() / second.intValue();
+            return first.doubleValue() / second.doubleValue();
+        }
+
+        @Override
+        public Class<?> getReturnType(Class<?> antecedent, Class<?> consequent) {
+            if (antecedent == Integer.class && consequent == Integer.class) return Integer.class;
+            return Number.class;
+        }
     };
 
     Object compare(Object a, Object b);

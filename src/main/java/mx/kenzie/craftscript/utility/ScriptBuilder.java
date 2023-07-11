@@ -133,20 +133,8 @@ public interface ScriptBuilder {
         return new LiteralStatement(value);
     }
 
-    static BinaryStatement<?> plus(Statement<?> antecedent, Statement<?> consequent) {
-        return new PlusStatement(antecedent, consequent);
-    }
-
-    static BinaryStatement<Number> minus(Statement<?> antecedent, Statement<?> consequent) {
-        return new MinusStatement(antecedent, consequent);
-    }
-
-    static BinaryStatement<Number> times(Statement<?> antecedent, Statement<?> consequent) {
-        return new TimesStatement(antecedent, consequent);
-    }
-
-    static BinaryStatement<Number> divide(Statement<?> antecedent, Statement<?> consequent) {
-        return new DivideStatement(antecedent, consequent);
+    static BinaryStatement<?> compare(Statement<?> antecedent, Comparator comparator, Statement<?> consequent) {
+        return new CompareStatement(antecedent, consequent, comparator);
     }
 
     static EqualsStatement is(Statement<?> antecedent, Statement<?> consequent) {

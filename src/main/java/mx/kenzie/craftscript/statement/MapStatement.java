@@ -4,6 +4,7 @@ import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.Container;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.variable.ContainerMap;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.craftscript.variable.VariableFinder;
@@ -18,6 +19,13 @@ public record MapStatement(Statement<?>... statements) implements Statement<Cont
         final VariableContainer container = new VariableFinder(context.variables());
         final Context sub = new Context(context.source(), context.manager(), container, context.data());
         for (final Statement<?> statement : statements) statement.execute(sub);
+        return new ContainerMap(container);
+    }
+
+    public static Container execute(Context context, Executable<?> executable) {
+        final VariableContainer container = new VariableFinder(context.variables());
+        final Context sub = new Context(context.source(), context.manager(), container, context.data());
+        executable.execute(sub);
         return new ContainerMap(container);
     }
 

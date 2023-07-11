@@ -34,6 +34,9 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<StringStatement> STRING = new StringCompiler();
     ElementCompiler<ListenerStatement> LISTENER = new ListenerCompiler();
     ElementCompiler<EqualsStatement> EQUALS = new EqualsCompiler();
+    ElementCompiler<InterpolationStatement> INTERPOLATION = new InterpolationCompiler();
+    ElementCompiler<MapStatement> MAP = new MapCompiler();
+    ElementCompiler<StructStatement> STRUCT = new StructCompiler();
 
     Instruction.Input<?> compile(Type type, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler);
 

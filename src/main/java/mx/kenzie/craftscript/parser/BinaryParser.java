@@ -15,19 +15,19 @@ public class BinaryParser extends OperatorParser {
     }
 
     public static OperatorParser comparePlus() {
-        return new OperatorParser("+", PlusStatement::new);
+        return new BinaryParser(Comparator.PLUS);
     }
 
     public static OperatorParser compareMinus() {
-        return new OperatorParser("-", MinusStatement::new);
+        return new BinaryParser(Comparator.MINUS);
     }
 
     public static OperatorParser compareTimes() {
-        return new OperatorParser("*", TimesStatement::new);
+        return new BinaryParser(Comparator.TIMES);
     }
 
     public static OperatorParser compareDivide() {
-        return new OperatorParser("/", DivideStatement::new);
+        return new BinaryParser(Comparator.DIVIDE);
     }
 
     public static BinaryParser compareLT() {
