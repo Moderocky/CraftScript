@@ -15,7 +15,7 @@ import java.io.OutputStream;
 
 public interface ScriptCompiler {
 
-    boolean compile(Statement<?> statement, PreMethod method, PreClass builder);
+    boolean compileLine(Statement<?> statement, PreMethod method, PreClass builder);
 
     boolean compile(MultiStatement<Object> script, PreClass builder);
 

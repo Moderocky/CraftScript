@@ -20,7 +20,7 @@ import static mx.kenzie.foundation.instruction.Instruction.*;
 
 public class SimpleScriptCompiler implements ScriptCompiler {
 
-    private Instruction.Input<Object> boxPrimitive(Object object) {
+    protected Instruction.Input<Object> boxPrimitive(Object object) {
         if (object instanceof Boolean) return METHOD
             .of(Boolean.class, Boolean.class, "valueOf", boolean.class)
             .getStatic(CONSTANT.of(object));
@@ -107,14 +107,12 @@ public class SimpleScriptCompiler implements ScriptCompiler {
 
     protected boolean compileLine(LineStatement line, PreMethod method, PreClass builder) {
         method.line(this.writeLineNumber(line.line(), builder));
-        return this.compile(line.statement(), method, builder);
+        return this.compileLine(line.statement(), method, builder);
     }
 
     @Override
-    public boolean compile(Statement<?> statement, PreMethod method, PreClass builder) {
+    public boolean compileLine(Statement<?> statement, PreMethod method, PreClass builder) {
         if (statement instanceof LineStatement line) return this.compileLine(line, method, builder);
-        final Input<?> input = this.compileInput(statement, builder);
-        assert input != null;
         method.line(STORE_VAR.object(2, this.compileStatement(statement, builder)));
         return true;
     }
@@ -129,7 +127,7 @@ public class SimpleScriptCompiler implements ScriptCompiler {
         );
         method.line(STORE_VAR.object(2, NULL)); // so we know it's ok to return 2
         for (final Statement<?> statement : script.statements()) {
-            final boolean ok = this.compile(statement, method, builder);
+            final boolean ok = this.compileLine(statement, method, builder);
             assert ok;
         }
         method.line(RETURN.object(LOAD_VAR.object(2)));
