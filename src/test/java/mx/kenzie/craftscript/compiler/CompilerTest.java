@@ -114,14 +114,14 @@ public abstract class CompilerTest {
         assert this.test("/print {10 <= 10}", "true");
         assert this.test("/print {11 <= 10}", "false");
         assert this.test("/print {9 < 10}", "true");
-        assert this.test("assert 10 > 1");
-        assert this.test("assert 10 >= 1");
-        assert this.test("assert 10 >= 10");
-        assert this.test("assert true & true");
-        assert this.test("assert true | false");
-        assert this.test("assert false | true");
-        assert this.test("assert false ^ true");
-        assert this.test("assert null ? true");
+        assert this.<Boolean>test("assert 10 > 1");
+        assert this.<Boolean>test("assert 10 >= 1");
+        assert this.<Boolean>test("assert 10 >= 10");
+        assert this.<Boolean>test("assert true & true");
+        assert this.<Boolean>test("assert true | false");
+        assert this.<Boolean>test("assert false | true");
+        assert this.<Boolean>test("assert false ^ true");
+        assert this.<Boolean>test("assert null ? true");
     }
 
     @Test
@@ -192,7 +192,7 @@ public abstract class CompilerTest {
         return manager.parseScript(name + ".script", content);
     }
 
-    protected boolean test(String source) {
+    protected <Type> Type test(String source) {
         final StackTraceElement[] elements = new Throwable().getStackTrace();
         final StackTraceElement element = elements[1];
         final String name = element.getMethodName();
@@ -200,14 +200,12 @@ public abstract class CompilerTest {
         try {
             assert this.compile(script);
             final Class<?> type = this.load(script);
-            final Object result = this.run(type);
+            return (Type) this.run(type);
         } catch (Throwable ex) {
             throw new ScriptCompileError("Unknown error.", ex);
         } finally {
             this.clearOutput();
         }
-        return true;
-
     }
 
     protected boolean test(String source, String output) {

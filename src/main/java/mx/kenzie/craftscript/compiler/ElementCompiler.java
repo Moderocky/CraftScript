@@ -27,6 +27,13 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<ListStatement> LIST = new ListCompiler();
     ElementCompiler<ScriptStatement> SCRIPT = new ScriptCompiler();
     ElementCompiler<FunctionStatement> FUNCTION = new FunctionCompiler();
+    ElementCompiler<RunStatement> RUN = new RunCompiler();
+    ElementCompiler<IfStatement> IF = new IfCompiler();
+    ElementCompiler<IfElseStatement> IF_ELSE = new IfElseCompiler();
+    ElementCompiler<CommandStatement> COMMAND = new CommandCompiler();
+    ElementCompiler<StringStatement> STRING = new StringCompiler();
+    ElementCompiler<ListenerStatement> LISTENER = new ListenerCompiler();
+    ElementCompiler<EqualsStatement> EQUALS = new EqualsCompiler();
 
     Instruction.Input<?> compile(Type type, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler);
 

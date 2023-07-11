@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
 import mx.kenzie.craftscript.utility.MapFormat;
 import net.kyori.adventure.text.Component;
@@ -18,7 +19,7 @@ public record CommandStatement(String input, InterpolationStatement... interpola
     public static List<Object> interpolateForPrinting(String string, InterpolationStatement... statements) {
         final LazyInterpolatingMap map = new LazyInterpolatingMap(new Context(null, null), statements);
         List<Object> list = List.of(string);
-        for (final Map.Entry<String, Statement<?>> entry : map.realEntrySet()) {
+        for (final Map.Entry<String, Executable<?>> entry : map.realEntrySet()) {
             final String key = entry.getKey();
             final List<Object> replacement = new LinkedList<>();
             for (final Object object : list) {
@@ -59,6 +60,15 @@ public record CommandStatement(String input, InterpolationStatement... interpola
         final String command;
         if (interpolations.length > 0) {
             final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
+            command = MapFormat.format(input, map);
+        } else command = input;
+        return context.manager().runCommand(context, command);
+    }
+
+    public static Boolean execute(Context context, String input, String[] keys, Executable<?>[] values) {
+        final String command;
+        if (keys.length > 0) {
+            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
             command = MapFormat.format(input, map);
         } else command = input;
         return context.manager().runCommand(context, command);

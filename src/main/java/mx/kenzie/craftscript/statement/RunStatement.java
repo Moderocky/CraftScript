@@ -27,12 +27,9 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
     }
 
     @SuppressWarnings("unchecked")
-    static Object execute(Context context, Statement<?> statement, Statement<?> data) {
-        final Object result = Wrapper.unwrap(statement.execute(context));
-        if (result == null) throw new ScriptError("Tried to run '" + statement.stringify() + "' but it was null.");
+    public static Object execute(Context context, Object result, Object found) {
         VariableContainer variables = new VariableContainer();
-        if (data != null) {
-            final Object found = Wrapper.unwrap(data.execute(context));
+        if (found != null) {
             if (found instanceof VariableContainer container) {
                 variables = container;
             } else if (found instanceof Map<?, ?> map) {
@@ -45,6 +42,12 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
             } else variables.getParameters().add(found);
         }
         return execute(context, result, variables);
+    }
+
+    public static Object execute(Context context, Statement<?> statement, Statement<?> data) {
+        final Object result = Wrapper.unwrap(statement.execute(context));
+        if (result == null) throw new ScriptError("Tried to run '" + statement.stringify() + "' but it was null.");
+        return execute(context, result, data != null ? Wrapper.unwrap(data.execute(context)) : null);
     }
 
     static Object execute(Context context, Object result, VariableContainer variables) {

@@ -11,6 +11,10 @@ public record EqualsStatement(Statement<?> antecedent, Statement<?> consequent) 
     @Override
     public Boolean execute(Context context) throws ScriptError {
         final Object a = Wrapper.unwrap(antecedent.execute(context)), b = Wrapper.unwrap(consequent.execute(context));
+        return execute(a, b);
+    }
+
+    public static Boolean execute(Object a, Object b) {
         return Objects.equals(a, b)
             || (a instanceof Number first && b instanceof Number second && first.doubleValue() == second.doubleValue());
     }

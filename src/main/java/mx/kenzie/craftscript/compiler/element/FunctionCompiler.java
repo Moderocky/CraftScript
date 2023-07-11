@@ -15,7 +15,7 @@ public class FunctionCompiler implements ElementCompiler<FunctionStatement> {
 
     @Override
     public Instruction.Input<?> compile(FunctionStatement statement, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler) {
-        return METHOD.metafactory(compiler.compileFunction(statement, builder),
+        return METHOD.metafactory(compiler.compileFunction(statement.executable(), builder),
                 Executable.class, "execute", builder)
             .invoke(LOAD_VAR.object(0));
     }

@@ -6,6 +6,7 @@ import mx.kenzie.craftscript.emitter.EventListener;
 import mx.kenzie.craftscript.emitter.StaticEventListener;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
@@ -22,17 +23,18 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
 
     @Override
     public EventListener execute(Context context) throws ScriptError {
-        final Object a = key.execute(context);
-        if (!(Wrapper.unwrap(a) instanceof NamespacedKey key))
-            throw new ScriptError("Object '" + a + "' was not an event key.");
+        return execute(context, key.execute(context), details != null ? details.execute(context) : null, task);
+    }
+    public static EventListener execute(Context context, Object token, Object inputs, Executable<?> task) {
+        if (!(Wrapper.unwrap(token) instanceof NamespacedKey key))
+            throw new ScriptError("Object '" + token + "' was not an event key.");
         final Context.Data data = context.data().clone();
         data.script = context.getRootContext().data().script;
         final EventListener.Details details = new EventListener.Details(context.source(), data);
         final EventListener listener;
-        if (this.details != null) {
-            final Object b = this.details.execute(context);
-            if (!(Wrapper.unwrap(b) instanceof Map<?, ?> map))
-                throw new ScriptError("Object '" + b + "' was not an event detail map.");
+        if (inputs != null) {
+            if (!(Wrapper.unwrap(inputs) instanceof Map<?, ?> map))
+                throw new ScriptError("Object '" + inputs + "' was not an event detail map.");
             final double radius = Math.min(Math.max(0, map.get("radius") instanceof Double d
                 ? d
                 : DEFAULT_EVENT_RADIUS), MAX_EVENT_RADIUS);

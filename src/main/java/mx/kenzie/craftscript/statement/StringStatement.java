@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
 import mx.kenzie.craftscript.utility.MapFormat;
 import net.kyori.adventure.text.Component;
@@ -19,6 +20,13 @@ public record StringStatement(String value, InterpolationStatement... interpolat
             final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
             return MapFormat.format(value, map);
         } else return value;
+    }
+
+    public static String execute(Context context, String input, String[] keys, Executable<?>[] values) {
+        if (keys.length > 0) {
+            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
+            return MapFormat.format(input, map);
+        } else return input;
     }
 
     @Override

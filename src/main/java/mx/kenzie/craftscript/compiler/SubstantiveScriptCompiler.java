@@ -4,11 +4,9 @@ import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.*;
 import mx.kenzie.craftscript.utility.Comparator;
-import mx.kenzie.foundation.Modifier;
-import mx.kenzie.foundation.PreClass;
-import mx.kenzie.foundation.PreMethod;
-import mx.kenzie.foundation.Type;
+import mx.kenzie.foundation.*;
 import mx.kenzie.foundation.instruction.Instruction;
+import org.objectweb.asm.ClassWriter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +32,13 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         register(ListStatement.class, ElementCompiler.LIST);
         register(ScriptStatement.class, ElementCompiler.SCRIPT);
         register(FunctionStatement.class, ElementCompiler.FUNCTION);
+        register(RunStatement.class, ElementCompiler.RUN);
+        register(IfStatement.class, ElementCompiler.IF);
+        register(IfElseStatement.class, ElementCompiler.IF_ELSE);
+        register(CommandStatement.class, ElementCompiler.COMMAND);
+        register(StringStatement.class, ElementCompiler.STRING);
+        register(ListenerStatement.class, ElementCompiler.LISTENER);
+        register(EqualsStatement.class, ElementCompiler.EQUALS);
     }
 
     protected final Map<Class<?>, ElementCompiler<?>> compilers;
@@ -89,7 +94,8 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         throw new ScriptCompileError("This method is not used.");
     }
 
-    public PreMethod compileFunction(FunctionStatement statement, PreClass builder) {
+    @SuppressWarnings("unchecked")
+    public PreMethod compileFunction(Statement<?> statement, PreClass builder) {
         final PreMethod method = builder.add(
             new PreMethod(Type.of(Object.class), "function" + ++methodCounter, Context.class));
         method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
@@ -97,7 +103,7 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
             .of(builder, void.class, "prepare", Context.class)
             .call(LOAD_VAR.self(), LOAD_VAR.object(1))
         );
-        method.line(RETURN.object((Input<Object>) this.compileStatement(statement.executable(), method, builder)));
+        method.line(RETURN.object((Input<Object>) this.compileStatement(statement, method, builder)));
         return method;
     }
 
@@ -119,6 +125,24 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         }
         method.line(RETURN.object(LOAD_VAR.object(2)));
         return method;
+    }
+
+    @Override
+    public UnloadedClass prepare(AbstractScript script) {
+        final var builder = new PreClass("script", script.name().substring(0, script.name().indexOf('.'))) {
+
+            @Override
+            public byte[] bytecode() {
+                ClassWriter writer = new ClassWriter(2);
+                this.build(writer);
+                return writer.toByteArray();
+            }
+        };
+        builder.setParent(Type.of(CompiledScript.class));
+        builder.addInterfaces(Type.of(Statement.class));
+        this.addMeta(script, builder);
+        this.compile(script, builder);
+        return builder.compile();
     }
 
 }

@@ -2,14 +2,13 @@ package mx.kenzie.craftscript.utility;
 
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.InterpolationStatement;
-import mx.kenzie.craftscript.statement.Statement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class LazyInterpolatingMap extends AbstractMap<String, Object> implements Container {
 
-    private final Map<String, Statement<?>> map = new LinkedHashMap<>();
+    private final Map<String, Executable<?>> map = new LinkedHashMap<>();
     private final Context context;
     private final Set<Entry<String, Object>> entrySet = new LinkedHashSet<>();
 
@@ -21,13 +20,21 @@ public class LazyInterpolatingMap extends AbstractMap<String, Object> implements
         }
     }
 
+    public LazyInterpolatingMap(Context context, String[] keys, Executable<?>[] values) {
+        this.context = context;
+        for (int i = 0; i < keys.length; i++) {
+            this.map.put(keys[i], values[i]);
+            this.entrySet.add(new LazyEntry(keys[i], values[i]));
+        }
+    }
+
     @NotNull
     @Override
     public Set<Entry<String, Object>> entrySet() {
         return entrySet;
     }
 
-    public Set<Entry<String, Statement<?>>> realEntrySet() {
+    public Set<Entry<String, Executable<?>>> realEntrySet() {
         return map.entrySet();
     }
 
@@ -39,9 +46,9 @@ public class LazyInterpolatingMap extends AbstractMap<String, Object> implements
     final class LazyEntry implements Entry<String, Object> {
 
         private final String getKey;
-        private final Statement<?> statement;
+        private final Executable<?> statement;
 
-        LazyEntry(String getKey, Statement<?> statement) {
+        LazyEntry(String getKey, Executable<?> statement) {
             this.getKey = getKey;
             this.statement = statement;
         }
@@ -59,7 +66,7 @@ public class LazyInterpolatingMap extends AbstractMap<String, Object> implements
         @Override
         public String getKey() {return getKey;}
 
-        public Statement<?> statement() {return statement;}
+        public Executable<?> statement() {return statement;}
 
         @Override
         public boolean equals(Object obj) {
