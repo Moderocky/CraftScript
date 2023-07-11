@@ -15,6 +15,10 @@ public record InvertStatement(Statement<?> check) implements Statement<Boolean> 
         return !IfStatement.value(result);
     }
 
+    public static Boolean execute(Context context, Object result) {
+        return !IfStatement.value(result);
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());

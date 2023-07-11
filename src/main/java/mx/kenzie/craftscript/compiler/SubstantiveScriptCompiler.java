@@ -30,6 +30,9 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         register(CompareStatement.class, ElementCompiler.COMPARE);
         register(ImportStatement.class, ElementCompiler.IMPORT);
         register(RequireStatement.class, ElementCompiler.REQUIRE);
+        register(InvertStatement.class, ElementCompiler.INVERT);
+        register(ListStatement.class, ElementCompiler.LIST);
+        register(ScriptStatement.class, ElementCompiler.SCRIPT);
     }
 
     protected int methodCounter;

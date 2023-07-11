@@ -9,6 +9,7 @@ import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public record ListStatement(Statement<?>... statements) implements Statement<List<?>> {
@@ -53,6 +54,10 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
         final List<Object> list = new ArrayList<>();
         for (final Statement<?> statement : statements) list.add(statement.execute(context));
         return list;
+    }
+
+    public static List<?> execute(Object... objects) {
+        return new ArrayList<>(Arrays.asList(objects));
     }
 
     @Override

@@ -17,6 +17,12 @@ public record ScriptStatement(String name) implements Statement<AbstractScript>,
         return script;
     }
 
+    public static AbstractScript execute(Context context, String name) {
+        final AbstractScript script = context.manager().getScript(name);
+        if (script == null) throw new ScriptError("Script '" + name + "' is not loaded.");
+        return script;
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());

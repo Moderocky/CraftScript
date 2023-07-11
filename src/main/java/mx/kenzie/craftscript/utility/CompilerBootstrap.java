@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.utility;
 
+import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
 
 public interface CompilerBootstrap {

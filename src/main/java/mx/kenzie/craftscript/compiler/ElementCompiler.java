@@ -1,5 +1,6 @@
 package mx.kenzie.craftscript.compiler;
 
+import mx.kenzie.craftscript.compiler.element.ScriptCompiler;
 import mx.kenzie.craftscript.compiler.element.*;
 import mx.kenzie.craftscript.statement.*;
 import mx.kenzie.foundation.PreClass;
@@ -22,6 +23,9 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<CompareStatement> COMPARE = new CompareCompiler();
     ElementCompiler<ImportStatement> IMPORT = new ImportCompiler();
     ElementCompiler<RequireStatement> REQUIRE = new RequireCompiler();
+    ElementCompiler<InvertStatement> INVERT = new InvertCompiler();
+    ElementCompiler<ListStatement> LIST = new ListCompiler();
+    ElementCompiler<ScriptStatement> SCRIPT = new ScriptCompiler();
 
     Instruction.Input<?> compile(Type type, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler);
 
