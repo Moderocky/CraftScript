@@ -2,10 +2,8 @@ package mx.kenzie.craftscript.compiler.element;
 
 import mx.kenzie.craftscript.compiler.ElementCompiler;
 import mx.kenzie.craftscript.compiler.SubstantiveScriptCompiler;
-import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.ListStatement;
 import mx.kenzie.craftscript.statement.Statement;
-import mx.kenzie.craftscript.utility.CompilerBootstrap;
 import mx.kenzie.foundation.PreClass;
 import mx.kenzie.foundation.PreMethod;
 import mx.kenzie.foundation.instruction.Instruction;

@@ -13,11 +13,6 @@ import java.io.PrintStream;
 
 public record ImportStatement(String... names) implements Statement<Boolean> {
 
-    @Override
-    public Boolean execute(Context context) throws ScriptError {
-        return execute(context, names);
-    }
-
     public static Boolean execute(Context context, String... names) {
         final VariableContainer container = context.variables();
         final ScriptManager manager = context.manager();
@@ -28,6 +23,11 @@ public record ImportStatement(String... names) implements Statement<Boolean> {
             container.put(name, result);
         }
         return true;
+    }
+
+    @Override
+    public Boolean execute(Context context) throws ScriptError {
+        return execute(context, names);
     }
 
     @Override

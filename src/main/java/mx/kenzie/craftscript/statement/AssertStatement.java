@@ -10,6 +10,17 @@ import java.io.PrintStream;
 
 public record AssertStatement(Statement<?> check) implements Statement<Boolean> {
 
+    public static Boolean check(Object value, String debug) {
+        final Object result = Wrapper.unwrap(value);
+        final boolean test = IfStatement.value(result);
+        if (test) return true;
+        if (result instanceof Boolean)
+            throw new ScriptError("The statement '" + debug + "' returned '" + Wrapper.of(result)
+                .toString() + "'.");
+        else throw new ScriptError("The statement '" + debug + "' returned '" + Wrapper.of(result)
+            .toString() + "' which evaluated to false.");
+    }
+
     @Override
     public Class<Boolean> returnType() {
         return Boolean.class;
@@ -23,17 +34,6 @@ public record AssertStatement(Statement<?> check) implements Statement<Boolean> 
     @Override
     public Boolean execute(Context context) throws ScriptError {
         return check(this.check.execute(context), check.stringify());
-    }
-
-    public static Boolean check(Object value, String debug) {
-        final Object result = Wrapper.unwrap(value);
-        final boolean test = IfStatement.value(result);
-        if (test) return true;
-        if (result instanceof Boolean)
-            throw new ScriptError("The statement '" + debug + "' returned '" + Wrapper.of(result)
-                .toString() + "'.");
-        else throw new ScriptError("The statement '" + debug + "' returned '" + Wrapper.of(result)
-            .toString() + "' which evaluated to false.");
     }
 
     @Override

@@ -10,14 +10,14 @@ import java.io.PrintStream;
 
 public record ScriptStatement(String name) implements Statement<AbstractScript>, EvaluatedStatement<AbstractScript> {
 
-    @Override
-    public AbstractScript execute(Context context) throws ScriptError {
+    public static AbstractScript execute(Context context, String name) {
         final AbstractScript script = context.manager().getScript(name);
         if (script == null) throw new ScriptError("Script '" + name + "' is not loaded.");
         return script;
     }
 
-    public static AbstractScript execute(Context context, String name) {
+    @Override
+    public AbstractScript execute(Context context) throws ScriptError {
         final AbstractScript script = context.manager().getScript(name);
         if (script == null) throw new ScriptError("Script '" + name + "' is not loaded.");
         return script;

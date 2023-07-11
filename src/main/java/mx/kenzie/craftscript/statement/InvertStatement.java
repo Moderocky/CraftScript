@@ -9,13 +9,13 @@ import java.io.PrintStream;
 
 public record InvertStatement(Statement<?> check) implements Statement<Boolean> {
 
-    @Override
-    public Boolean execute(Context context) throws ScriptError {
-        final Object result = this.check.execute(context);
+    public static Boolean execute(Context context, Object result) {
         return !IfStatement.value(result);
     }
 
-    public static Boolean execute(Context context, Object result) {
+    @Override
+    public Boolean execute(Context context) throws ScriptError {
+        final Object result = this.check.execute(context);
         return !IfStatement.value(result);
     }
 

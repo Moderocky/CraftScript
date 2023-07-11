@@ -16,7 +16,8 @@ public class AssertCompiler implements ElementCompiler<AssertStatement> {
     public Instruction.Input<?> compile(AssertStatement statement, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler) {
         return METHOD
             .of(AssertStatement.class, Object.class, "check", Object.class, String.class)
-            .getStatic(compiler.compileStatement(statement.check(), method, builder), CONSTANT.of(statement.check().stringify()));
+            .getStatic(compiler.compileStatement(statement.check(), method, builder),
+                CONSTANT.of(statement.check().stringify()));
     }
 
 }

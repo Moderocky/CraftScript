@@ -49,15 +49,15 @@ public record ListStatement(Statement<?>... statements) implements Statement<Lis
         return builder.build();
     }
 
+    public static List<?> execute(Object... objects) {
+        return new ArrayList<>(Arrays.asList(objects));
+    }
+
     @Override
     public List<?> execute(Context context) throws ScriptError {
         final List<Object> list = new ArrayList<>();
         for (final Statement<?> statement : statements) list.add(statement.execute(context));
         return list;
-    }
-
-    public static List<?> execute(Object... objects) {
-        return new ArrayList<>(Arrays.asList(objects));
     }
 
     @Override

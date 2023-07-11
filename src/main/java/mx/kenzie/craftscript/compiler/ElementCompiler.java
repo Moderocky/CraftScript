@@ -26,6 +26,7 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<InvertStatement> INVERT = new InvertCompiler();
     ElementCompiler<ListStatement> LIST = new ListCompiler();
     ElementCompiler<ScriptStatement> SCRIPT = new ScriptCompiler();
+    ElementCompiler<FunctionStatement> FUNCTION = new FunctionCompiler();
 
     Instruction.Input<?> compile(Type type, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler);
 

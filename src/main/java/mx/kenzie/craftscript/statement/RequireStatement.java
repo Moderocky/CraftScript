@@ -38,12 +38,12 @@ public record RequireStatement(String... names) implements Statement<Boolean> {
         builder.append(Component.text(']', profile.pop()));
     }
 
-    @Override
-    public Boolean execute(Context context) throws ScriptError {
+    public static Boolean execute(Context context, String[] names) {
         return require(context, names).length == names.length;
     }
 
-    public static Boolean execute(Context context, String[] names) {
+    @Override
+    public Boolean execute(Context context) throws ScriptError {
         return require(context, names).length == names.length;
     }
 

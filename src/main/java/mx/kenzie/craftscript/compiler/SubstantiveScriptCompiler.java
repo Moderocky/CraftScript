@@ -33,11 +33,11 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         register(InvertStatement.class, ElementCompiler.INVERT);
         register(ListStatement.class, ElementCompiler.LIST);
         register(ScriptStatement.class, ElementCompiler.SCRIPT);
+        register(FunctionStatement.class, ElementCompiler.FUNCTION);
     }
 
-    protected int methodCounter;
-
     protected final Map<Class<?>, ElementCompiler<?>> compilers;
+    protected int methodCounter;
 
     public SubstantiveScriptCompiler(Map<Class<?>, ElementCompiler<?>> compilers) {this.compilers = compilers;}
 
@@ -89,11 +89,23 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         throw new ScriptCompileError("This method is not used.");
     }
 
+    public PreMethod compileFunction(FunctionStatement statement, PreClass builder) {
+        final PreMethod method = builder.add(
+            new PreMethod(Type.of(Object.class), "function" + ++methodCounter, Context.class));
+        method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+        method.line(METHOD
+            .of(builder, void.class, "prepare", Context.class)
+            .call(LOAD_VAR.self(), LOAD_VAR.object(1))
+        );
+        method.line(RETURN.object((Input<Object>) this.compileStatement(statement.executable(), method, builder)));
+        return method;
+    }
+
     @Override
     public PreMethod compile(MultiStatement<Object> script, PreClass builder) {
         final String name;
         if (script instanceof AbstractScript) name = "execute";
-        else name = "execute$" + ++methodCounter;
+        else name = "block" + ++methodCounter;
         final PreMethod method = builder.add(new PreMethod(Type.of(Object.class), name, Context.class));
         method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         method.line(METHOD
