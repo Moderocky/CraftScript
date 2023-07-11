@@ -4,14 +4,12 @@ import mx.kenzie.craftscript.compiler.ElementCompiler;
 import mx.kenzie.craftscript.compiler.SubstantiveScriptCompiler;
 import mx.kenzie.craftscript.statement.IfElseStatement;
 import mx.kenzie.craftscript.statement.IfStatement;
-import mx.kenzie.foundation.Block;
 import mx.kenzie.foundation.PreClass;
 import mx.kenzie.foundation.PreMethod;
 import mx.kenzie.foundation.instruction.Instruction;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 
-import static mx.kenzie.foundation.instruction.Instruction.IF;
 import static mx.kenzie.foundation.instruction.Instruction.METHOD;
 
 public class IfElseCompiler implements ElementCompiler<IfElseStatement> {

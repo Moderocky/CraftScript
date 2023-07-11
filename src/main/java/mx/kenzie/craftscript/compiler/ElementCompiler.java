@@ -43,6 +43,11 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<LocalKeywordStatement> LOCAL_KEYWORD = new LocalKeywordCompiler();
     ElementCompiler<LocalSyntaxStatement> LOCAL_SYNTAX = new LocalSyntaxCompiler();
     ElementCompiler<SelectorStatement> SELECTOR = new SelectorCompiler();
+    ElementCompiler<DoStatement> DO = new DoCompiler();
+    ElementCompiler<ForStatement> FOR = new ForCompiler();
+    ElementCompiler<GetterStatement> GETTER = new GetterCompiler();
+    ElementCompiler<SetterStatement> SETTER = new SetterCompiler();
+    ElementCompiler<WhileStatement> WHILE = new WhileCompiler();
 
     Instruction.Input<?> compile(Type type, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler);
 

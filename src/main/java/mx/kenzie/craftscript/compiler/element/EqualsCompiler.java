@@ -7,7 +7,6 @@ import mx.kenzie.foundation.PreClass;
 import mx.kenzie.foundation.PreMethod;
 import mx.kenzie.foundation.instruction.Instruction;
 
-import static mx.kenzie.foundation.instruction.Instruction.LOAD_VAR;
 import static mx.kenzie.foundation.instruction.Instruction.METHOD;
 
 public class EqualsCompiler implements ElementCompiler<EqualsStatement> {

@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.variable.PropertyVariableContainer;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.craftscript.variable.Wrapper;
@@ -14,16 +15,20 @@ public record DoStatement(Statement<?> source, Statement<?> then) implements Sta
 
     @Override
     public Object execute(Context context) throws ScriptError {
-        final Context sub = this.prepare(context, Wrapper.of(source.execute(context)));
+        return execute(context, source.execute(context), then);
+    }
+
+    public static Object execute(Context context, Object source, Executable<?> then) {
+        final Context sub = prepare(context, Wrapper.of(source));
         try {
             Context.setLocalContext(sub);
-            return this.then.execute(sub);
+            return then.execute(sub);
         } finally {
             Context.setLocalContext(context);
         }
     }
 
-    private <Type> Context prepare(Context parent, Wrapper<Type> wrapper) {
+    private static <Type> Context prepare(Context parent, Wrapper<Type> wrapper) {
         final VariableContainer old = parent.variables();
         final VariableContainer special = new PropertyVariableContainer<>(old, wrapper);
         final Context context = new Context(parent.source(), parent.manager(), special, parent.data().clone());

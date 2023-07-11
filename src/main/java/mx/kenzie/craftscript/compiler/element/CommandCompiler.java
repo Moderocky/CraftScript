@@ -14,6 +14,17 @@ import static mx.kenzie.foundation.instruction.Instruction.*;
 
 public class CommandCompiler implements ElementCompiler<CommandStatement> {
 
+    static Instruction.Input<Object>[] getInputs(InterpolationStatement[] statements, PreClass builder, SubstantiveScriptCompiler compiler) {
+        final Instruction.Input<Object>[] inputs = new Instruction.Input[statements.length];
+        for (int i = 0; i < statements.length; i++) {
+            inputs[i] = METHOD
+                .metafactory(compiler.compileFunction(statements[i].statement(), builder),
+                    Executable.class, "execute", builder)
+                .invoke(LOAD_VAR.object(0));
+        }
+        return inputs;
+    }
+
     @Override
     public Instruction.Input<?> compile(CommandStatement statement, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler) {
         final InterpolationStatement[] statements = statement.interpolations();
@@ -25,17 +36,6 @@ public class CommandCompiler implements ElementCompiler<CommandStatement> {
             .getStatic(LOAD_VAR.object(1), CONSTANT.of(statement.input()),
                 compiler.compileInputArray(keys, builder),
                 ARRAY.of(Executable.class, inputs));
-    }
-
-    static Instruction.Input<Object>[] getInputs(InterpolationStatement[] statements, PreClass builder, SubstantiveScriptCompiler compiler) {
-        final Instruction.Input<Object>[] inputs = new Instruction.Input[statements.length];
-        for (int i = 0; i < statements.length; i++) {
-            inputs[i] = METHOD
-                .metafactory(compiler.compileFunction(statements[i].statement(), builder),
-                    Executable.class, "execute", builder)
-                .invoke(LOAD_VAR.object(0));
-        }
-        return inputs;
     }
 
 }

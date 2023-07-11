@@ -20,6 +20,12 @@ public record SetterStatement(Statement<?> source, String property, Statement<?>
         return kind.setProperty(Wrapper.unwrap(object), property, Wrapper.unwrap(result));
     }
 
+    @SuppressWarnings("unchecked")
+    public static Object execute(Object value, String property, Object result) throws ScriptError {
+        final Kind<Object> kind = (Kind<Object>) Kind.of(value);
+        return kind.setProperty(Wrapper.unwrap(value), property, Wrapper.unwrap(result));
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());

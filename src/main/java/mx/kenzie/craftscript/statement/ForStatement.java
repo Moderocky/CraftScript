@@ -3,6 +3,7 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
 
@@ -27,6 +28,26 @@ public record ForStatement(VariableAssignmentStatement assignment, Statement<?> 
             for (int i = 0; i < length; i++) this.trip(context, Array.get(values, i));
         } else this.trip(context, values);
         return true;
+    }
+
+    public static Boolean execute(Context context, String var, Object set, Executable<?> function) {
+        final Object values = Wrapper.unwrap(set);
+        if (values instanceof Iterable<?> iterable) for (final Object value : iterable) trip(context, value, var, function);
+        else if (values instanceof Iterator<?> iterator) while (iterator.hasNext()) trip(context, iterator.next(), var, function);
+        else if (values instanceof Stream<?> stream) stream.forEach(object -> trip(context, object, var, function)); // hope this is ok
+        else if (values instanceof Object[] objects) for (final Object value : objects) trip(context, value, var, function);
+        else if (values == null) return false;
+        else if (values.getClass().isArray()) {
+            final int length = Array.getLength(values);
+            for (int i = 0; i < length; i++) trip(context, Array.get(values, i), var, function);
+        } else trip(context, values, var, function);
+        return true;
+
+    }
+
+    private static void trip(Context context, Object value, String var, Executable<?> function) {
+        context.variables().put(var, Wrapper.of(value));
+        function.execute(context);
     }
 
     private void trip(Context context, Object value) {

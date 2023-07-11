@@ -27,6 +27,12 @@ public record GetterStatement(Statement<?> source, String property) implements S
         return Wrapper.of(kind.getProperty(Wrapper.unwrap(value), property));
     }
 
+    @SuppressWarnings("unchecked")
+    public static Object execute(Object value, String property) throws ScriptError {
+        final Kind<Object> kind = (Kind<Object>) Kind.of(value);
+        return Wrapper.of(kind.getProperty(Wrapper.unwrap(value), property));
+    }
+
     @Override
     public void debug(PrintStream stream) {
         stream.print(this.getClass().getSimpleName());
