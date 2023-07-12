@@ -47,7 +47,7 @@ public record RunStatement(Statement<?> statement, Statement<?> data) implements
     public static Object execute(Context context, Statement<?> statement, Statement<?> data) {
         final Object result = Wrapper.unwrap(statement.execute(context));
         if (result == null) throw new ScriptError("Tried to run '" + statement.stringify() + "' but it was null.");
-        return execute(context, result, data != null ? Wrapper.unwrap(data.execute(context)) : null);
+        return execute(context, result, (Object) (data != null ? Wrapper.unwrap(data.execute(context)) : null));
     }
 
     static Object execute(Context context, Object result, VariableContainer variables) {

@@ -95,7 +95,7 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         else throw new ScriptCompileError("Unable to compile '" + statement.stringify() + "'.");
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "TypeParameterHidesVisibleType"})
     public <Type extends Statement<?>> Input<?> compileStatement(Type statement, PreMethod method, PreClass builder) {
         final ElementCompiler<Type> compiler = (ElementCompiler<Type>) compilers.get(statement.getClass());
         if (compiler == null) throw new ScriptCompileError(

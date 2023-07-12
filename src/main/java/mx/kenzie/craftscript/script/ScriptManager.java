@@ -63,7 +63,7 @@ public class ScriptManager implements Closeable {
     protected final boolean test;
     protected TaskExecutor executor = DISPATCHER;
     protected BackgroundTaskExecutor backgroundExecutor = BACKGROUND;
-    protected GameEventListener listener = new GameEventListener(this);
+    protected final GameEventListener listener = new GameEventListener(this);
 
     public ScriptManager(JavaPlugin plugin, ScriptLoader loader) {
         this.plugin = plugin;

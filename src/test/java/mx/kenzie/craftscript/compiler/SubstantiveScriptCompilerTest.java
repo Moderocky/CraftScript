@@ -22,17 +22,11 @@ public class SubstantiveScriptCompilerTest extends CompilerTest {
     }
 
     @Test
-    public void checkFilesOk() throws Throwable {
+    public void checkFilesOk() {
         final File source = new File("src/main/java/mx/kenzie/craftscript/");
         final File statements = new File(source, "statement/"), elements = new File(source, "compiler/element/");
         assert statements.isDirectory();
         assert elements.isDirectory();
-        for (final File file : Objects.requireNonNull(statements.listFiles())) {
-            final String name = file.getName().substring(0, file.getName().indexOf('.'));
-            final Class<?> type = Class.forName("mx.kenzie.craftscript.statement." + name);
-            if (!type.isRecord()) continue;
-//            assert SubstantiveScriptCompiler.COMPILER_MAP.containsKey(type): type;
-        }
     }
 
     @Test

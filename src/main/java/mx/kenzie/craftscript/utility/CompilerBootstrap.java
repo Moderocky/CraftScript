@@ -23,17 +23,6 @@ public interface CompilerBootstrap {
         return context.variables().get(name);
     }
 
-
-    static Handle getBootstrapFunction() {
-        try {
-            return getHandle(
-                CompilerBootstrap.class.getMethod("bootstrapFunction", MethodHandles.Lookup.class, String.class,
-                    MethodType.class, String.class, Class.class, String.class));
-        } catch (Throwable ex) {
-            throw new ScriptCompileError("Bootstrap error.", ex);
-        }
-    }
-
     private static Handle getHandle(final PreMethod method) {
         final int code;
         if (Modifier.isStatic(method.getModifiers())) code = H_INVOKESTATIC;

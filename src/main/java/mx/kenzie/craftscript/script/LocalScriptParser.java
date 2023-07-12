@@ -18,7 +18,7 @@ public class LocalScriptParser implements ScriptLoader, ScriptParser {
 
     protected final ScriptLoader parent;
     protected final BufferedReader reader;
-    protected List<Supplier<Parser>> local = new LinkedList<>();
+    protected final List<Supplier<Parser>> local = new LinkedList<>();
     private int line;
     private int modCount;
 
