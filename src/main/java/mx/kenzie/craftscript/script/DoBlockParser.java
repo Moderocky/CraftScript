@@ -15,7 +15,7 @@ public class DoBlockParser implements ScriptParser {
 
     protected final ScriptParser parent;
     protected final Statement<?> source;
-    private boolean dirty;
+    private int dirty;
 
     public DoBlockParser(Statement<?> source, ScriptParser parent) {
         this.parent = parent;
@@ -29,7 +29,7 @@ public class DoBlockParser implements ScriptParser {
     @Override
     public Statement<?> parseLine() throws IOException {
         do {
-            this.dirty = false;
+            this.dirty = 0;
             this.parent.incrementLine();
             final String line = this.readLine();
             if (line == null) throw new ScriptError("Reached end of script when expecting line.");
@@ -61,7 +61,7 @@ public class DoBlockParser implements ScriptParser {
             if (parser.matches()) return parser.parse();
             assert !parser.canUse();
         }
-        if (dirty) return null;
+        if (dirty > 5) return null;
         try (Parser parser = new LocalFunctionParser()) {
             parser.insert(line, this);
             if (parser.matches()) return parser.parse();
@@ -71,7 +71,7 @@ public class DoBlockParser implements ScriptParser {
 
     @Override
     public int getLine() {
-        return 0;
+        return parent.getLine();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class DoBlockParser implements ScriptParser {
     }
 
     public void flagDirty() {
-        this.dirty = true;
+        ++this.dirty;
     }
 
 }
