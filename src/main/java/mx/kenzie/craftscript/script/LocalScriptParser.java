@@ -56,7 +56,7 @@ public class LocalScriptParser implements ScriptLoader, ScriptParser {
     @Override
     public Statement<?> parse(String line) {
         this.modCount++;
-        if (modCount > 8) throw new ScriptError("Line " + this.line + ": the statement '"
+        if (modCount > 12) throw new ScriptError("Line " + this.line + ": the statement '"
             + line + "' will recurse infinitely and cannot be parsed.");
         try {
             final Iterator<Parser> iterator = this.parsers();
