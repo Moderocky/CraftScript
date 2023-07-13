@@ -3,10 +3,15 @@ package mx.kenzie.craftscript.compiler;
 import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.script.core.NativeStatement;
 import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.statement.Statement;
 
 public abstract class CompiledScript implements AbstractScript {
+
+    private static final NativeStatement<Void> EMPTY = context -> {
+        throw new ScriptError("Compiled scripts do not have defined lines.");
+    };
 
     protected final String name;
 
@@ -20,7 +25,7 @@ public abstract class CompiledScript implements AbstractScript {
     }
 
     protected void line(Context context, int line) {
-        context.data().line = new LineStatement(null, line); // todo is it okay if this is null ?
+        context.data().line = new LineStatement(EMPTY, line); // todo is it okay if this is null ?
     }
 
     @Override
@@ -30,7 +35,7 @@ public abstract class CompiledScript implements AbstractScript {
 
     @Override
     public Statement<?>[] statements() {
-        return new Statement[]{this};
+        return new Statement[0];
     }
 
 }
