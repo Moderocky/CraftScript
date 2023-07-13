@@ -38,7 +38,6 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         register(CommandStatement.class, ElementCompiler.COMMAND);
         register(StringStatement.class, ElementCompiler.STRING);
         register(ListenerStatement.class, ElementCompiler.LISTENER);
-        register(EqualsStatement.class, ElementCompiler.EQUALS);
         register(InterpolationStatement.class, ElementCompiler.INTERPOLATION);
         register(MapStatement.class, ElementCompiler.MAP);
         register(StructStatement.class, ElementCompiler.STRUCT);

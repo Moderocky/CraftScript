@@ -34,18 +34,6 @@ public record LocalSyntaxStatement(String pattern, Statement<?> function,
         return builder.build();
     }
 
-    @Override
-    public Object execute(Context context) throws ScriptError {
-        final VariableContainer container = new VariableContainer();
-        for (final Map.Entry<String, Statement<?>> entry : data.entrySet()) {
-            final String key = entry.getKey();
-            final Object value = entry.getValue().execute(context);
-            container.put(key, value);
-            container.getParameters().add(value);
-        }
-        return RunStatement.execute(context, function, container);
-    }
-
     public static LocalSyntaxStatement make(String pattern, Statement<?> function, String[] keys, Statement<?>[] values) {
         final Map<String, Statement<?>> map = new LinkedHashMap<>();
         for (int i = 0; i < keys.length; i++) map.put(keys[i], values[i]);
@@ -59,6 +47,18 @@ public record LocalSyntaxStatement(String pattern, Statement<?> function,
         for (int i = 0; i < keys.length; i++) {
             container.put(keys[i], values[i]);
             container.getParameters().add(values[i]);
+        }
+        return RunStatement.execute(context, function, container);
+    }
+
+    @Override
+    public Object execute(Context context) throws ScriptError {
+        final VariableContainer container = new VariableContainer();
+        for (final Map.Entry<String, Statement<?>> entry : data.entrySet()) {
+            final String key = entry.getKey();
+            final Object value = entry.getValue().execute(context);
+            container.put(key, value);
+            container.getParameters().add(value);
         }
         return RunStatement.execute(context, function, container);
     }

@@ -137,8 +137,8 @@ public interface ScriptBuilder {
         return new CompareStatement(antecedent, consequent, comparator);
     }
 
-    static EqualsStatement is(Statement<?> antecedent, Statement<?> consequent) {
-        return new EqualsStatement(antecedent, consequent);
+    static BinaryStatement<?> is(Statement<?> antecedent, Statement<?> consequent) {
+        return new CompareStatement(antecedent, consequent, Comparator.EQ);
     }
 
     static InvertStatement not(Statement<?> value) {

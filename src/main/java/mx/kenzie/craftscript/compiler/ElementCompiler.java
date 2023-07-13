@@ -34,7 +34,6 @@ public interface ElementCompiler<Type extends Statement<?>> {
     ElementCompiler<CommandStatement> COMMAND = new CommandCompiler();
     ElementCompiler<StringStatement> STRING = new StringCompiler();
     ElementCompiler<ListenerStatement> LISTENER = new ListenerCompiler();
-    ElementCompiler<EqualsStatement> EQUALS = new EqualsCompiler();
     ElementCompiler<InterpolationStatement> INTERPOLATION = new InterpolationCompiler();
     ElementCompiler<MapStatement> MAP = new MapCompiler();
     ElementCompiler<StructStatement> STRUCT = new StructCompiler();

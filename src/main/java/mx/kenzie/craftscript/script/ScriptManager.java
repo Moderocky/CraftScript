@@ -61,9 +61,9 @@ public class ScriptManager implements Closeable {
     protected final Map<NamespacedKey, ListenerList> listenerMap = new ConcurrentHashMap<>();
     protected final Set<Kind<?>> kinds = new LinkedHashSet<>();
     protected final boolean test;
+    protected final GameEventListener listener = new GameEventListener(this);
     protected TaskExecutor executor = DISPATCHER;
     protected BackgroundTaskExecutor backgroundExecutor = BACKGROUND;
-    protected final GameEventListener listener = new GameEventListener(this);
 
     public ScriptManager(JavaPlugin plugin, ScriptLoader loader) {
         this.plugin = plugin;

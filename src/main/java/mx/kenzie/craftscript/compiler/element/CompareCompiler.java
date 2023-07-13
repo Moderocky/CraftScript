@@ -19,7 +19,7 @@ public class CompareCompiler implements ElementCompiler<CompareStatement> {
         antecedent = compiler.compileStatement(statement.antecedent(), method, builder);
         consequent = compiler.compileStatement(statement.consequent(), method, builder);
         comparator = compiler.compileConstant(statement.comparator(), method, builder);
-        return METHOD.of(Comparator.class, Object.class, "compare", Object.class, Object.class)
+        return METHOD.of(Comparator.class, Object.class, "compareWrapped", Object.class, Object.class)
             .get(comparator, antecedent, consequent);
     }
 

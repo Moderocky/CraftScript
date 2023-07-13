@@ -11,7 +11,7 @@ public class BinaryParser extends OperatorParser {
     }
 
     public static OperatorParser compareEQ() {
-        return new EqualsParser();
+        return new BinaryParser(Comparator.EQ);
     }
 
     public static OperatorParser comparePlus() {

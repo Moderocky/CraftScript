@@ -2,6 +2,7 @@ package mx.kenzie.craftscript.utility;
 
 import mx.kenzie.craftscript.statement.BlockStatement;
 import mx.kenzie.craftscript.statement.IfStatement;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 import java.util.Objects;
 
@@ -101,10 +102,28 @@ public interface Comparator {
                 return Number.class;
             return Boolean.class;
         }
+    }, EQ = new SimpleComparator("==") {
+        @Override
+        public Object compare(Object a, Object b) {
+            if (a == b) return true;
+            else if (Objects.equals(a, b)) return true;
+            else if (a instanceof Number first && b instanceof Number second)
+                return first.doubleValue() == second.doubleValue();
+            else return false;
+        }
+
+        @Override
+        public Class<?> getReturnType(Class<?> antecedent, Class<?> consequent) {
+            return Boolean.class;
+        }
     }, NE = new SimpleComparator("!=") {
         @Override
         public Object compare(Object a, Object b) {
-            return !Objects.equals(a, b);
+            if (a == b) return false;
+            else if (Objects.equals(a, b)) return false;
+            else if (a instanceof Number first && b instanceof Number second)
+                return first.doubleValue() != second.doubleValue();
+            else return true;
         }
 
         @Override
@@ -183,6 +202,10 @@ public interface Comparator {
     };
 
     Object compare(Object a, Object b);
+
+    default Object compareWrapped(Object a, Object b) {
+        return this.compare(Wrapper.unwrap(a), Wrapper.unwrap(b));
+    }
 
     Class<?> getReturnType(Class<?> antecedent, Class<?> consequent);
 

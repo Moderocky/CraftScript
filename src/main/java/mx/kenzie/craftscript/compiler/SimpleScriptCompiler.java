@@ -40,6 +40,8 @@ public class SimpleScriptCompiler implements ScriptCompiler {
 
     protected Instruction.Input<Object> compileComparator(Comparator comparator, PreClass builder) {
         final String field = switch (comparator.toString()) {
+            case "==" -> "EQ";
+            case "!=" -> "NE";
             case "<" -> "LESS_THAN";
             case "<=" -> "LESS_EQUAL";
             case ">" -> "GREATER_THAN";
@@ -47,7 +49,6 @@ public class SimpleScriptCompiler implements ScriptCompiler {
             case "&" -> "AND";
             case "|" -> "OR";
             case "^" -> "XOR";
-            case "!=" -> "NE";
             case "?" -> "ALT";
             case "+" -> "PLUS";
             case "-" -> "MINUS";
