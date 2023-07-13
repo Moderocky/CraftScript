@@ -2,10 +2,7 @@ package mx.kenzie.craftscript.compiler;
 
 import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.statement.InterpolationStatement;
-import mx.kenzie.craftscript.statement.LineStatement;
-import mx.kenzie.craftscript.statement.MultiStatement;
-import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.statement.*;
 import mx.kenzie.craftscript.utility.Comparator;
 import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.foundation.*;
@@ -87,6 +84,7 @@ public class SimpleScriptCompiler implements ScriptCompiler {
         else if (statement instanceof AbstractScript)
             throw new ScriptCompileError("Tried to compile a script inside a script.");
 //        else if (statement instanceof LiteralStatement literal) return CONSTANT.of(literal.value());
+        else if (statement instanceof LocalSyntaxStatement local) return this.compileLocal(local, builder);
         else if (statement instanceof LineStatement line) {
             final Input<Object> input = this.compileInput(line.statement(), builder);
             return visitor -> {
@@ -95,6 +93,23 @@ public class SimpleScriptCompiler implements ScriptCompiler {
             };
         } else if (statement instanceof Record) return this.makeStatement(statement, builder);
         else throw new ScriptCompileError("Unable to compile '" + statement.stringify() + "'.");
+    }
+
+    protected Instruction.Input<Object> compileLocal(LocalSyntaxStatement statement, PreClass builder) {
+        final String[] keys = statement.data().keySet().toArray(new String[0]);
+        final Input<Object>[] objects = new Input[keys.length];
+        for (int i = 0; i < objects.length; i++) objects[i] = CONSTANT.of(keys[i]);
+        final Statement<?>[] values = statement.data().values().toArray(new Statement[0]);
+        final Input<Object>[] inputs = new Input[values.length];
+        for (int i = 0; i < values.length; i++) inputs[i] = this.compileInput(values[i], builder);
+        return METHOD.of(LocalSyntaxStatement.class, LocalSyntaxStatement.class, "make", String.class, Statement.class,
+                String[].class, Statement[].class)
+            .getStatic(
+                CONSTANT.of(statement.pattern()),
+                this.compileInput(statement.function(), builder),
+                ARRAY.of(String.class, objects),
+                ARRAY.of(Object.class, inputs)
+            );
     }
 
     protected Instruction.Input<Object> compileStatement(Statement<?> statement, PreClass builder) {

@@ -125,6 +125,16 @@ public abstract class CompilerTest {
     }
 
     @Test
+    public void customSyntax() {
+        assert this.test("""
+            syntax "blob %number%" = {
+                /print number {number}
+            }
+            blob 5
+            """, "number 5");
+    }
+
+    @Test
     public void ifKindTest() {
         assert this.test("""
             var = "no"

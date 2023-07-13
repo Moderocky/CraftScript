@@ -4,11 +4,15 @@ import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.parser.LocalSyntaxParser;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public record LocalSyntaxStatement(String pattern, Statement<?> function,
@@ -40,6 +44,33 @@ public record LocalSyntaxStatement(String pattern, Statement<?> function,
             container.getParameters().add(value);
         }
         return RunStatement.execute(context, function, container);
+    }
+
+    public static LocalSyntaxStatement make(String pattern, Statement<?> function, String[] keys, Statement<?>[] values) {
+        final Map<String, Statement<?>> map = new LinkedHashMap<>();
+        for (int i = 0; i < keys.length; i++) map.put(keys[i], values[i]);
+        return new LocalSyntaxStatement(pattern, function, map);
+    }
+
+    public static Object execute(Context context, Executable<?> function, String[] keys, Object[] values) {
+        if (values.length != keys.length)
+            throw new ScriptError("Received " + values.length + " inputs for " + keys.length + " keys.");
+        final VariableContainer container = new VariableContainer();
+        for (int i = 0; i < keys.length; i++) {
+            container.put(keys[i], values[i]);
+            container.getParameters().add(values[i]);
+        }
+        return RunStatement.execute(context, function, container);
+    }
+
+    public String[] getInputKeys() {
+        final LocalSyntaxParser.Element[] elements = LocalSyntaxParser.tokenize(pattern);
+        final List<String> list = new ArrayList<>(elements.length);
+        for (final LocalSyntaxParser.Element element : elements) {
+            if (element instanceof LocalSyntaxParser.Literal) continue;
+            list.add(element.value());
+        }
+        return list.toArray(new String[0]);
     }
 
     @Override
