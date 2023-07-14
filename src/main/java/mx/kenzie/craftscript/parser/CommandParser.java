@@ -1,9 +1,8 @@
 package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.statement.CommandStatement;
-import mx.kenzie.craftscript.statement.InterpolationStatement;
-import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.statement.*;
+import mx.kenzie.craftscript.utility.Interpolator;
 import org.bukkit.Bukkit;
 
 public class CommandParser extends BasicParser {
@@ -23,8 +22,10 @@ public class CommandParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
-        final InterpolationStatement[] statements = StringParser.interpolations(input, parent);
-        return new CommandStatement(input.substring(1).trim(), statements);
+        final String content = input.substring(1).trim();
+        final Object[] parts = new Interpolator(content, parent).interpolations();
+        if (parts.length == 0 || parts.length == 1 && parts[0] instanceof String) return new LiteralStringStatement(content);
+        return new CommandStatement(content, parts);
     }
 
 }

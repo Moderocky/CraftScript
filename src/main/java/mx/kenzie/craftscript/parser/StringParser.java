@@ -6,6 +6,7 @@ import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.LiteralStringStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.statement.StringStatement;
+import mx.kenzie.craftscript.utility.Interpolator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +58,10 @@ public class StringParser extends BasicParser {
 
     @Override
     public Statement<?> parse() throws ScriptError {
-        final InterpolationStatement[] statements = interpolations(input, parent);
-        if (statements.length == 0) return new LiteralStringStatement(input.substring(1, input.length() - 1));
-        return new StringStatement(input.substring(1, input.length() - 1), statements);
+        final String content = input.substring(1, input.length() - 1);
+        final Object[] parts = new Interpolator(content, parent).interpolations();
+        if (parts.length == 0 || parts.length == 1 && parts[0] instanceof String) return new LiteralStringStatement(content);
+        return new StringStatement(content, parts);
     }
 
 }

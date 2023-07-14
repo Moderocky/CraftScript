@@ -43,7 +43,7 @@ public class SubstantiveScriptCompilerTest extends CompilerTest {
     }
 
     @Test
-    public void interpolations() throws Throwable {
+    public void interpolations() {
         this.test("""
             /print hello
             """, "hello");

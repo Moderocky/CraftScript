@@ -3,18 +3,19 @@ package mx.kenzie.craftscript.statement;
 import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
+import mx.kenzie.craftscript.utility.Bridge;
 import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
-import mx.kenzie.craftscript.utility.MapFormat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public record CommandStatement(String input, InterpolationStatement... interpolations) implements Statement<Boolean> {
+public record CommandStatement(String input, Object... parts) implements Statement<Boolean> {
 
     public static List<Object> interpolateForPrinting(String string, InterpolationStatement... statements) {
         final LazyInterpolatingMap map = new LazyInterpolatingMap(new Context(null, null), statements);
@@ -44,33 +45,27 @@ public record CommandStatement(String input, InterpolationStatement... interpola
         return list;
     }
 
-    static void debugInterpolations(PrintStream stream, InterpolationStatement... interpolations) {
-        if (interpolations.length > 0) {
-            stream.print(", ");
-            stream.print("interpolations=[");
-            for (final InterpolationStatement interpolation : interpolations) {
-                interpolation.debug(stream);
-            }
-            stream.print(']');
+    static void debugInterpolations(PrintStream stream, Object... parts) {
+        stream.print(", parts=[");
+        for (final Object part : parts) {
+            if (part instanceof String string) stream.print("\"" + string + "\", ");
+            else if (part instanceof Statement<?> statement) statement.debug(stream);
         }
+        stream.print(']');
     }
 
-    public static Boolean execute(Context context, String input, String[] keys, Executable<?>[] values) {
+    public static Boolean execute(Context context, String input, Object... parts) {
         final String command;
-        if (keys.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
-            command = MapFormat.format(input, map);
-        } else command = input;
+        if (parts.length > 0) command = Bridge.interpolate(context, parts);
+        else command = input;
         return context.manager().runCommand(context, command);
     }
 
     @Override
     public Boolean execute(Context context) throws ScriptError {
         final String command;
-        if (interpolations.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
-            command = MapFormat.format(input, map);
-        } else command = input;
+        if (parts.length > 0) command = Bridge.interpolate(context, parts);
+        else command = input;
         return context.manager().runCommand(context, command);
     }
 
@@ -80,7 +75,7 @@ public record CommandStatement(String input, InterpolationStatement... interpola
         stream.print('[');
         stream.print("input=");
         stream.print(input);
-        CommandStatement.debugInterpolations(stream, interpolations);
+        CommandStatement.debugInterpolations(stream, parts);
         stream.print(']');
     }
 
@@ -92,8 +87,13 @@ public record CommandStatement(String input, InterpolationStatement... interpola
 
     @Override
     public Component prettyPrint(ColorProfile profile) {
-        if (interpolations.length > 0) {
-            final List<Object> list = interpolateForPrinting(input, interpolations);
+        final List<InterpolationStatement> statements = new ArrayList<>();
+        for (final Object part : parts) {
+            if (part instanceof InterpolationStatement statement) statements.add(statement);
+        }
+        if (!statements.isEmpty()) {
+            final List<Object> list = CommandStatement.interpolateForPrinting(input,
+                statements.toArray(new InterpolationStatement[0]));
             final TextComponent.Builder builder = Component.text();
             builder.append(Component.text('/', profile.pop()));
             for (final Object object : list) {

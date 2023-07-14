@@ -7,6 +7,7 @@ import mx.kenzie.craftscript.utility.MapFormat;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import org.bukkit.command.CommandSender;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -57,6 +58,22 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         kinds.addAll(data.kinds);
         kinds.addAll(manager.getKinds());
         return kinds;
+    }
+
+    public Iterator<Kind<?>> kinds() {
+        return new Iterator<>() {
+            final Iterator<Kind<?>> ours = data.kinds.iterator(), theirs = manager.getKinds().iterator();
+
+            @Override
+            public boolean hasNext() {
+                return ours.hasNext() || theirs.hasNext();
+            }
+
+            @Override
+            public Kind<?> next() {
+                return ours.hasNext() ? ours.next() : theirs.next();
+            }
+        };
     }
 
     public Context getParentContext() {

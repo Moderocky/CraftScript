@@ -1,30 +1,28 @@
 package mx.kenzie.craftscript.compiler.element;
 
 import mx.kenzie.craftscript.compiler.ElementCompiler;
-import mx.kenzie.craftscript.compiler.SubstantiveScriptCompiler;
 import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.SelectorStatement;
-import mx.kenzie.craftscript.utility.Executable;
-import mx.kenzie.foundation.PreClass;
-import mx.kenzie.foundation.PreMethod;
-import mx.kenzie.foundation.instruction.Instruction;
+import mx.kenzie.foundation.instruction.CallMethod;
 
-import static mx.kenzie.foundation.instruction.Instruction.*;
+import static mx.kenzie.foundation.instruction.Instruction.METHOD;
 
-public class SelectorCompiler implements ElementCompiler<SelectorStatement> {
+public class SelectorCompiler extends InterpolatedContentCompiler<SelectorStatement> implements ElementCompiler<SelectorStatement> {
+
 
     @Override
-    public Instruction.Input<?> compile(SelectorStatement statement, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler) {
-        final InterpolationStatement[] statements = statement.interpolations();
-        final String[] keys = new String[statements.length];
-        final Instruction.Input<Object>[] inputs = CommandCompiler.getInputs(statements, builder, compiler);
-        for (int i = 0; i < statements.length; i++) keys[i] = statements[i].key();
-        return METHOD.of(SelectorStatement.class, Object.class, "execute", Context.class, String.class, String[].class,
-                Executable[].class)
-            .getStatic(LOAD_VAR.object(1), CONSTANT.of(statement.text()),
-                compiler.compileInputArray(keys, builder),
-                ARRAY.of(Executable.class, inputs));
+    protected CallMethod.Stub getMethod() {
+        return METHOD.of(SelectorStatement.class, Object.class, "execute", Context.class, String.class, Object[].class);
+    }
+
+    @Override
+    protected Object[] getParts(SelectorStatement statement) {
+        return statement.parts();
+    }
+
+    @Override
+    protected String getBasic(SelectorStatement statement) {
+        return statement.text();
     }
 
 }

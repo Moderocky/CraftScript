@@ -6,9 +6,7 @@ import mx.kenzie.centurion.selector.Universe;
 import mx.kenzie.craftscript.parser.SelectorParser;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.utility.Executable;
-import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
-import mx.kenzie.craftscript.utility.MapFormat;
+import mx.kenzie.craftscript.utility.Bridge;
 import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -17,14 +15,12 @@ import java.io.PrintStream;
 import java.util.List;
 
 public record SelectorStatement(String text, Universe<?> universe,
-                                InterpolationStatement... interpolations) implements Statement<Object> {
+                                Object... parts) implements Statement<Object> {
 
-    public static Object execute(Context context, String text, String[] keys, Executable<?>[] values) {
+    public static Object execute(Context context, String text, Object... parts) {
         final String input;
-        if (keys.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, keys, values);
-            input = MapFormat.format(text, map);
-        } else input = text;
+        if (parts.length > 0) input = Bridge.interpolate(context, parts);
+        else input = text;
         final List<?> list = Selector.of(input, SelectorParser.universe).getAll(context.source());
         if (list.size() == 1) return Wrapper.of(list.get(0));
         return list;
@@ -32,14 +28,7 @@ public record SelectorStatement(String text, Universe<?> universe,
 
     @Override
     public Object execute(Context context) throws ScriptError {
-        final String input;
-        if (interpolations.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, interpolations);
-            input = MapFormat.format(text, map);
-        } else input = text;
-        final List<?> list = Selector.of(input, universe).getAll(context.source());
-        if (list.size() == 1) return Wrapper.of(list.get(0));
-        return list;
+        return execute(context, text, parts);
     }
 
     @Override
@@ -48,7 +37,7 @@ public record SelectorStatement(String text, Universe<?> universe,
         stream.print('[');
         stream.print("text=");
         stream.print(text);
-        CommandStatement.debugInterpolations(stream, interpolations);
+        CommandStatement.debugInterpolations(stream, parts);
         stream.print(']');
     }
 

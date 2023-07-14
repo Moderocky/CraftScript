@@ -6,6 +6,7 @@ import mx.kenzie.craftscript.variable.StructObject;
 import mx.kenzie.craftscript.variable.Wrapper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -40,13 +41,17 @@ public abstract class Kind<Type> {
         if (thing instanceof Kind<?>) return new KindKind();
         if (thing instanceof Class<?> kind) return new UnknownKind(kind);
         final Context context = Context.getLocalContext();
-        if (context != null) for (final Kind<?> kind : context.getKinds()) {
-            if (kind.getType().isInstance(thing)) return kind;
-        }
-        else for (final Kind<?> kind : Kinds.kinds) {
+        final Iterator<Kind<?>> iterator = kinds(context);
+        while (iterator.hasNext()) {
+            final Kind<?> kind = iterator.next();
             if (kind.getType().isInstance(thing)) return kind;
         }
         return new UnknownKind(thing.getClass());
+    }
+
+    private static Iterator<Kind<?>> kinds(Context context) {
+        if (context != null) return context.kinds();
+        return Kinds.kinds.iterator();
     }
 
     @SuppressWarnings("unchecked")

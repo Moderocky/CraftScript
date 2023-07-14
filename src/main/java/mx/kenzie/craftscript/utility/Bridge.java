@@ -5,11 +5,24 @@ import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.statement.RequireStatement;
+import mx.kenzie.craftscript.variable.Wrapper;
 
 /**
  * A bridge designed for using script bits in Java.
  */
 public interface Bridge {
+
+    static String interpolate(Context context, Object... objects) {
+        if (objects.length == 0) return "";
+        if (objects.length == 1) return Wrapper.of(objects[0]).toString();
+        final StringBuilder builder = new StringBuilder();
+        for (final Object object : objects) {
+            if (object instanceof String string) builder.append(string);
+            else if (object instanceof Executable<?> executable) builder.append(Wrapper.of(executable.execute(context)).toString());
+            else builder.append(Wrapper.of(object).toString());
+        }
+        return builder.toString();
+    }
 
     static Object[] require(String... names) {
         return RequireStatement.require(Context.requireLocalContext(), names);
