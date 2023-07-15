@@ -60,7 +60,8 @@ public class StringParser extends BasicParser {
     public Statement<?> parse() throws ScriptError {
         final String content = input.substring(1, input.length() - 1);
         final Object[] parts = new Interpolator(content, parent).interpolations();
-        if (parts.length == 0 || parts.length == 1 && parts[0] instanceof String) return new LiteralStringStatement(content);
+        if (parts.length == 0 || parts.length == 1 && parts[0] instanceof String)
+            return new LiteralStringStatement(content);
         return new StringStatement(content, parts);
     }
 

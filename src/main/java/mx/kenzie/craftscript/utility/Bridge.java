@@ -18,7 +18,8 @@ public interface Bridge {
         final StringBuilder builder = new StringBuilder();
         for (final Object object : objects) {
             if (object instanceof String string) builder.append(string);
-            else if (object instanceof Executable<?> executable) builder.append(Wrapper.of(executable.execute(context)).toString());
+            else if (object instanceof Executable<?> executable)
+                builder.append(Wrapper.of(executable.execute(context)).toString());
             else builder.append(Wrapper.of(object).toString());
         }
         return builder.toString();

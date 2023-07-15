@@ -5,13 +5,9 @@ import mx.kenzie.centurion.selector.Finder;
 import mx.kenzie.centurion.selector.Selector;
 import mx.kenzie.centurion.selector.Universe;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.SelectorStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.utility.Interpolator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SelectorParser extends BasicParser {
 

@@ -3,7 +3,6 @@ package mx.kenzie.craftscript.compiler.element;
 import mx.kenzie.craftscript.compiler.ElementCompiler;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.StringStatement;
-import mx.kenzie.craftscript.utility.Bridge;
 import mx.kenzie.foundation.instruction.CallMethod;
 
 import static mx.kenzie.foundation.instruction.Instruction.METHOD;
