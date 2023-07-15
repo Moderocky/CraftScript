@@ -12,15 +12,15 @@ import static mx.kenzie.foundation.instruction.Instruction.*;
 
 public class RunCompiler implements ElementCompiler<RunStatement> {
 
-    public static Input<?> compile(Input<?> function, Input<?> data, PreClass builder) {
+    public static Input<?> compile(Input<?> function, Input<?> data, PreClass builder, SubstantiveScriptCompiler compiler) {
         return visitor -> {
             METHOD.of(RunStatement.class, Object.class, "execute", Context.class, Object.class, Object.class)
                 .getStatic(LOAD_VAR.object(1), function, data)
                 .write(visitor);
-            METHOD
-                .of(builder, void.class, "prepare", Context.class)
-                .call(LOAD_VAR.self(), LOAD_VAR.object(1))
-                .write(visitor);
+            STORE_VAR.object(1, METHOD
+                .of(builder, Context.class, "prepare", Context.class)
+                .get(LOAD_VAR.self(), LOAD_VAR.object(1))
+            ).write(visitor);
         };
     }
 
@@ -29,7 +29,7 @@ public class RunCompiler implements ElementCompiler<RunStatement> {
         final Input<?> function = compiler.compileStatement(statement.statement(), method, builder), data;
         if (statement.data() == null) data = Instruction.NULL;
         else data = compiler.compileStatement(statement.data(), method, builder);
-        return compile(function, data, builder);
+        return compile(function, data, builder, compiler);
     }
 
 }

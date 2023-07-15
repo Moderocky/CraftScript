@@ -484,6 +484,11 @@ public class ScriptManagerTest {
     @Test
     public void maths() {
         assert this.test("""
+            three = 3
+            result = "{three}"
+            /print {result}
+            """, "3");
+        assert this.test("""
             three = 1
             three = three + 2
             result = var == "hello"

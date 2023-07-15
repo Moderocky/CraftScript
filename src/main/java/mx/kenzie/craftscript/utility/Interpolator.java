@@ -31,7 +31,7 @@ public class Interpolator {
                     final String value = input.substring(open, close + 1);
                     final Statement<?> statement = parser.parse(value);
                     if (statement instanceof InterpolationStatement interpolation) {
-                        list.add(before);
+                        if (!before.isEmpty()) list.add(before);
                         list.add(interpolation);
                         break;
                     }
@@ -40,7 +40,8 @@ public class Interpolator {
                 if (close == -1) break;
                 start = close + 1;
             } while (true);
-            list.add(input.substring(start));
+            final String part = input.substring(start);
+            if (!part.isEmpty()) list.add(part);
             return list.toArray();
         } else return new Object[]{input};
     }

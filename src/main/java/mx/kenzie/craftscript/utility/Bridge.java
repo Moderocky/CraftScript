@@ -14,7 +14,7 @@ public interface Bridge {
 
     static String interpolate(Context context, Object... objects) {
         if (objects.length == 0) return "";
-        if (objects.length == 1) return Wrapper.of(objects[0]).toString();
+        if (objects.length == 1 && !(objects[0] instanceof Executable<?>)) return Wrapper.of(objects[0]).toString();
         final StringBuilder builder = new StringBuilder();
         for (final Object object : objects) {
             if (object instanceof String string) builder.append(string);

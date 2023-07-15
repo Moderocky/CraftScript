@@ -20,8 +20,13 @@ public abstract class CompiledScript implements AbstractScript {
     @Override
     public abstract Object execute(Context context) throws ScriptError;
 
-    protected void prepare(Context context) {
+    protected Context prepare(Context context) {
         context.data().script = this;
+        return context;
+    }
+
+    protected ClassLoader loader() {
+        return this.getClass().getClassLoader();
     }
 
     protected void line(Context context, int line) {

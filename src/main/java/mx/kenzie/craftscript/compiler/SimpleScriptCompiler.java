@@ -142,7 +142,7 @@ public class SimpleScriptCompiler implements ScriptCompiler {
         final PreMethod method = builder.add(new PreMethod(Type.of(Object.class), "execute", Context.class));
         method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         method.line(METHOD
-            .of(builder, void.class, "prepare", Context.class)
+            .of(builder, Context.class, "prepare", Context.class)
             .call(LOAD_VAR.self(), LOAD_VAR.object(1))
         );
         method.line(STORE_VAR.object(2, NULL)); // so we know it's ok to return 2

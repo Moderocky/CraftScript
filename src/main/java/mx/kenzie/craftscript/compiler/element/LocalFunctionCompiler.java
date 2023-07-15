@@ -14,7 +14,7 @@ public class LocalFunctionCompiler implements ElementCompiler<LocalFunctionState
         final Instruction.Input<?> function = compiler.compileStatement(statement.statement(), method, builder), data;
         if (statement.data() == null) data = Instruction.NULL;
         else data = compiler.compileStatement(statement.data(), method, builder);
-        return RunCompiler.compile(function, data, builder);
+        return RunCompiler.compile(function, data, builder, compiler);
     }
 
 }

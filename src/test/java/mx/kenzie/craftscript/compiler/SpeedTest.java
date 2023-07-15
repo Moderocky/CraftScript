@@ -5,17 +5,23 @@ import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.craftscript.variable.Wrapper;
+import org.junit.BeforeClass;
 
 import java.util.Objects;
 
 public class SpeedTest extends CompilerTest {
 
+    @BeforeClass
+    public static void startup() {
+        CompilerTest.startup();
+        compiler = new SubstantiveScriptCompiler();
+    }
+
     public static void main(String[] args) throws Throwable {
         final SpeedTest test = new SpeedTest();
-        CompilerTest.startup();
-        CompilerTest.compiler = new SubstantiveScriptCompiler();
+        SpeedTest.startup();
         test.speed();
-        CompilerTest.tearDown();
+        SpeedTest.tearDown();
     }
 
     private void speed() throws Throwable {
@@ -25,14 +31,15 @@ public class SpeedTest extends CompilerTest {
             result = null
             text = "hello"
             if text[length=5] {
-              result = "the word \\"" + text + "\\" is " + text[length] + " letters!"
+              result = "the word '{text}' is {text[length]} letters!"
             }
             name = "BaeFell"
             text = "hi im " + name
             result = text
-            result = "hi " + name + " im phil"
+            result = "hi {name} im phil"
             result
             """);
+        this.compile(interpreted);
         final CompiledScript compiled = (CompiledScript) this.load(interpreted).getConstructor().newInstance();
         final Context.Data data = new Context.Data();
         data.localCommands.add(new TestPrintCommand());
@@ -42,7 +49,6 @@ public class SpeedTest extends CompilerTest {
             if (!Objects.equals(this.run(interpreted, context), result)) throw new Error();
             if (!Objects.equals(this.run(compiled, context), result)) throw new Error();
         }
-        interpreted:
         {
             final long start = System.currentTimeMillis(), end;
             for (int i = 0; i < revs; i++) {
@@ -51,7 +57,6 @@ public class SpeedTest extends CompilerTest {
             end = System.currentTimeMillis();
             System.out.println("Interpreted script took " + (end - start) + "ms for " + revs + " runs.");
         }
-        compiled:
         {
             final long start = System.currentTimeMillis(), end;
             for (int i = 0; i < revs; i++) {

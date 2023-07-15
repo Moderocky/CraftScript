@@ -4,12 +4,12 @@ import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.statement.*;
 import mx.kenzie.craftscript.utility.Comparator;
+import mx.kenzie.craftscript.variable.MagicVariableContainer;
+import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.foundation.*;
 import mx.kenzie.foundation.instruction.Instruction;
-import org.objectweb.asm.ClassWriter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static mx.kenzie.foundation.instruction.Instruction.*;
 
@@ -55,7 +55,9 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
     }
 
     protected final Map<Class<?>, ElementCompiler<?>> compilers;
+    protected final Set<String> variables = new HashSet<>();
     protected int methodCounter;
+    protected boolean fastVariables = true;
 
     public SubstantiveScriptCompiler(Map<Class<?>, ElementCompiler<?>> compilers) {this.compilers = compilers;}
 
@@ -112,12 +114,19 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         final PreMethod method = builder.add(
             new PreMethod(Type.of(Object.class), "function" + ++methodCounter, Context.class));
         method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        method.line(METHOD
-            .of(builder, void.class, "prepare", Context.class)
-            .call(LOAD_VAR.self(), LOAD_VAR.object(1))
-        );
+        this.prepareContext(method, builder);
         method.line(RETURN.object((Input<Object>) this.compileStatement(statement, method, builder)));
         return method;
+    }
+
+    private void prepareContext(PreMethod method, PreClass builder) {
+        method.line(STORE_VAR.object(1, METHOD
+            .of(builder, Context.class, "prepare", Context.class)
+            .get(LOAD_VAR.self(), LOAD_VAR.object(1))
+        ));
+        method.line(STORE_VAR.object(3,
+            METHOD.of(Context.class, VariableContainer.class, "variables").get(LOAD_VAR.object(1))
+        ));
     }
 
     @Override
@@ -127,10 +136,11 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
         else name = "block" + ++methodCounter;
         final PreMethod method = builder.add(new PreMethod(Type.of(Object.class), name, Context.class));
         method.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        method.line(METHOD
-            .of(builder, void.class, "prepare", Context.class)
-            .call(LOAD_VAR.self(), LOAD_VAR.object(1))
-        );
+        if (fastVariables) this.prepareContext(method, builder);
+        else method.line(STORE_VAR.object(1, SUPER
+            .of(CompiledScript.class, Context.class, "prepare", Context.class)
+            .get(LOAD_VAR.self(), LOAD_VAR.object(1))
+        ));
         method.line(STORE_VAR.object(2, NULL)); // so we know it's ok to return 2
         for (final Statement<?> statement : script.statements()) {
             final boolean ok = this.compileLine(statement, method, builder);
@@ -142,20 +152,63 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
 
     @Override
     public UnloadedClass prepare(AbstractScript script) {
-        final var builder = new PreClass("script", script.name().substring(0, script.name().indexOf('.'))) {
-
-            @Override
-            public byte[] bytecode() {
-                ClassWriter writer = new ClassWriter(2);
-                this.build(writer);
-                return writer.toByteArray();
-            }
-        };
+        final var builder = new PreClass("script", script.name().substring(0, script.name().indexOf('.')));
         builder.setParent(Type.of(CompiledScript.class));
         builder.addInterfaces(Type.of(Statement.class));
         this.addMeta(script, builder);
         this.compile(script, builder);
+        final PreMethod prepare = builder.add(
+            new PreMethod(Modifier.PROTECTED, Context.class, "prepare", Context.class));
+        MagicVariableContainer.prepareMagicBoxFor(variables.toArray(new String[0]));
+        prepare.line(STORE_VAR.object(1, SUPER
+            .of(CompiledScript.class, Context.class, "prepare", Context.class)
+            .get(THIS, LOAD_VAR.object(1))));
+        prepare.line(STORE_VAR.object(1, METHOD
+            .of(MagicVariableContainer.class, Context.class, "makeMagic", Context.class, VariableContainer.class)
+            .getStatic(LOAD_VAR.object(1),
+                NEW.of(this.magicVariable(), Map.class)
+                    .make(METHOD.of(Context.class, VariableContainer.class, "variables").get(LOAD_VAR.object(1))))
+        ));
+        prepare.line(RETURN.object(LOAD_VAR.object(1)));
+//            METHOD.of(MagicVariableContainer.class, Context.class, "makeMagic", Context.class, String[].class)
+//                .getStatic(
+//                    SUPER
+//                        .of(CompiledScript.class, Context.class, "prepare", Context.class)
+//                        .get(THIS, LOAD_VAR.object(1)),
+//                    ARRAY.of(String.class, this.variableArray())
+//                ))
+        MagicVariableContainer.makeInterfaces(variables.toArray(new String[0]));
         return builder.compile();
+    }
+
+    private Input<Object>[] variableArray() {
+        final List<Input<String>> list = new ArrayList<>(variables.size());
+        for (final String variable : variables) list.add(visitor -> visitor.visitLdcInsn(variable));
+        return list.toArray(new Input[0]);
+    }
+
+    public String magicVariableName() {
+        return MagicVariableContainer.identifier(variables.toArray(new String[0]));
+    }
+
+    public Type magicVariable() {
+        return Type.of("script", this.magicVariableName());
+    }
+
+    public boolean knows(String name) {
+        return fastVariables && variables.contains(name);
+    }
+
+    public boolean isFastVariables() {
+        return fastVariables;
+    }
+
+    public void setFastVariables(boolean fastVariables) {
+        this.fastVariables = fastVariables;
+    }
+
+    public void notifyVariable(String name) {
+        this.variables.add(name);
     }
 
 }

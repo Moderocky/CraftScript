@@ -17,7 +17,10 @@ public class StructCompiler implements ElementCompiler<StructStatement> {
 
     @Override
     public Instruction.Input<?> compile(StructStatement statement, PreMethod method, PreClass builder, SubstantiveScriptCompiler compiler) {
+        final boolean fast = compiler.isFastVariables();
+        compiler.setFastVariables(false);
         final PreMethod block = compiler.compile(statement.block(), builder);
+        compiler.setFastVariables(fast);
         return METHOD.of(StructStatement.class, StructObject.class, "execute", Context.class, Executable.class)
             .getStatic(
                 LOAD_VAR.object(1),

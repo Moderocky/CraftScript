@@ -7,6 +7,7 @@ import mx.kenzie.craftscript.kind.Kinds;
 import mx.kenzie.craftscript.script.*;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.craftscript.variable.Wrapper;
+import mx.kenzie.foundation.Loader;
 import mx.kenzie.foundation.UnloadedClass;
 import org.jetbrains.annotations.Contract;
 import org.junit.AfterClass;
@@ -212,6 +213,7 @@ public abstract class CompilerTest {
             final Class<?> type = this.load(script);
             return (Type) this.run(type);
         } catch (Throwable ex) {
+//            ex.getCause().printStackTrace();
             throw new ScriptCompileError("Unknown error.", ex);
         } finally {
             this.clearOutput();
@@ -251,7 +253,7 @@ public abstract class CompilerTest {
     protected Class<?> load(AbstractScript script) {
         final UnloadedClass unloaded = compiler.prepare(script);
         assert unloaded != null;
-        return unloaded.load(new TestClassLoader());
+        return unloaded.load(new TestClassLoader(Loader.getDefault()));
     }
 
     protected Object run(Class<?> type) throws Throwable {
