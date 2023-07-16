@@ -77,7 +77,7 @@ public abstract class MagicVariableContainer extends VariableContainer {
     }
 
     @SuppressWarnings("unused")
-    public static Context makeMagic(Context context, VariableContainer container) throws Exception {
+    public static Context makeMagic(Context context, VariableContainer container) {
         final VariableContainer parent = context.variables();
         if (parent instanceof VariableFinder) return context;
         else if (parent instanceof StructObject) return context;

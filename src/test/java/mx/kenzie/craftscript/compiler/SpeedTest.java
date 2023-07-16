@@ -25,7 +25,7 @@ public class SpeedTest extends CompilerTest {
     }
 
     private void speed() throws Throwable {
-        final int revs = 1000000;
+        final int revs = 10000000;
         final String result = "hi BaeFell im phil";
         final AbstractScript interpreted = this.parse("speed.script", """
             result = null
