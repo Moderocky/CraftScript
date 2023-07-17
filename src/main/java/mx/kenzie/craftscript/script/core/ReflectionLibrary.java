@@ -1,14 +1,12 @@
 package mx.kenzie.craftscript.script.core;
 
-import mx.kenzie.craftscript.parser.StringParser;
 import mx.kenzie.craftscript.script.AbstractScript;
 import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.statement.Statement;
+import mx.kenzie.craftscript.utility.Bridge;
 import mx.kenzie.craftscript.utility.Executable;
-import mx.kenzie.craftscript.utility.LazyInterpolatingMap;
-import mx.kenzie.craftscript.utility.MapFormat;
+import mx.kenzie.craftscript.utility.Interpolator;
 import mx.kenzie.craftscript.variable.LibraryObject;
 
 import java.util.Objects;
@@ -35,12 +33,9 @@ public class ReflectionLibrary extends LibraryObject {
     private static final Executable<?> INTERPOLATE = new InternalStatement((ours, arguments) -> {
         final Context context = ours.getParentContext();
         final String text = Objects.toString(arguments.get(0));
-        final InterpolationStatement[] statements = StringParser
-            .interpolations(text, context.manager().getParser());
-        if (statements.length > 0) {
-            final LazyInterpolatingMap map = new LazyInterpolatingMap(context, statements);
-            return MapFormat.format(text, map);
-        } else return text;
+        final Object[] parts = new Interpolator(text, context.manager().getParser()).interpolations();
+        if (parts.length == 0 || (parts.length == 1 && parts[0] instanceof String)) return text;
+        else return Bridge.interpolate(context, parts);
     });
 
     public ReflectionLibrary() {

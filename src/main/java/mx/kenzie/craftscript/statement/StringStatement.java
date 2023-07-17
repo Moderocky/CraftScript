@@ -8,8 +8,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public record StringStatement(String value, Object... parts) implements TextStatement {
 
@@ -44,16 +42,10 @@ public record StringStatement(String value, Object... parts) implements TextStat
     public Component prettyPrint(ColorProfile profile) {
         final Component component = Component.textOfChildren(Component.text("Text.", profile.light()),
             Component.newline(), this.printReturnType(profile));
-        final List<InterpolationStatement> statements = new ArrayList<>();
-        for (final Object part : parts) {
-            if (part instanceof InterpolationStatement statement) statements.add(statement);
-        }
-        if (!statements.isEmpty()) {
-            final List<Object> list = CommandStatement.interpolateForPrinting(value,
-                statements.toArray(new InterpolationStatement[0]));
+        if (parts.length > 0) {
             final TextComponent.Builder builder = Component.text();
             builder.append(Component.text('"', profile.pop()));
-            for (final Object object : list) {
+            for (final Object object : parts) {
                 if (object instanceof String string) builder.append(Component.text(string, profile.light()));
                 else if (object instanceof Statement<?> statement) builder.append(statement.prettyPrint(profile));
             }

@@ -3,7 +3,6 @@ package mx.kenzie.craftscript.script;
 import mx.kenzie.centurion.MinecraftCommand;
 import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.statement.LineStatement;
-import mx.kenzie.craftscript.utility.MapFormat;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import org.bukkit.command.CommandSender;
 
@@ -88,10 +87,6 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
             context = data().parentContext;
         } while (context != null);
         return this;
-    }
-
-    public String interpolate(String input) {
-        return MapFormat.format(input, variables);
     }
 
     public int getLine() {
