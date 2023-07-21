@@ -152,6 +152,8 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
 
     @Override
     public UnloadedClass prepare(AbstractScript script) {
+        if (script instanceof CompiledScript)
+            throw new ScriptCompileError("The script '" + script.name() + "' is already compiled.");
         final var builder = new PreClass("script", script.name().substring(0, script.name().indexOf('.')));
         builder.setParent(Type.of(CompiledScript.class));
         builder.addInterfaces(Type.of(Statement.class));
