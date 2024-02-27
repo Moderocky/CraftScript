@@ -1,0 +1,7 @@
+name: CraftScript
+version: 1.0.0
+main: mx.kenzie.craftscript.CraftScriptPlugin
+description: "A scripting language for minecraft."
+website: 'https://github.com/Moderocky/CraftScript'
+api-version: '1.20'
+load: STARTUP

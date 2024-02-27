@@ -1,0 +1,6 @@
+
+web = struct {
+    enabled = false
+    content_root = "http://localhost:8765/craftscript/"
+}
+
