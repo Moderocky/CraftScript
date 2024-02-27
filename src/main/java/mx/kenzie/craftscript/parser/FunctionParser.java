@@ -15,7 +15,7 @@ public class FunctionParser extends BasicParser {
         if (input.length() < 10) return false;
         final String string = input.substring(9).trim();
         if (string.isEmpty()) return false;
-        VariableHelper helper = VariableHelper.instance(), child = helper.clone();
+        final VariableHelper helper = VariableHelper.instance(), child = helper.clone();
         try {
             child.purge(); // outer variables aren't available in a function
             VariableHelper.local.set(child);
