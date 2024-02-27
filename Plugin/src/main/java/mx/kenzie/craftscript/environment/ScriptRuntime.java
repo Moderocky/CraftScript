@@ -46,7 +46,7 @@ public class ScriptRuntime {
             text(script.name(), profile.highlight()), text("' encountered an error and stopped.", profile.dark()),
             Component.newline(), text(error.getMessage(), profile.light()), Component.newline()));
         if (!error.hasContext()) return;
-        final Context context = error.getContext();
+        final Context context = ((ScriptRuntimeError) error).getContext();
         if (context.data().line == null) return;
         sender.sendMessage(
             Component.textOfChildren(text("Line " + context.getLine(), profile.highlight()), text(':', profile.pop()),

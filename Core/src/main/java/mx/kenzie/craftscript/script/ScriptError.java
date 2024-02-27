@@ -22,4 +22,8 @@ public class ScriptError extends Error {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
+    public boolean hasContext() {
+        return false;
+    }
+
 }

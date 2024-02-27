@@ -1,15 +1,15 @@
 package mx.kenzie.craftscript.script;
 
-public class ScriptError extends Error {
+public class ScriptRuntimeError extends ScriptError {
 
     private final Context context;
 
-    public ScriptError(String message) {
+    public ScriptRuntimeError(String message) {
         super(message);
         this.context = Context.getLocalContext();
     }
 
-    public ScriptError(String message, Throwable cause) {
+    public ScriptRuntimeError(String message, Throwable cause) {
         super(message, cause);
         this.context = Context.getLocalContext();
     }

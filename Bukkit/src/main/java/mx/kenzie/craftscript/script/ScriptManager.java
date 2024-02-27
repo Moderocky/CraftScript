@@ -180,13 +180,13 @@ public class ScriptManager implements Closeable {
 
     public void printError(ScriptError error, CommandSender sender) {
         if (this.isTest()) throw error;
-        if (!error.hasContext()) {
+        if (!error.hasContext() ) {
             sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
                 text("Script Error:", NamedTextColor.RED), Component.newline(),
                 text(error.getMessage(), NamedTextColor.GRAY)));
             return;
         }
-        final Context context = error.getContext();
+        final Context context = ((ScriptRuntimeError) error).getContext();
         sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
             text("Script Error in '" + Context.getLocalContext().data().script.name() + "':", NamedTextColor.RED),
             Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
