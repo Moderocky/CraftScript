@@ -2,7 +2,7 @@ package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.LocalScriptParser;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.SimpleScriptLoader;
+import mx.kenzie.craftscript.script.BukkitScriptLoader;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -68,7 +68,7 @@ public class LocalSyntaxParserTest {
     private boolean match(String pattern, String input) {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(
             new ByteArrayInputStream(pattern.getBytes(StandardCharsets.UTF_8))));
-        final LocalScriptParser parser = new LocalScriptParser(SimpleScriptLoader.BASIC, reader);
+        final LocalScriptParser parser = new LocalScriptParser(BukkitScriptLoader.BASIC, reader);
         final LocalSyntaxParser local = new LocalSyntaxParser(pattern);
         parser.register(() -> new LocalSyntaxParser(pattern));
         assert local.canUse();

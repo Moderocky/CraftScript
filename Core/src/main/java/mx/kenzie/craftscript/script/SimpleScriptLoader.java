@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 public class SimpleScriptLoader implements ScriptLoader {
 
-    public static final ScriptLoader BASIC = new SimpleScriptLoader(
+    public static final SimpleScriptLoader BASIC = new SimpleScriptLoader(
         NullParser::new,
         AssertParser::new,
         ForParser::new,
@@ -27,22 +27,18 @@ public class SimpleScriptLoader implements ScriptLoader {
         StructParser::new,
         RequireParser::new,
         ImportParser::new,
-        ListenerParser::new,
         RunParser::new,
         SyntaxParser::new,
         ElseParser::new,
         InvertParser::new,
         BooleanParser::new,
-        SelectorParser::new,
         ScriptParser::new,
         BlockParser::new,
         MapParser::new,
         ListParser::new,
         StringParser::new,
-        CommandParser::new,
         CommentParser::new,
         InterpolationParser::new,
-        ResourceParser::new,
         CloseParser::new,
         IntegerParser::new,
         DoubleParser::new,
@@ -71,6 +67,14 @@ public class SimpleScriptLoader implements ScriptLoader {
     protected Supplier<Parser>[] parsers;
     private BufferedReader reader;
     private List<Warning> warnings;
+
+    @SafeVarargs
+    @SuppressWarnings("unchecked")
+    public SimpleScriptLoader(SimpleScriptLoader loader, Supplier<Parser>... parsers) {
+        final List<Supplier<Parser>> list = new ArrayList<>(Arrays.asList(loader.parsers));
+        list.addAll(Arrays.asList(parsers));
+        this.parsers = (Supplier<Parser>[]) list.toArray(new Supplier[0]);
+    }
 
     @SafeVarargs
     public SimpleScriptLoader(Supplier<Parser>... parsers) {

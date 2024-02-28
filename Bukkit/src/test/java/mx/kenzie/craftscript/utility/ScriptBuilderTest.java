@@ -21,7 +21,7 @@ public class ScriptBuilderTest {
 
     @BeforeClass
     public static void startup() {
-        manager = new BukkitScriptManager(null, SimpleScriptLoader.BASIC);
+        manager = new BukkitScriptManager(null, BukkitScriptLoader.BASIC);
         for (final Kind<?> kind : Kinds.kinds) manager.registerKind(kind);
         manager.loadScript(Libraries.MATH);
         manager.loadScript(Libraries.PARSER);

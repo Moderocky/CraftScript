@@ -107,7 +107,7 @@ public class ScriptController implements mx.kenzie.craftscript.utility.ScriptCon
     }
 
     protected BukkitScriptManager prepareScriptManager() {
-        final BukkitScriptManager manager = new BukkitScriptManager(CraftScriptPlugin.plugin, SimpleScriptLoader.BASIC);
+        final BukkitScriptManager manager = new BukkitScriptManager(CraftScriptPlugin.plugin, BukkitScriptLoader.BASIC);
         for (final Kind<?> kind : kinds) manager.registerKind(kind);
 //        if (manager.getParser() instanceof SimpleScriptLoader loader) {
 ////            loader.addParsers(ItemQueryParser::new); todo items
