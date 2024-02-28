@@ -1,7 +1,7 @@
 package mx.kenzie.craftscript.listener;
 
 import mx.kenzie.craftscript.emitter.MinecraftEvent;
-import mx.kenzie.craftscript.script.ScriptManager;
+import mx.kenzie.craftscript.script.BukkitScriptManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -9,9 +9,9 @@ import org.bukkit.event.world.GenericGameEvent;
 
 public class GameEventListener implements Listener {
 
-    protected final ScriptManager manager;
+    protected final BukkitScriptManager manager;
 
-    public GameEventListener(ScriptManager manager) {
+    public GameEventListener(BukkitScriptManager manager) {
         this.manager = manager;
     }
 

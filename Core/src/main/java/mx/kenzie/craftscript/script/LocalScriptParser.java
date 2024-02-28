@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class LocalScriptParser implements ScriptLoader, ScriptParser {
+public class LocalScriptParser implements ScriptLoader, ScriptSourceParser {
 
 
     protected final ScriptLoader parent;

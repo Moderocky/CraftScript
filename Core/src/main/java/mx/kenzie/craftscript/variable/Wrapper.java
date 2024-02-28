@@ -40,15 +40,15 @@ public class Wrapper<Type> {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(kind, thing);
-    }
-
-    @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (!(object instanceof final Wrapper<?> wrapper)) return false;
         return Objects.equals(thing, wrapper.thing);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(kind, thing);
     }
 
     @Override

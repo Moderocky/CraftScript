@@ -1,6 +1,6 @@
 package mx.kenzie.craftscript.utility;
 
-import mx.kenzie.craftscript.script.ScriptParser;
+import mx.kenzie.craftscript.script.ScriptSourceParser;
 import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.Statement;
 
@@ -10,9 +10,9 @@ import java.util.List;
 public class Interpolator {
 
     protected final String input;
-    protected final ScriptParser parser;
+    protected final ScriptSourceParser parser;
 
-    public Interpolator(String input, ScriptParser parser) {
+    public Interpolator(String input, ScriptSourceParser parser) {
         this.input = input;
         this.parser = parser;
     }

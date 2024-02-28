@@ -85,7 +85,7 @@ public class ScriptController implements mx.kenzie.craftscript.utility.ScriptCon
     public ScriptRuntime getRuntime() {
         if (closing) return null;
         if (runtime == null) {
-            final ScriptManager manager = this.prepareScriptManager();
+            final BukkitScriptManager manager = this.prepareScriptManager();
             final ScriptRuntime runtime = new ScriptRuntime(CraftScriptPlugin.storage, manager, this, Bukkit.getConsoleSender(), 0);
             return this.runtime = runtime;
         } else return runtime;
@@ -106,8 +106,8 @@ public class ScriptController implements mx.kenzie.craftscript.utility.ScriptCon
         this.runtime.run(script);
     }
 
-    protected ScriptManager prepareScriptManager() {
-        final ScriptManager manager = new ScriptManager(CraftScriptPlugin.plugin, ScriptLoader.BASIC);
+    protected BukkitScriptManager prepareScriptManager() {
+        final BukkitScriptManager manager = new BukkitScriptManager(CraftScriptPlugin.plugin, SimpleScriptLoader.BASIC);
         for (final Kind<?> kind : kinds) manager.registerKind(kind);
 //        if (manager.getParser() instanceof SimpleScriptLoader loader) {
 ////            loader.addParsers(ItemQueryParser::new); todo items
@@ -140,11 +140,11 @@ public class ScriptController implements mx.kenzie.craftscript.utility.ScriptCon
 
     public void emit(Event event) {
         this.getRuntime().manager.emit(event);
-    }    private final BackgroundTaskExecutor background = (script, executable, context) -> {
+    }
+
+    private final BackgroundTaskExecutor background = (script, executable, context) -> {
         this.getRuntime().runTask(script, executable, context);
     };
-
-
 
 
 }

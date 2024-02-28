@@ -7,6 +7,6 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface TaskExecutor {
 
-    Object execute(Context context, Supplier<Object> task);
+    Object execute(Context<?> context, Supplier<Object> task);
 
 }

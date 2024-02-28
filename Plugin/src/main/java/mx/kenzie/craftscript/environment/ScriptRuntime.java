@@ -23,14 +23,14 @@ public class ScriptRuntime {
     static final int TIME = 3;
     final CommandSender owner;
     final int limit;
-    final ScriptManager manager;
+    final BukkitScriptManager manager;
     final ScriptController controller;
     final ScriptStorage storage;
     final Map<AbstractScript, ScriptRunData> map = new ConcurrentHashMap<>();
     final Map<Executable<?>, TaskRunData> background = new ConcurrentHashMap<>();
     final List<Resource> resources = new SleepyList<>();
 
-    public ScriptRuntime(ScriptStorage storage, ScriptManager manager, ScriptController controller, CommandSender owner, int limit) {
+    public ScriptRuntime(ScriptStorage storage, BukkitScriptManager manager, ScriptController controller, CommandSender owner, int limit) {
         this.storage = storage;
         this.owner = owner;
         this.limit = limit;
@@ -46,7 +46,7 @@ public class ScriptRuntime {
             text(script.name(), profile.highlight()), text("' encountered an error and stopped.", profile.dark()),
             Component.newline(), text(error.getMessage(), profile.light()), Component.newline()));
         if (!error.hasContext()) return;
-        final Context context = ((ScriptRuntimeError) error).getContext();
+        final Context<?> context = ((ScriptRuntimeError) error).getContext();
         if (context.data().line == null) return;
         sender.sendMessage(
             Component.textOfChildren(text("Line " + context.getLine(), profile.highlight()), text(':', profile.pop()),
@@ -168,7 +168,7 @@ public class ScriptRuntime {
             final ScriptThread thread = (ScriptThread) Thread.currentThread();
             try {
                 this.runtime.map.put(script, new ScriptRunData(thread, new AtomicLong(System.currentTimeMillis())));
-                final ScriptManager manager = this.runtime.manager;
+                final BukkitScriptManager manager = this.runtime.manager;
                 try {
                     manager.runScript(script, owner);
                     while (manager.hasListeners(script)) {
@@ -209,9 +209,9 @@ public class ScriptRuntime {
                     thread.resurrect();
                 } catch (ThreadDeath ignore) { // we probably don't need to kill this thread
                 } catch (ScriptError error) {
-                    printError(script, error, context.source());
+                    printError(script, error, (CommandSender) context.getSource());
                 } catch (Throwable ex) {
-                    printError(script, new ScriptError("Error in background task.", ex), context.source());
+                    printError(script, new ScriptError("Error in background task.", ex), (CommandSender) context.getSource());
                 }
             } finally {
                 this.runtime.background.remove(task);

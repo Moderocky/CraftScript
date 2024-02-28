@@ -26,7 +26,7 @@ public abstract class CompilerTest {
 
     @BeforeClass
     public static void startup() {
-        manager = new ScriptManager(null, ScriptLoader.BASIC);
+        manager = new BukkitScriptManager(null, SimpleScriptLoader.BASIC);
         for (final Kind<?> kind : Kinds.kinds) manager.registerKind(kind);
         manager.loadScript(Libraries.MATH);
         manager.loadScript(Libraries.PARSER);

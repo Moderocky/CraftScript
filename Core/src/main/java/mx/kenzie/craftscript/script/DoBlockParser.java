@@ -11,13 +11,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
-public class DoBlockParser implements ScriptParser {
+public class DoBlockParser implements ScriptSourceParser {
 
-    protected final ScriptParser parent;
+    protected final ScriptSourceParser parent;
     protected final Statement<?> source;
     private int dirty;
 
-    public DoBlockParser(Statement<?> source, ScriptParser parent) {
+    public DoBlockParser(Statement<?> source, ScriptSourceParser parent) {
         this.parent = parent;
         this.source = source;
     }

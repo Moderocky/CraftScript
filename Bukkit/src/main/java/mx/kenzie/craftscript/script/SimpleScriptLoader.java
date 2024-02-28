@@ -1,7 +1,6 @@
 package mx.kenzie.craftscript.script;
 
-import mx.kenzie.craftscript.parser.CommentParser;
-import mx.kenzie.craftscript.parser.Parser;
+import mx.kenzie.craftscript.parser.*;
 import mx.kenzie.craftscript.statement.CloseStatement;
 import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.statement.Statement;
@@ -17,6 +16,56 @@ import java.util.function.Supplier;
 
 public class SimpleScriptLoader implements ScriptLoader {
 
+    public static final ScriptLoader BASIC = new SimpleScriptLoader(
+        NullParser::new,
+        AssertParser::new,
+        ForParser::new,
+        DoParser::new,
+        IfParser::new,
+        WhileParser::new,
+        FunctionParser::new,
+        StructParser::new,
+        RequireParser::new,
+        ImportParser::new,
+        ListenerParser::new,
+        RunParser::new,
+        SyntaxParser::new,
+        ElseParser::new,
+        InvertParser::new,
+        BooleanParser::new,
+        SelectorParser::new,
+        ScriptParser::new,
+        BlockParser::new,
+        MapParser::new,
+        ListParser::new,
+        StringParser::new,
+        CommandParser::new,
+        CommentParser::new,
+        InterpolationParser::new,
+        ResourceParser::new,
+        CloseParser::new,
+        IntegerParser::new,
+        DoubleParser::new,
+        VariableAssignmentParser::new,
+        BinaryParser::compareEQ,
+        BinaryParser::comparePlus,
+        BinaryParser::compareMinus,
+        BinaryParser::compareTimes,
+        BinaryParser::compareDivide,
+        BinaryParser::compareLE,
+        BinaryParser::compareGE,
+        BinaryParser::compareLT,
+        BinaryParser::compareGT,
+        BinaryParser::compareNE,
+        BinaryParser::compareAND,
+        BinaryParser::compareOR,
+        BinaryParser::compareXOR,
+        BinaryParser::compareALT,
+        SetterParser::new,
+        GetterParser::new,
+        KindParser::new,
+        VariableParser::new
+    );
     private final Map<Supplier<Parser>, Parser> cache = new HashMap<>();
     private final CommentParser comment = new CommentParser();
     protected Supplier<Parser>[] parsers;

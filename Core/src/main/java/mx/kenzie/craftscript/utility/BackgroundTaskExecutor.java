@@ -6,6 +6,6 @@ import mx.kenzie.craftscript.script.Context;
 @FunctionalInterface
 public interface BackgroundTaskExecutor {
 
-    void execute(AbstractScript source, Executable<?> executable, Context context);
+    void execute(AbstractScript source, Executable<?> executable, Context<?> context);
 
 }

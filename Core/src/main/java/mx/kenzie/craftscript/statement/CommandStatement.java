@@ -20,7 +20,7 @@ public record CommandStatement(String input, Object... parts) implements Stateme
         stream.print(']');
     }
 
-    public static Boolean execute(Context context, String input, Object... parts) {
+    public static Boolean execute(Context<?> context, String input, Object... parts) {
         final String command;
         if (parts.length > 0) command = Bridge.interpolate(context, parts);
         else command = input;
@@ -28,7 +28,7 @@ public record CommandStatement(String input, Object... parts) implements Stateme
     }
 
     @Override
-    public Boolean execute(Context context) throws ScriptError {
+    public Boolean execute(Context<?> context) throws ScriptError {
         final String command;
         if (parts.length > 0) command = Bridge.interpolate(context, parts);
         else command = input;

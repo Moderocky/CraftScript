@@ -17,17 +17,17 @@ import java.util.List;
 public record SelectorStatement(String text, Universe<?> universe,
                                 Object... parts) implements Statement<Object> {
 
-    public static Object execute(Context context, String text, Object... parts) {
+    public static Object execute(Context<?> context, String text, Object... parts) {
         final String input;
         if (parts.length > 0) input = Bridge.interpolate(context, parts);
         else input = text;
-        final List<?> list = Selector.of(input, SelectorParser.universe).getAll(context.source());
+        final List<?> list = Selector.of(input, SelectorParser.universe).getAll(context.getSource());
         if (list.size() == 1) return Wrapper.of(list.get(0));
         return list;
     }
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public Object execute(Context<?> context) throws ScriptError {
         return execute(context, text, parts);
     }
 

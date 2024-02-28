@@ -1,7 +1,7 @@
 package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.ScriptParser;
+import mx.kenzie.craftscript.script.ScriptSourceParser;
 import mx.kenzie.craftscript.statement.Statement;
 
 import java.io.Closeable;
@@ -15,7 +15,7 @@ import java.io.Closeable;
  */
 public interface Parser extends Closeable {
 
-    void insert(String input, ScriptParser parent);
+    void insert(String input, ScriptSourceParser parent);
 
     boolean matches();
 

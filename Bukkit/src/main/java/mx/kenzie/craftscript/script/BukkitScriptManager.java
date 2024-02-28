@@ -26,7 +26,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -37,12 +36,13 @@ import java.util.function.Supplier;
 
 import static net.kyori.adventure.text.Component.text;
 
-public class ScriptManager implements Closeable {
+public class BukkitScriptManager implements ScriptManager<CommandSender> {
 
     public static final TaskExecutor DISPATCHER = (context, task) -> {
         try {
             if (Bukkit.isPrimaryThread()) return task.get();
-            else return Bukkit.getScheduler().callSyncMethod(context.manager().getPlugin(), task::get).get();
+            else
+                return Bukkit.getScheduler().callSyncMethod(((BukkitScriptManager) context.manager()).getPlugin(), task::get).get();
         } catch (ExecutionException | CommandException e) {
             throw new ScriptError("An unknown error occurred while running task.", e);
         } catch (InterruptedException e) {
@@ -65,7 +65,7 @@ public class ScriptManager implements Closeable {
     protected TaskExecutor executor = DISPATCHER;
     protected BackgroundTaskExecutor backgroundExecutor = BACKGROUND;
 
-    public ScriptManager(JavaPlugin plugin, ScriptLoader loader) {
+    public BukkitScriptManager(JavaPlugin plugin, ScriptLoader loader) {
         this.plugin = plugin;
         this.loader = loader;
         this.test = plugin == null || Bukkit.getServer() == null;
@@ -80,10 +80,12 @@ public class ScriptManager implements Closeable {
         GenericGameEvent.getHandlerList().unregister(listener);
     }
 
+    @Override
     public AbstractScript parseScript(String content) {
         return this.parseScript(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
     }
 
+    @Override
     public AbstractScript parseScript(InputStream content) {
         try {
             return loader.parse(content);
@@ -92,10 +94,12 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    @Override
     public Script parseScript(String name, String content) {
         return this.parseScript(name, new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
     }
 
+    @Override
     public Script parseScript(String name, InputStream stream) {
         try {
             ScriptHelper.init(this);
@@ -107,15 +111,18 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    @Override
     public Script loadScript(String name, InputStream stream) {
         final Script script = this.parseScript(name, stream);
         return this.loadScript(script);
     }
 
+    @Override
     public Script loadScript(String name, String content) {
         return this.loadScript(name, new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
     }
 
+    @Override
     public <Type extends AbstractScript> Type loadScript(Type script) {
         if (script instanceof AnonymousScript)
             throw new ScriptError("Unable to load anonymous script into environment.");
@@ -125,12 +132,14 @@ public class ScriptManager implements Closeable {
         return script;
     }
 
+    @Override
     public AbstractScript getScript(String name) {
         synchronized (scripts) {
             return scripts.get(name);
         }
     }
 
+    @Override
     public void deleteScript(String name) {
         final AbstractScript script;
         synchronized (scripts) {
@@ -139,6 +148,7 @@ public class ScriptManager implements Closeable {
         if (script != null) this.unregisterListeners(script);
     }
 
+    @Override
     public void deleteScript(AbstractScript script) {
         synchronized (scripts) {
             this.scripts.values().removeIf(script::equals);
@@ -146,6 +156,7 @@ public class ScriptManager implements Closeable {
         this.unregisterListeners(script);
     }
 
+    @Override
     public Object runScript(AbstractScript script, CommandSender source) {
         final Context context = new Context(source, this);
         Context.setLocalContext(context);
@@ -159,6 +170,7 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    @Override
     public Object runScriptSafely(AbstractScript script, CommandSender source) {
         try {
             return this.runScript(script, source);
@@ -174,27 +186,25 @@ public class ScriptManager implements Closeable {
         return null;
     }
 
+    @Override
     public AbstractScript[] getScripts() {
         return scripts.values().toArray(new AbstractScript[0]);
     }
 
+    @Override
     public void printError(ScriptError error, CommandSender sender) {
         if (this.isTest()) throw error;
-        if (!error.hasContext() ) {
-            sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
-                text("Script Error:", NamedTextColor.RED), Component.newline(),
-                text(error.getMessage(), NamedTextColor.GRAY)));
+        if (!error.hasContext()) {
+            sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD), text("Script Error:", NamedTextColor.RED), Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
             return;
         }
-        final Context context = ((ScriptRuntimeError) error).getContext();
-        sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD),
-            text("Script Error in '" + Context.getLocalContext().data().script.name() + "':", NamedTextColor.RED),
-            Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
+        final Context<?> context = ((ScriptRuntimeError) error).getContext();
+        sender.sendMessage(Component.textOfChildren(text("!! ", NamedTextColor.WHITE).decorate(TextDecoration.BOLD), text("Script Error in '" + Context.getLocalContext().data().script.name() + "':", NamedTextColor.RED), Component.newline(), text(error.getMessage(), NamedTextColor.GRAY)));
         if (context.data().line == null) return;
-        sender.sendMessage(
-            text("Line " + context.data().line + ": " + context.data().line.stringify(), NamedTextColor.GRAY));
+        sender.sendMessage(text("Line " + context.data().line + ": " + context.data().line.stringify(), NamedTextColor.GRAY));
     }
 
+    @Override
     public Map<String, Object> getGlobalVariables() {
         return globalVariables;
     }
@@ -207,41 +217,34 @@ public class ScriptManager implements Closeable {
         }
     }
 
+    @Override
     public void setExecutor(TaskExecutor executor) {
         this.executor = executor;
     }
 
+    @Override
     public void setBackgroundExecutor(BackgroundTaskExecutor executor) {
         this.backgroundExecutor = executor;
     }
 
-    public JavaPlugin getPlugin() {
-        return plugin;
-    }
-
+    @Override
     public boolean isTest() {
         return test;
     }
 
+    @Override
     public void registerKind(Kind<?> kind) {
         this.kinds.add(kind);
     }
 
+    @Override
     public Set<Kind<?>> getKinds() {
         return kinds;
     }
 
-    private Command handle(MinecraftCommand command) {
-        return new Command(command.label()) {
-            @Override
-            public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-                return command.onCommand(sender, this, commandLabel, args);
-            }
-        };
-    }
-
-    public boolean runCommand(Context context, String command) {
-        final Set<MinecraftCommand> set = context.data().localCommands;
+    @Override
+    public boolean runCommand(Context<?> context, String command) {
+        final Set<MinecraftCommand> set = (Set<MinecraftCommand>) (Set) context.data().localCommands;
         if (!set.isEmpty()) {
             final String label;
             final String[] args;
@@ -253,19 +256,43 @@ public class ScriptManager implements Closeable {
                 label = command.substring(0, index);
                 args = command.substring(index + 1).split(" ");
             }
-            for (final MinecraftCommand local : context.data().localCommands) {
+            for (final MinecraftCommand local : set) {
                 if (!local.label().equals(label)) continue;
-                return local.onCommand(context.source(), this.handle(local), label, args);
+                return local.onCommand(context.getSource(), this.handle(local), label, args);
             }
         }
         if (this.isTest()) {
             return false;
         }
-        return (boolean) this.executeOnPrimary(context, () -> Bukkit.dispatchCommand(context.source(), command));
+        return (boolean) this.executeOnPrimary(context, () -> Bukkit.dispatchCommand(context.getSource(), command));
     }
 
-    public Object executeOnPrimary(Context context, Supplier<Object> supplier) {
+    @Override
+    public Object executeOnPrimary(Context<?> context, Supplier<Object> supplier) {
         return executor.execute(context, supplier);
+    }
+
+    @Override
+    public ScriptSourceParser getParser() {
+        return loader;
+    }
+
+    @Override
+    public void println(CommandSender sender, String line) {
+        sender.sendMessage(line);
+    }
+
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    private Command handle(MinecraftCommand command) {
+        return new Command(command.label()) {
+            @Override
+            public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+                return command.onCommand(sender, this, commandLabel, args);
+            }
+        };
     }
 
     public void registerListener(EventListener listener) {
@@ -312,7 +339,7 @@ public class ScriptManager implements Closeable {
             final EventListener.Details details = listener.getDetails();
             try {
                 final Context.Data data = details.data().clone();
-                final Context context = new Context(details.owner(), this, new VariableContainer(), data);
+                final Context<CommandSender> context = new Context<>(details.owner(), this, new VariableContainer(), data);
                 context.variables().put("event", new Wrapper<>(event, new EventKind()));
                 BACKGROUND.execute(data.script, listener, context);
             } catch (ThreadDeath death) {
@@ -321,10 +348,6 @@ public class ScriptManager implements Closeable {
                 this.printError(new ScriptError("Error in event listener.", ex), details.owner());
             }
         }
-    }
-
-    public ScriptParser getParser() {
-        return loader;
     }
 
 }

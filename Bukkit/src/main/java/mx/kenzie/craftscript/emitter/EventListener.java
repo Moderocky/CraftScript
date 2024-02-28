@@ -55,16 +55,16 @@ public abstract class EventListener implements Executable<Object> {
     public abstract Location getLocation();
 
     @Override
-    public int hashCode() {
-        return Objects.hash(details, key, radius);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (!(obj instanceof EventListener listener)) return false;
         return Objects.equals(key, listener.key)
             && trigger == listener.trigger && details.data.script == listener.details.data.script;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(details, key, radius);
     }
 
     public record Details(CommandSender owner, Context.Data data) {

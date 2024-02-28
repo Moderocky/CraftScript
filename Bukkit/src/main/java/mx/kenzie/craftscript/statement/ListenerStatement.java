@@ -4,6 +4,7 @@ import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.emitter.EntityEventListener;
 import mx.kenzie.craftscript.emitter.EventListener;
 import mx.kenzie.craftscript.emitter.StaticEventListener;
+import mx.kenzie.craftscript.script.BukkitScriptManager;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.utility.Executable;
@@ -21,12 +22,12 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
 
     public static final double DEFAULT_EVENT_RADIUS = 32, MAX_EVENT_RADIUS = 128;
 
-    public static EventListener execute(Context context, Object token, Object inputs, Executable<?> task) {
+    public static EventListener execute(Context<?> context, Object token, Object inputs, Executable<?> task) {
         if (!(Wrapper.unwrap(token) instanceof NamespacedKey key))
             throw new ScriptError("Object '" + token + "' was not an event key.");
         final Context.Data data = context.data().clone();
         data.script = context.getRootContext().data().script;
-        final EventListener.Details details = new EventListener.Details(context.source(), data);
+        final EventListener.Details details = new EventListener.Details(context.getSource(), data);
         final EventListener listener;
         if (inputs != null) {
             if (!(Wrapper.unwrap(inputs) instanceof Map<?, ?> map))
@@ -39,9 +40,9 @@ public record ListenerStatement(Statement<?> key, Statement<?> details, Statemen
                 listener = new StaticEventListener(details, key, task, radius, location);
             else if (at instanceof CommandSender sender)
                 listener = new EntityEventListener(details, key, task, radius, sender);
-            else listener = new EntityEventListener(details, key, task, radius, context.source());
-        } else listener = new EntityEventListener(details, key, task, DEFAULT_EVENT_RADIUS, context.source());
-        context.manager().registerListener(listener);
+            else listener = new EntityEventListener(details, key, task, radius, context.getSource());
+        } else listener = new EntityEventListener(details, key, task, DEFAULT_EVENT_RADIUS, context.getSource());
+        ((BukkitScriptManager) context.manager()).registerListener(listener);
         return listener;
     }
 

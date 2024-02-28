@@ -118,7 +118,7 @@ public interface ScriptBuilder {
     }
 
     static CommandStatement command(String command, InterpolationStatement... interpolations) {
-        return new CommandStatement(command, interpolations);
+        return new CommandStatement(command, (Object[]) interpolations);
     }
 
     static LiteralStringStatement string(String value) {
@@ -126,7 +126,7 @@ public interface ScriptBuilder {
     }
 
     static StringStatement string(String value, InterpolationStatement... interpolations) {
-        return new StringStatement(value, interpolations);
+        return new StringStatement(value, (Object[]) interpolations);
     }
 
     static LiteralStatement literal(Object value) {
@@ -204,7 +204,7 @@ public interface ScriptBuilder {
     }
 
     static SelectorStatement selector(String text, Universe<?> universe, InterpolationStatement... interpolations) {
-        return new SelectorStatement(text, universe, interpolations);
+        return new SelectorStatement(text, universe, (Object[]) interpolations);
     }
 
     static StructStatement struct_(Map<String, Statement<?>> entries) {

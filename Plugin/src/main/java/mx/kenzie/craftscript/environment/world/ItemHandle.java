@@ -4,6 +4,7 @@ import mx.kenzie.craftscript.CraftScriptPlugin;
 import mx.kenzie.craftscript.environment.Resource;
 import mx.kenzie.craftscript.script.Context;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +21,7 @@ public class ItemHandle implements Handle, Resource {
         this.readOnly = readOnly;
         final Context context = Context.getLocalContext();
         if (context == null) return;
-        CraftScriptPlugin.scripts.getRuntime(context.source()).registerResource(this);
+        CraftScriptPlugin.scripts.getRuntime((CommandSender) context.getSource()).registerResource(this);
     }
 
     public ItemHandle(ItemStack item) {
@@ -53,17 +54,17 @@ public class ItemHandle implements Handle, Resource {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(item, readOnly);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (ItemHandle) obj;
         return Objects.equals(this.item, that.item) &&
             this.readOnly == that.readOnly;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(item, readOnly);
     }
 
     @Override

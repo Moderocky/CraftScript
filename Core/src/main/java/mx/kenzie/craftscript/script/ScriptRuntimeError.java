@@ -2,7 +2,7 @@ package mx.kenzie.craftscript.script;
 
 public class ScriptRuntimeError extends ScriptError {
 
-    private final Context context;
+    private final Context<?> context;
 
     public ScriptRuntimeError(String message) {
         super(message);
@@ -14,7 +14,7 @@ public class ScriptRuntimeError extends ScriptError {
         this.context = Context.getLocalContext();
     }
 
-    public Context getContext() {
+    public Context<?> getContext() {
         return context;
     }
 

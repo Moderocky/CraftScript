@@ -10,12 +10,12 @@ import java.util.WeakHashMap;
 
 public interface ScriptHelper {
 
-    Map<ScriptManager, ScriptHelper> map = Collections.synchronizedMap(new WeakHashMap<>());
+    Map<ScriptManager<?>, ScriptHelper> map = Collections.synchronizedMap(new WeakHashMap<>());
     ThreadLocal<ScriptHelper> local = new ThreadLocal<>();
     ScriptHelper EMPTY = new ScriptHelper() {
     };
 
-    static void init(ScriptManager manager) {
+    static void init(ScriptManager<?> manager) {
         final ScriptHelper helper = new SimpleScriptHelper();
         map.put(manager, helper);
         local.set(helper);

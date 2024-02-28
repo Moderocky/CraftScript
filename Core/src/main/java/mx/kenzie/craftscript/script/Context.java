@@ -1,43 +1,42 @@
 package mx.kenzie.craftscript.script;
 
-import mx.kenzie.centurion.MinecraftCommand;
+import mx.kenzie.centurion.Command;
 import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.variable.VariableContainer;
-import org.bukkit.command.CommandSender;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public record Context(CommandSender source, ScriptManager manager, VariableContainer variables, Data data) {
+public record Context<Source>(Source source, ScriptManager<Source> manager, VariableContainer variables, Data data) {
 
-    private static final ThreadLocal<Context> local = new ThreadLocal<>();
+    private static final ThreadLocal<Context<?>> local = new ThreadLocal<>();
 
-    public Context(Context context) {
+    public Context(Context<Source> context) {
         this(context.source, context.manager, new VariableContainer(context.variables), context.data.clone());
         this.data.parentContext = context;
     }
 
-    public Context(CommandSender source, ScriptManager manager) {
+    public Context(Source source, ScriptManager<Source> manager) {
         this(source, manager, new VariableContainer());
     }
 
-    public Context(CommandSender source, ScriptManager manager, VariableContainer variables) {
+    public Context(Source source, ScriptManager<Source> manager, VariableContainer variables) {
         this(source, manager, variables, new Data());
     }
 
-    public static Context getLocalContext() {
+    public static Context<?> getLocalContext() {
         return local.get();
     }
 
-    public static void setLocalContext(Context context) {
+    public static void setLocalContext(Context<?> context) {
         local.set(context);
     }
 
-    public static Context requireLocalContext() {
-        final Context context = getLocalContext();
+    public static Context<?> requireLocalContext() {
+        final Context<?> context = getLocalContext();
         if (context == null) throw new ScriptError("No script environment context is available.");
         return context;
     }
@@ -48,8 +47,13 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
 
     @SuppressWarnings("unchecked")
     public static <Type> Type executeOnPrimary(Supplier<Type> supplier) {
-        final Context context = requireLocalContext();
+        final Context<?> context = requireLocalContext();
         return (Type) context.manager.executeOnPrimary(context, (Supplier<Object>) supplier);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <Type> Type getSource() {
+        return (Type) source;
     }
 
     public Set<Kind<?>> getKinds() {
@@ -75,12 +79,12 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
         };
     }
 
-    public Context getParentContext() {
+    public Context<?> getParentContext() {
         return data.parentContext;
     }
 
-    public Context getRootContext() {
-        var context = this;
+    public Context<?> getRootContext() {
+        Context<?> context = this;
         do {
             if (context.data == null) return context;
             if (context.data.parentContext == null) return context;
@@ -102,10 +106,10 @@ public record Context(CommandSender source, ScriptManager manager, VariableConta
     public static class Data {
 
         public AbstractScript script;
-        public Set<MinecraftCommand> localCommands = new LinkedHashSet<>();
+        public Set<Command<?>> localCommands = new LinkedHashSet<>();
         public Set<Kind<?>> kinds = new LinkedHashSet<>();
         public LineStatement line;
-        public Context parentContext;
+        public Context<?> parentContext;
 
         @Override
         public Data clone() {

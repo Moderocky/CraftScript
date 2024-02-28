@@ -4,16 +4,15 @@ import mx.kenzie.centurion.ColorProfile;
 import mx.kenzie.craftscript.command.ScriptArgument;
 import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.PrettyPrinter;
-import mx.kenzie.craftscript.variable.LibraryObject;
 import mx.kenzie.craftscript.variable.Wrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
-public class DebugLibrary extends LibraryObject {
+public class BukkitDebugLibrary extends DebugLibrary {
 
     private static final Executable<?> LINE = context -> {
         final ColorProfile profile = ScriptArgument.COLOR_PROFILE;
-        final CommandSender sender = context.source();
+        final CommandSender sender = context.getSource();
         sender.sendMessage(Component.textOfChildren(
             Component.text("Current Line:", profile.dark())
         ));
@@ -32,7 +31,7 @@ public class DebugLibrary extends LibraryObject {
     };
     private static final Executable<?> SCRIPT = context -> {
         final ColorProfile profile = ScriptArgument.COLOR_PROFILE;
-        final CommandSender sender = context.source();
+        final CommandSender sender = context.getSource();
         sender.sendMessage(Component.textOfChildren(
             Component.text("Current Script:", profile.dark())
         ));
@@ -50,7 +49,7 @@ public class DebugLibrary extends LibraryObject {
     };
     private static final Executable<?> VARIABLES = context -> {
         final ColorProfile profile = ScriptArgument.COLOR_PROFILE;
-        final CommandSender sender = context.source();
+        final CommandSender sender = context.getSource();
         sender.sendMessage(Component.textOfChildren(
             Component.text("Current Variable Structure:", profile.dark())
         ));
@@ -70,7 +69,7 @@ public class DebugLibrary extends LibraryObject {
         return null;
     };
 
-    public DebugLibrary() {
+    public BukkitDebugLibrary() {
         super("variables", "line", "script");
     }
 

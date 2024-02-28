@@ -1,7 +1,7 @@
 package mx.kenzie.craftscript.parser;
 
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.ScriptParser;
+import mx.kenzie.craftscript.script.ScriptSourceParser;
 import mx.kenzie.craftscript.statement.InterpolationStatement;
 import mx.kenzie.craftscript.statement.LiteralStringStatement;
 import mx.kenzie.craftscript.statement.Statement;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class StringParser extends BasicParser {
 
-    public static InterpolationStatement[] interpolations(String input, ScriptParser parser) {
+    public static InterpolationStatement[] interpolations(String input, ScriptSourceParser parser) {
         int start;
         if (input.indexOf('}') > input.indexOf('{')) {
             start = 0;

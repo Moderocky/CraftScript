@@ -6,7 +6,7 @@ import mx.kenzie.craftscript.environment.ScriptController;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.Script;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.ScriptLoader;
+import mx.kenzie.craftscript.script.SimpleScriptLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,14 +55,14 @@ public class CraftScriptPlugin extends JavaPlugin {
                 output.flush();
             }
             try (final InputStream stream = new FileInputStream(file)) {
-                final Script script = ScriptLoader.BASIC.parse("config.script", stream);
+                final Script script = SimpleScriptLoader.BASIC.parse("config.script", stream);
                 script.execute(new Context(Bukkit.getConsoleSender(), scripts.getScriptManager(), container));
             } catch (IOException | ScriptError ex) {
                 Bukkit.getLogger().log(Level.SEVERE, "Unable to load CraftScript config.", ex);
             }
         } catch (IOException | NullPointerException problem) {
             try (final InputStream stream = CraftScriptPlugin.class.getClassLoader().getResourceAsStream("config.script")) {
-                final Script script = ScriptLoader.BASIC.parse("config.script", stream);
+                final Script script = SimpleScriptLoader.BASIC.parse("config.script", stream);
                 script.execute(new Context(Bukkit.getConsoleSender(), scripts.getScriptManager(), container));
             } catch (IOException | ScriptError ex) {
                 Bukkit.getLogger().log(Level.SEVERE, "Unable to load CraftScript config.", ex);

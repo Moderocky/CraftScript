@@ -21,7 +21,7 @@ public abstract class Kind<Type> {
     public static Kind<?> asKind(Object thing) {
         if (thing instanceof Kind<?> kind) return kind;
         if (thing instanceof Class<?> kind) {
-            final Context context = Context.getLocalContext();
+            final Context<?> context = Context.getLocalContext();
             if (context != null) for (final Kind<?> found : context.getKinds()) {
                 if (found.type.isAssignableFrom(kind)) return found;
             }
@@ -113,16 +113,16 @@ public abstract class Kind<Type> {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(type);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o instanceof Class<?> type && type.equals(this.type)) return true;
         if (!(o instanceof final Kind<?> kind)) return false;
         return Objects.equals(type, kind.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type);
     }
 
     @Override

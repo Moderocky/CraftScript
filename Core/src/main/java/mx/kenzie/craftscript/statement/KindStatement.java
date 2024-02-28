@@ -19,7 +19,7 @@ public record KindStatement(String name) implements Statement<Kind<?>> {
         return Kinds.ANY;
     }
 
-    public static Kind<?> execute(Context context, String name) {
+    public static Kind<?> execute(Context<?> context, String name) {
         for (final Kind<?> kind : context.getKinds()) {
             if (kind.toString().equals('#' + name)) return kind;
         }
@@ -27,7 +27,7 @@ public record KindStatement(String name) implements Statement<Kind<?>> {
     }
 
     @Override
-    public Kind<?> execute(Context context) throws ScriptError {
+    public Kind<?> execute(Context<?> context) throws ScriptError {
         for (final Kind<?> kind : context.getKinds()) {
             if (kind.toString().equals('#' + name)) return kind;
         }

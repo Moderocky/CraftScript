@@ -3,7 +3,7 @@ package mx.kenzie.craftscript.parser;
 import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.script.DoBlockParser;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.ScriptParser;
+import mx.kenzie.craftscript.script.ScriptSourceParser;
 import mx.kenzie.craftscript.statement.DoStatement;
 import mx.kenzie.craftscript.statement.GetterStatement;
 import mx.kenzie.craftscript.statement.KindStatement;
@@ -51,7 +51,7 @@ public class DoParser extends BasicParser {
             for (final String property : kind.getProperties()) {
                 child.assign(property, new GetterStatement(object, property));
             }
-            final ScriptParser parser = new DoBlockParser(object, parent);
+            final ScriptSourceParser parser = new DoBlockParser(object, parent);
             this.block = parser.parse(after);
         } finally {
             VariableHelper.local.set(helper);

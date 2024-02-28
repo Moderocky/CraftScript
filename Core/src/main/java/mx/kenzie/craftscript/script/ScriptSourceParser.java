@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
-public interface ScriptParser {
+public interface ScriptSourceParser {
 
     Statement<?> parseLine() throws IOException;
 
