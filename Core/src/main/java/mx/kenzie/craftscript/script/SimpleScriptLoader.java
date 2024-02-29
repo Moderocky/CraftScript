@@ -6,6 +6,7 @@ import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.statement.Statement;
 import mx.kenzie.craftscript.utility.VariableHelper;
 import mx.kenzie.craftscript.utility.Warning;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -109,10 +110,11 @@ public class SimpleScriptLoader implements ScriptLoader {
             VariableHelper.init();
             do {
                 parser.incrementLine();
-                final String line = this.readLine();
+                String line = this.readLine();
                 if (line == null) break;
                 if (line.isBlank()) continue;
                 if (parser.checkEmpty(line)) continue;
+                line = this.lookAhead(line, parser);
                 final Statement<?> statement = parser.parse(line.trim());
                 if (statement == null)
                     throw new ScriptError("Line " + parser.getLine() + ": '" + line + "' was not recognised.");
@@ -127,13 +129,26 @@ public class SimpleScriptLoader implements ScriptLoader {
         return list.toArray(new Statement[0]);
     }
 
+    @NotNull
+    private String lookAhead(String line, ScriptSourceParser parser) throws IOException {
+        line = line.trim();
+        while (line.charAt(line.length() - 1) == '\\') {
+            final String next = this.readLine();
+            if (line == null) break;
+            line = line.substring(0, line.length() - 1).trim() + ' ' + next.trim();
+            if (parser != null) parser.incrementLine();
+        }
+        return line;
+    }
+
     @Override
     public Statement<?> parseLine() throws IOException {
-        final String line = this.readLine();
+        String line = this.readLine();
         if (line == null) throw new ScriptError("No lines left in reader.");
         if (line.isBlank()) return null;
         if (this.checkEmpty(line)) return null;
-        final Statement<?> statement = this.parse(line.trim());
+        line = this.lookAhead(line, this);
+        final Statement<?> statement = this.parse(line);
         if (statement == null)
             throw new ScriptError("Line '" + line + "' was not recognised.");
         return statement;

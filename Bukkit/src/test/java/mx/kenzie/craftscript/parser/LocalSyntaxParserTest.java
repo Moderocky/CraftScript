@@ -1,8 +1,8 @@
 package mx.kenzie.craftscript.parser;
 
+import mx.kenzie.craftscript.script.BukkitScriptLoader;
 import mx.kenzie.craftscript.script.LocalScriptParser;
 import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.BukkitScriptLoader;
 import org.junit.Test;
 
 import java.io.BufferedReader;

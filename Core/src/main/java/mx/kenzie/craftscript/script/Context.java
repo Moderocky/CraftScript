@@ -5,6 +5,7 @@ import mx.kenzie.craftscript.kind.Kind;
 import mx.kenzie.craftscript.statement.LineStatement;
 import mx.kenzie.craftscript.variable.VariableContainer;
 
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.function.Supplier;
 public record Context<Source>(Source source, ScriptManager<Source> manager, VariableContainer variables, Data data) {
 
     private static final ThreadLocal<Context<?>> local = new ThreadLocal<>();
+    private static final Context<PrintStream> system = new Context<>(System.out, new SystemScriptManager(SimpleScriptLoader.BASIC));
 
     public Context(Context<Source> context) {
         this(context.source, context.manager, new VariableContainer(context.variables), context.data.clone());
@@ -25,6 +27,10 @@ public record Context<Source>(Source source, ScriptManager<Source> manager, Vari
 
     public Context(Source source, ScriptManager<Source> manager, VariableContainer variables) {
         this(source, manager, variables, new Data());
+    }
+
+    public static Context<PrintStream> system() {
+        return system;
     }
 
     public static Context<?> getLocalContext() {

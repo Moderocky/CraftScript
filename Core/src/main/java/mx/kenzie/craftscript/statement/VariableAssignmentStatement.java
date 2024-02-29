@@ -16,7 +16,7 @@ public record VariableAssignmentStatement(String name, Statement<?> statement) i
     }
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public Object execute(Context<?> context) throws ScriptError {
         final Object result = this.statement.execute(context);
         context.variables().put(name, Wrapper.of(result));
         return result;

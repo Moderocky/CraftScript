@@ -13,8 +13,8 @@ import java.io.PrintStream;
 
 public record DoStatement(Statement<?> source, Statement<?> then) implements Statement<Object> {
 
-    public static Object execute(Context context, Object source, Executable<?> then) {
-        final Context sub = prepare(context, Wrapper.of(source));
+    public static Object execute(Context<?> context, Object source, Executable<?> then) {
+        final Context<?> sub = prepare(context, Wrapper.of(source));
         try {
             Context.setLocalContext(sub);
             return then.execute(sub);
@@ -23,10 +23,10 @@ public record DoStatement(Statement<?> source, Statement<?> then) implements Sta
         }
     }
 
-    private static <Type> Context prepare(Context parent, Wrapper<Type> wrapper) {
+    private static <Type> Context<?> prepare(Context<?> parent, Wrapper<Type> wrapper) {
         final VariableContainer old = parent.variables();
         final VariableContainer special = new PropertyVariableContainer<>(old, wrapper);
-        final Context context = new Context(parent.source(), parent.manager(), special, parent.data().clone());
+        final Context<?> context = new Context(parent.source(), parent.manager(), special, parent.data().clone());
         context.data().parentContext = parent;
         context.data().script = parent.data().script;
         wrapper.getKind().setupDoBlock(context);
@@ -34,7 +34,7 @@ public record DoStatement(Statement<?> source, Statement<?> then) implements Sta
     }
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public Object execute(Context<?> context) throws ScriptError {
         return execute(context, source.execute(context), then);
     }
 

@@ -10,7 +10,7 @@ import java.io.PrintStream;
 public record FunctionStatement(Statement<?> executable) implements Statement<Object>, EvaluatedStatement<Object> {
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public Object execute(Context<?> context) throws ScriptError {
         return executable;
     }
 

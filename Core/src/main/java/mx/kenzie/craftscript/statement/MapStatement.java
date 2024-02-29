@@ -14,17 +14,17 @@ import java.io.PrintStream;
 
 public record MapStatement(Statement<?>... statements) implements Statement<Container> {
 
-    public static Container execute(Context context, Executable<?> executable) {
+    public static Container execute(Context<?> context, Executable<?> executable) {
         final VariableContainer container = new VariableFinder(context.variables());
-        final Context sub = new Context(context.source(), context.manager(), container, context.data());
+        final Context<?> sub = new Context(context.source(), context.manager(), container, context.data());
         executable.execute(sub);
         return new ContainerMap(container);
     }
 
     @Override
-    public Container execute(Context context) throws ScriptError {
+    public Container execute(Context<?> context) throws ScriptError {
         final VariableContainer container = new VariableFinder(context.variables());
-        final Context sub = new Context(context.source(), context.manager(), container, context.data());
+        final Context<?> sub = new Context(context.source(), context.manager(), container, context.data());
         for (final Statement<?> statement : statements) statement.execute(sub);
         return new ContainerMap(container);
     }
