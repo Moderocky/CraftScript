@@ -38,7 +38,7 @@ public class PropertyVariableContainer<Type> extends VariableContainer implement
         final String key = Objects.toString(object);
         if (properties.contains(key)) return wrapper.kind.getProperty(wrapper.thing, key);
         else if (overrides.containsKey(key)) return overrides.get(key).get();
-        else return super.get(key);
+        else return super.get(object);
     }
 
     @Override

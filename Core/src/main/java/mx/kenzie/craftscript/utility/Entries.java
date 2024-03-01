@@ -1,33 +1,13 @@
 package mx.kenzie.craftscript.utility;
 
-import java.util.Map;
+public interface Entries {
 
-public interface Entries extends Map<String, Object> {
+    <Type> Type get(String key);
 
-    @SuppressWarnings("unchecked")
-    default <Type> Type get(String key) {
-        return (Type) this.get((Object) key);
-    }
+    <Type> Type getOrDefault(String key, Type alternative);
 
-    @SuppressWarnings("unchecked")
-    default <Type> Type getOrDefault(String key, Type alternative) {
-        try {
-            return (Type) this.getOrDefault((Object) key, alternative);
-        } catch (ClassCastException ex) {
-            return alternative;
-        }
-    }
+    <Type> Type get(String key, Class<Type> type);
 
-    default <Type> Type get(String key, Class<Type> type) {
-        final Object found = this.get((Object) key);
-        if (type.isInstance(found)) return type.cast(found);
-        return null;
-    }
-
-    default <Type> Type getOrDefault(String key, Class<Type> type, Type alternative) {
-        final Object found = this.getOrDefault((Object) key, alternative);
-        if (type.isInstance(found)) return type.cast(found);
-        return alternative;
-    }
+    <Type> Type getOrDefault(String key, Class<Type> type, Type alternative);
 
 }
