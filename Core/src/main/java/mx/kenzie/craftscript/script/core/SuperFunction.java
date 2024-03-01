@@ -80,7 +80,7 @@ public record SuperFunction<Result>(Executable<Result> executable,
 
     }
 
-    public Builder of() {
+    public static Builder of() {
         return new Builder();
     }
 
