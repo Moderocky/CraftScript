@@ -3,13 +3,16 @@ package mx.kenzie.craftscript.script.core;
 import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.script.ScriptRuntimeError;
-import mx.kenzie.craftscript.statement.Statement;
-import mx.kenzie.craftscript.statement.VariableAssignmentStatement;
-import mx.kenzie.craftscript.statement.VariableReferenceStatement;
+import mx.kenzie.craftscript.statement.*;
+import mx.kenzie.craftscript.utility.Entries;
 import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.VariableHelper;
 import mx.kenzie.craftscript.variable.VariableContainer;
 import mx.kenzie.craftscript.variable.Wrapper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 public record SuperFunction<Result>(Executable<Result> executable,
                                     Statement<?>... parameters) implements Executable<Result> {
@@ -74,6 +77,30 @@ public record SuperFunction<Result>(Executable<Result> executable,
     }
 
     public record Argument(String name, Object value) {
+
+    }
+
+    public Builder of() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        final List<Statement<?>> list = new ArrayList<>();
+
+        public Builder arg(String name) {
+            this.list.add(new VariableStatement(name));
+            return this;
+        }
+
+        public Builder arg(String name, Object value) {
+            this.list.add(new VariableAssignmentStatement(name, new LiteralStatement(value)));
+            return this;
+        }
+
+        public <Result> SuperFunction<Result> runs(Function<Entries, Result> function) {
+            return new SuperFunction<>(context -> function.apply(context.variables()), list.toArray(new Statement[0]));
+        }
 
     }
 
