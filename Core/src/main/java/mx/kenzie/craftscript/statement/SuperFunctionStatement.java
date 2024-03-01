@@ -5,6 +5,7 @@ import mx.kenzie.craftscript.script.Context;
 import mx.kenzie.craftscript.script.ScriptError;
 import mx.kenzie.craftscript.script.core.SuperFunction;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -52,7 +53,7 @@ public record SuperFunctionStatement(List<Statement<?>> header,
         return Component.textOfChildren(
             Component.text("fn", profile.dark()),
             Component.text("(", profile.pop()),
-            // todo
+            Component.join(JoinConfiguration.separator(Component.text(", ", profile.pop())), header),
             Component.text(")", profile.pop()),
             Component.space(),
             this.executable.prettyPrint(profile)
