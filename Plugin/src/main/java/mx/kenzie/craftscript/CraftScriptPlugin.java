@@ -3,11 +3,9 @@ package mx.kenzie.craftscript;
 import mx.kenzie.craftscript.disk.DirectoryScriptStorage;
 import mx.kenzie.craftscript.disk.ScriptStorage;
 import mx.kenzie.craftscript.environment.ScriptController;
-import mx.kenzie.craftscript.script.Context;
-import mx.kenzie.craftscript.script.Script;
-import mx.kenzie.craftscript.script.ScriptError;
-import mx.kenzie.craftscript.script.BukkitScriptLoader;
+import mx.kenzie.craftscript.script.*;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -30,6 +28,7 @@ public class CraftScriptPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        Bukkit.getServicesManager().unregister(ScriptManager.class, CraftScriptPlugin.scripts.getScriptManager());
         CraftScriptPlugin.scripts.close();
         CraftScriptPlugin.scripts = null;
         CraftScriptPlugin.plugin = null;
@@ -44,6 +43,7 @@ public class CraftScriptPlugin extends JavaPlugin {
         CraftScriptPlugin.storage = new DirectoryScriptStorage(scripts);
         CraftScriptPlugin.scripts = new ScriptController();
         CraftScriptPlugin.config = this.loadConfigFile(new File(folder, "config.script"));
+        Bukkit.getServicesManager().register(ScriptManager.class, CraftScriptPlugin.scripts.getScriptManager(), this, ServicePriority.Normal);
     }
 
     private CraftScriptConfig loadConfigFile(File file) {

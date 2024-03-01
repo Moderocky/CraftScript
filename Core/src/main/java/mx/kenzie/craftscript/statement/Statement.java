@@ -1,14 +1,17 @@
 package mx.kenzie.craftscript.statement;
 
 import mx.kenzie.centurion.ColorProfile;
+import mx.kenzie.centurion.DefaultColorProfile;
 import mx.kenzie.craftscript.utility.Executable;
 import mx.kenzie.craftscript.utility.PrettyPrinter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-public interface Statement<Result> extends Executable<Result> {
+public interface Statement<Result> extends Executable<Result>, ComponentLike {
 
     default void debug(PrintStream stream) {
         stream.print(this);
@@ -50,6 +53,11 @@ public interface Statement<Result> extends Executable<Result> {
             .replaceAll("([a-z])([A-Z])", "$1 $2");
         return Component.translatable("script.statement.outcome", "Outcome: %s",
             Component.text(name, profile.highlight())).color(profile.light());
+    }
+
+    default @Override
+    @NotNull Component asComponent() {
+        return this.prettyPrint(DefaultColorProfile.get());
     }
 
 }

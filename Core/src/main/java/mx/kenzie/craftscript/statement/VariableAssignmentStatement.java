@@ -9,7 +9,8 @@ import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record VariableAssignmentStatement(String name, Statement<?> statement) implements Statement<Object> {
+public record VariableAssignmentStatement(String name,
+                                          Statement<?> statement) implements Statement<Object>, VariableReferenceStatement {
 
     public VariableAssignmentStatement {
         VariableHelper.instance().assign(name, statement);

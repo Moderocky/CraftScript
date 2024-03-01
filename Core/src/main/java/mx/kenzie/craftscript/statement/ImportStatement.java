@@ -13,9 +13,9 @@ import java.io.PrintStream;
 
 public record ImportStatement(String... names) implements Statement<Boolean> {
 
-    public static Boolean execute(Context context, String... names) {
+    public static Boolean execute(Context<?> context, String... names) {
         final VariableContainer container = context.variables();
-        final ScriptManager manager = context.manager();
+        final ScriptManager<?> manager = context.manager();
         for (final String name : names) {
             final AbstractScript script = manager.getScript(name + ".script");
             if (script == null) throw new ScriptError("The script '" + name + ".script' is not loaded.");
@@ -26,7 +26,7 @@ public record ImportStatement(String... names) implements Statement<Boolean> {
     }
 
     @Override
-    public Boolean execute(Context context) throws ScriptError {
+    public Boolean execute(Context<?> context) throws ScriptError {
         return execute(context, names);
     }
 

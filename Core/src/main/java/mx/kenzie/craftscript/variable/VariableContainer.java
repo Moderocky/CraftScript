@@ -94,4 +94,20 @@ public class VariableContainer implements Map<String, Object>, Container {
         return container.entrySet();
     }
 
+    public String debug() {
+        final StringBuilder builder = new StringBuilder("[");
+        int x = 0;
+        for (Entry<String, Object> entry : this.entrySet()) {
+            if (x++ > 0) builder.append(',');
+            builder.append(entry.getKey()).append('=').append(entry.getValue());
+        }
+        builder.append(']');
+        return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return this.debug();
+    }
+
 }

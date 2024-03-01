@@ -8,10 +8,10 @@ import net.kyori.adventure.text.Component;
 
 import java.io.PrintStream;
 
-public record VariableStatement(String name) implements Statement<Object>, EvaluatedStatement<Object> {
+public record VariableStatement(String name) implements EvaluatedStatement<Object>, VariableReferenceStatement {
 
     @Override
-    public Object execute(Context context) throws ScriptError {
+    public Object execute(Context<?> context) throws ScriptError {
         return context.variables().get(name);
     }
 

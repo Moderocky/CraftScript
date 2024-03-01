@@ -58,6 +58,8 @@ public class SimpleScriptLoader implements ScriptLoader {
         BinaryParser::compareOR,
         BinaryParser::compareXOR,
         BinaryParser::compareALT,
+        SuperFunctionParser::new,
+        InvokeParser::new,
         SetterParser::new,
         GetterParser::new,
         KindParser::new,
