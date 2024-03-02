@@ -95,6 +95,12 @@ public class VariableContainer implements Entries, Map<String, Object>, Containe
         return container.entrySet();
     }
 
+    @Nullable
+    @Override
+    public Object putIfAbsent(String key, Object value) {
+        return Container.super.putIfAbsent(key, value);
+    }
+
     public String debug() {
         final StringBuilder builder = new StringBuilder("[");
         int x = 0;
@@ -107,35 +113,31 @@ public class VariableContainer implements Entries, Map<String, Object>, Containe
     }
 
     @Override
-    public String toString() {
-        return this.debug();
+    public <Type> Type getValue(String key) {
+        return Wrapper.unwrap(this.get(key));
     }
 
-
-    @SuppressWarnings("unchecked")
-    public <Type> Type get(String key) {
-        return (Type) this.get((Object) key);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <Type> Type getOrDefault(String key, Type alternative) {
+    @Override
+    public <Type> Type getValueOr(String key, Type alternative) {
         try {
-            return (Type) this.getOrDefault((Object) key, alternative);
+            return Wrapper.unwrap(this.getOrDefault(key, alternative));
         } catch (ClassCastException ex) {
             return alternative;
         }
     }
 
-    @Nullable
     @Override
-    public Object putIfAbsent(String key, Object value) {
-        return Container.super.putIfAbsent(key, value);
-    }
-
-    public <Type> Type get(String key, Class<Type> type) {
-        final Object found = this.get((Object) key);
+    public <Type> Type getValue(String key, Class<Type> type) {
+        final Object found = Wrapper.unwrap(this.get(key));
         if (type.isInstance(found)) return type.cast(found);
         return null;
+    }
+
+    @Override
+    public <Type> Type getValueOr(String key, Class<Type> type, Type alternative) {
+        final Object found = Wrapper.unwrap(this.getOrDefault(key, alternative));
+        if (type.isInstance(found)) return type.cast(found);
+        return alternative;
     }
 
     @Override
@@ -143,10 +145,9 @@ public class VariableContainer implements Entries, Map<String, Object>, Containe
         return super.equals(o);
     }
 
-    public <Type> Type getOrDefault(String key, Class<Type> type, Type alternative) {
-        final Object found = this.getOrDefault((Object) key, alternative);
-        if (type.isInstance(found)) return type.cast(found);
-        return alternative;
+    @Override
+    public String toString() {
+        return this.debug();
     }
 
 }

@@ -36,6 +36,10 @@ public record SuperFunction<Result>(Executable<Result> executable,
         else throw new ScriptRuntimeError("Can't turn '" + object + "' into a super-function");
     }
 
+    public static Builder of() {
+        return new Builder();
+    }
+
     @Override
     public Result execute(Context<?> context) throws ScriptError {
         return executable.execute(context);
@@ -78,10 +82,6 @@ public record SuperFunction<Result>(Executable<Result> executable,
 
     public record Argument(String name, Object value) {
 
-    }
-
-    public static Builder of() {
-        return new Builder();
     }
 
     public static class Builder {

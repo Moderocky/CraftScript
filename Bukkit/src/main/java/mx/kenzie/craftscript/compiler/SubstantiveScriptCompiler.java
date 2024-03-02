@@ -87,7 +87,7 @@ public class SubstantiveScriptCompiler extends SimpleScriptCompiler {
     protected Instruction.Input<Object> compileInput(Object object, PreClass builder) {
         if (object instanceof Object[] statements) return this.compileInputArray(statements, builder);
         if (object instanceof Comparator comparator) return this.compileComparator(comparator, builder);
-        if (!(object instanceof Statement<?> statement)) return this.boxPrimitive(object);
+        if (!(object instanceof Statement<?> statement)) return ProxyCompiler.boxPrimitive(object);
         else throw new ScriptCompileError("Unable to compile '" + statement.stringify() + "'.");
     }
 

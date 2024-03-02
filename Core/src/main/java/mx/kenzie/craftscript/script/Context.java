@@ -30,7 +30,7 @@ public record Context<Source>(Source source, ScriptManager<Source> manager, Vari
     }
 
     public static Context<PrintStream> system() {
-        return system;
+        return new Context<>(system);
     }
 
     public static Context<?> getLocalContext() {

@@ -12,6 +12,38 @@ import mx.kenzie.craftscript.variable.Wrapper;
  */
 public interface Bridge {
 
+    static boolean unbox(Boolean value) {
+        return value;
+    }
+
+    static byte unbox(Byte value) {
+        return value;
+    }
+
+    static short unbox(Short value) {
+        return value;
+    }
+
+    static int unbox(Integer value) {
+        return value;
+    }
+
+    static long unbox(Long value) {
+        return value;
+    }
+
+    static float unbox(Float value) {
+        return value;
+    }
+
+    static double unbox(Double value) {
+        return value;
+    }
+
+    static char unbox(Character value) {
+        return value;
+    }
+
     static String interpolate(Context context, Object... objects) {
         if (objects.length == 0) return "";
         if (objects.length == 1 && !(objects[0] instanceof Executable<?>)) return Wrapper.of(objects[0]).toString();

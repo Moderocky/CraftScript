@@ -17,19 +17,6 @@ import static mx.kenzie.foundation.instruction.Instruction.*;
 
 public class SimpleScriptCompiler implements ScriptCompiler {
 
-    protected Instruction.Input<Object> boxPrimitive(Object object) {
-        if (object instanceof Boolean) return METHOD
-            .of(Boolean.class, Boolean.class, "valueOf", boolean.class)
-            .getStatic(CONSTANT.of(object));
-        if (object instanceof Integer) return METHOD
-            .of(Integer.class, Integer.class, "valueOf", int.class)
-            .getStatic(CONSTANT.of(object));
-        if (object instanceof Number number) return METHOD
-            .of(Double.class, Double.class, "valueOf", double.class)
-            .getStatic(CONSTANT.of(number.doubleValue()));
-        else return CONSTANT.of(object);
-    }
-
     @SuppressWarnings("unchecked")
     protected Instruction.Input<Object> compileInputArray(Object[] objects, PreClass builder) {
         final Input<Object>[] inputs = new Input[objects.length];
@@ -81,7 +68,7 @@ public class SimpleScriptCompiler implements ScriptCompiler {
     protected Instruction.Input<Object> compileInput(Object object, PreClass builder) {
         if (object instanceof Object[] statements) return this.compileInputArray(statements, builder);
         if (object instanceof Comparator comparator) return this.compileComparator(comparator, builder);
-        if (!(object instanceof Statement<?> statement)) return this.boxPrimitive(object);
+        if (!(object instanceof Statement<?> statement)) return ProxyCompiler.boxPrimitive(object);
         else if (statement instanceof AbstractScript)
             throw new ScriptCompileError("Tried to compile a script inside a script.");
 //        else if (statement instanceof LiteralStatement literal) return CONSTANT.of(literal.value());

@@ -2,12 +2,12 @@ package mx.kenzie.craftscript.utility;
 
 public interface Entries {
 
-    <Type> Type get(String key);
+    <Type> Type getValue(String key);
 
-    <Type> Type getOrDefault(String key, Type alternative);
+    <Type> Type getValueOr(String key, Type alternative);
 
-    <Type> Type get(String key, Class<Type> type);
+    <Type> Type getValue(String key, Class<Type> type);
 
-    <Type> Type getOrDefault(String key, Class<Type> type, Type alternative);
+    <Type> Type getValueOr(String key, Class<Type> type, Type alternative);
 
 }
