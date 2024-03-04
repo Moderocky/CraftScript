@@ -9,11 +9,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
-public interface ScriptSourceParser {
+public interface ScriptSourceParser extends ElementParser {
 
     Statement<?> parseLine() throws IOException;
-
-    Statement<?> parse(String line);
 
     int getLine();
 

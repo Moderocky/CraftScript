@@ -157,19 +157,6 @@ public class SimpleScriptLoader implements ScriptLoader {
     }
 
     @Override
-    public Statement<?> parse(String line) {
-        for (final Supplier<Parser> supplier : parsers) {
-            try (final Parser parser = this.getParser(supplier)) {
-                assert parser.canUse();
-                parser.insert(line, this);
-                if (parser.matches()) return parser.parse();
-                assert !parser.canUse();
-            }
-        }
-        return null;
-    }
-
-    @Override
     public int getLine() {
         return -1;
     }
@@ -224,6 +211,19 @@ public class SimpleScriptLoader implements ScriptLoader {
     @Override
     public void register(Supplier<Parser> parser) {
         throw new ScriptError("The root loader cannot have a local parser registered to it.");
+    }
+
+    @Override
+    public Statement<?> parse(String line) {
+        for (final Supplier<Parser> supplier : parsers) {
+            try (final Parser parser = this.getParser(supplier)) {
+                assert parser.canUse();
+                parser.insert(line, this);
+                if (parser.matches()) return parser.parse();
+                assert !parser.canUse();
+            }
+        }
+        return null;
     }
 
     private Parser getParser(Supplier<Parser> supplier) {

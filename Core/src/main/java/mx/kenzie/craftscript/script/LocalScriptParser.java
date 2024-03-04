@@ -54,25 +54,6 @@ public class LocalScriptParser implements ScriptLoader, ScriptSourceParser {
     }
 
     @Override
-    public Statement<?> parse(String line) {
-        this.modCount++;
-        if (modCount > 12) throw new ScriptError("Line " + this.line + ": the statement '"
-            + line + "' will recurse infinitely and cannot be parsed.");
-        try {
-            final Iterator<Parser> iterator = this.parsers();
-            while (iterator.hasNext()) try (final Parser parser = iterator.next()) {
-                assert parser.canUse();
-                parser.insert(line, this);
-                if (parser.matches()) return parser.parse();
-                assert !parser.canUse();
-            }
-        } finally {
-            this.modCount--;
-        }
-        return null;
-    }
-
-    @Override
     public int getLine() {
         return line;
     }
@@ -125,6 +106,25 @@ public class LocalScriptParser implements ScriptLoader, ScriptSourceParser {
     @Override
     public void register(Supplier<Parser> parser) {
         this.local.add(parser);
+    }
+
+    @Override
+    public Statement<?> parse(String line) {
+        this.modCount++;
+        if (modCount > 12) throw new ScriptError("Line " + this.line + ": the statement '"
+            + line + "' will recurse infinitely and cannot be parsed.");
+        try {
+            final Iterator<Parser> iterator = this.parsers();
+            while (iterator.hasNext()) try (final Parser parser = iterator.next()) {
+                assert parser.canUse();
+                parser.insert(line, this);
+                if (parser.matches()) return parser.parse();
+                assert !parser.canUse();
+            }
+        } finally {
+            this.modCount--;
+        }
+        return null;
     }
 
 }

@@ -1,15 +1,11 @@
 package mx.kenzie.craftscript.script.core;
 
-import mx.kenzie.craftscript.script.SimpleScriptLoader;
-import mx.kenzie.craftscript.script.SystemScriptManager;
-import mx.kenzie.craftscript.variable.Wrapper;
+import mx.kenzie.craftscript.ManagedTest;
 import org.junit.Test;
 
 import java.util.Objects;
 
-public class SuperFunctionTest {
-
-    static SystemScriptManager manager = new SystemScriptManager(SimpleScriptLoader.BASIC);
+public class SuperFunctionTest extends ManagedTest {
 
     @Test
     public void simple() {
@@ -105,15 +101,6 @@ public class SuperFunctionTest {
             blob("test")
             """);
         assert Objects.equals(result, "test") : result;
-    }
-
-    private Object run(String source) {
-        return Wrapper.unwrap(manager.runScript(manager.parseScript(source), System.out));
-    }
-
-    private Object debug(String source) {
-        manager.parseScript(source).debug(System.out);
-        return Wrapper.unwrap(manager.runScript(manager.parseScript(source), System.out));
     }
 
 }

@@ -45,23 +45,6 @@ public class DoBlockParser implements ScriptSourceParser {
     }
 
     @Override
-    public Statement<?> parse(String line) {
-        final Iterator<Parser> parsers = this.parsers();
-        while (parsers.hasNext()) try (Parser parser = parsers.next()) {
-            assert parser.canUse();
-            parser.insert(line, this);
-            if (parser.matches()) return parser.parse();
-            assert !parser.canUse();
-        }
-        if (dirty > 5) return null;
-        try (Parser parser = new LocalFunctionParser()) {
-            parser.insert(line, this);
-            if (parser.matches()) return parser.parse();
-            return null;
-        }
-    }
-
-    @Override
     public int getLine() {
         return parent.getLine();
     }
@@ -99,6 +82,23 @@ public class DoBlockParser implements ScriptSourceParser {
     @Override
     public void register(Supplier<Parser> parser) {
         this.parent.register(parser);
+    }
+
+    @Override
+    public Statement<?> parse(String line) {
+        final Iterator<Parser> parsers = this.parsers();
+        while (parsers.hasNext()) try (Parser parser = parsers.next()) {
+            assert parser.canUse();
+            parser.insert(line, this);
+            if (parser.matches()) return parser.parse();
+            assert !parser.canUse();
+        }
+        if (dirty > 5) return null;
+        try (Parser parser = new LocalFunctionParser()) {
+            parser.insert(line, this);
+            if (parser.matches()) return parser.parse();
+            return null;
+        }
     }
 
     protected Statement<?> localFunction(String line) {
