@@ -49,7 +49,7 @@ public class ProxyCompiler<Result> {
         }
     }
 
-    private static Class<?> getWrapperType(Class<?> type) {
+    static Class<?> getWrapperType(Class<?> type) {
         if (type == boolean.class) return Boolean.class;
         if (type == byte.class) return Byte.class;
         if (type == short.class) return Short.class;
@@ -62,7 +62,7 @@ public class ProxyCompiler<Result> {
         return type;
     }
 
-    private static Class<?> getUnwrapperType(Class<?> type) {
+    static Class<?> getUnwrapperType(Class<?> type) {
         if (type == Boolean.class) return boolean.class;
         if (type == Byte.class) return byte.class;
         if (type == Short.class) return short.class;
