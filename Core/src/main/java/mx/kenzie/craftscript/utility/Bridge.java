@@ -44,6 +44,22 @@ public interface Bridge {
         return value;
     }
 
+    static Object[] makeArgumentsOkay(Object[] objects, Class<?>[] types) {
+        final Object[] result = new Object[types.length];
+        System.arraycopy(objects, 0, result, 0, Math.min(objects.length, result.length));
+        for (int i = 0; i < types.length; i++) {
+            if (result[i] == null) result[i] = defaultValue(types[i]);
+            else if (!types[i].isInstance(result[i])) return null;
+        }
+        return result;
+    }
+
+    static Object defaultValue(Class<?> type) {
+        if (type == boolean.class) return false;
+        if (type.isPrimitive()) return 0;
+        return null;
+    }
+
     static String interpolate(Context context, Object... objects) {
         if (objects.length == 0) return "";
         if (objects.length == 1 && !(objects[0] instanceof Executable<?>)) return Wrapper.of(objects[0]).toString();

@@ -66,4 +66,10 @@ public class Metafactory {
         return new ConstantCallSite(handle);
     }
 
+    public static CallSite spreader(MethodHandles.Lookup caller, String name, MethodType type, Class<?> owner)
+        throws Exception {
+        final MethodHandle handle = caller.findVirtual(owner, name, type);
+        return new ConstantCallSite(handle.asSpreader(Object[].class, type.parameterCount()));
+    }
+
 }
