@@ -1,7 +1,7 @@
 CraftScript
 =====
 
-### Opus #25
+### Opus #26
 
 A tiny scripting language for writing user-centered scripts in Minecraft.
 
